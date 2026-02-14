@@ -27,15 +27,18 @@ Fimbulwinter is a curated Valheim modpack designed for experienced players retur
 - **Armory** -- New armor sets with set bonuses
 - **Wizardry** -- Full magic system with staves, spells, and elemental damage
 
-### Content: Creatures & World (13 mods)
+### Content: Creatures & World (16 mods)
 - **Monstrum + Deep North + Ashlands** -- 100+ new creatures across every biome
 - **RtD Suite** (Ocean, Dungeons, Horrors, Monsters, Monstrum) -- Massive world expansion
+- **Fee Fi Fo Fum** -- Giants roaming across biomes
+- **EpicValheimsAdditions** -- Mistlands, DeepNorth, and Ashlands content expansion
 - **Custom Raids** -- Configurable raid events
 - **Forbidden Catacombs** -- Handcrafted swamp dungeon
 - **More World Locations AIO** -- 153 new points of interest
 
-### Content: Ships, Mounts & Cooking (4 mods)
+### Content: Ships, Mounts & Cooking (5 mods)
 - **OdinShip** -- 14 new ships and boats
+- **SeaAnimals** -- Ocean creatures and rideable marine beasts
 - **OdinHorse** -- Tameable horses with saddles and armor
 - **DragoonCapes** -- 20+ capes with unique combat effects
 - **CookingAdditions** -- 23 new foods and cooking stations
@@ -51,13 +54,15 @@ Fimbulwinter is a curated Valheim modpack designed for experienced players retur
 - **HUDCompass** -- Map-pin compass with dynamic markers
 - **BetterUI** -- Enemy HP bars, XP tracking, skill display
 
-### Quality of Life (19 mods)
+### Quality of Life (21 mods)
 - **Extended Inventory + CraftyBoxes + AutoStore + ContainerSizes** -- Inventory overhaul
 - **Quick Stack + Recycle + AAA Crafting** -- Streamlined crafting
 - **LazyVikings + Eternal Fire + PetPantry** -- Automation
 - **PlantEverything + PlantEasily** -- Advanced farming
 - **SpeedyPaths + TeleportEverything** -- Movement QoL (ore teleport with 20% tax)
 - **MissingPieces + NoRainDamage** -- Building improvements
+- **TrueInstantLootDrop** -- Loot drops instantly at creature death location
+- **TradersExtended** -- Expanded trader UI with sell lists and economy
 
 ### Sailing (2 mods)
 - **Sailing Skill + SailingSpeed** -- Ship speed, health, and exploration scale with skill
@@ -77,7 +82,7 @@ All mods have been individually configured for balanced veteran multiplayer:
 - **Ore Teleporting:** Enabled with 20% transport tax (vanilla spirit preserved)
 - **Seasons:** 5-day cycles with gameplay modifiers (Winter is harsh, Fall boosts damage)
 - **Night Danger:** Darker nights (0.65 luminance) + horror spawns
-- **Death Penalty:** 75% skill recovery, 5% exp loss per skill -- punishing but not crushing
+- **Death Penalty:** No skill loss on death for mod skills; 75% vanilla skill recovery via SmartSkills
 - **Sailing:** Skill-based speed/health/exploration bonuses, raft gets 2x boost
 - **Raids:** ~Every 2 hours of play (36min interval, 30% chance)
 
@@ -90,21 +95,11 @@ All mods have been individually configured for balanced veteran multiplayer:
 3. Click **Install with dependencies**
 4. Click **Start modded** to launch
 
-### Manual HD Visuals (Optional)
-
-4 standalone HD visual mods are NOT on Thunderstore and must be installed separately for the full visual experience:
-
-- **HDValheimTextures** -- HD retexture of all vanilla assets
-- **ValheimHDTerrain** -- HD terrain textures + normal maps
-- **BadgersShadingOverhaul** -- Improved lighting/shading
-- **BadgersValheimSkies** -- 4K/8K skybox replacements
-
 ## Server Setup
 
 This modpack is designed for dedicated server multiplayer. The server needs all gameplay mods but NOT the client-only visual/UI mods.
 
 **Client-only mods** (server does not need):
-- HD texture mods (standalone DLLs)
 - HD Seasonality textures
 - HUDCompass, CameraTweaks, BetterUI
 - BreatheEasy, GammaOfNightLights
@@ -118,4 +113,4 @@ See [CHANGELOG.md](https://github.com/ibfleming/fimbulwinter/blob/main/CHANGELOG
 ## Links
 
 - **Source:** [GitHub](https://github.com/ibfleming/fimbulwinter)
-- **Thunderstore:** Coming soon
+- **Thunderstore:** [Fimbulwinter](https://thunderstore.io/c/valheim/p/ibfleming/Fimbulwinter/)
