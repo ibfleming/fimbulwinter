@@ -12,8 +12,10 @@ TASKS.md
 *.bundle
 *.manifest
 config/Seasonality/Default/
-config/Seasonality/WillybachHD/
 config/Seasonality/LastSeasonChangeData/
+
+# WillybachHD: ship custom textures but exclude winter variants
+config/Seasonality/WillybachHD/*@winter.png
 
 # Runtime save data
 config/EpicLoot/BountySaves/
