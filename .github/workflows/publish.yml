@@ -30,7 +30,7 @@ jobs:
       - name: Extract & Verify Version
         id: version
         run: |
-          # pip install tomli
+          pip install tomli
 
           TOML_VERSION=$(python3 -c "import tomli; print(tomli.load(open('thunderstore.toml', 'rb'))['package']['versionNumber'])")
 
@@ -104,3 +104,4 @@ jobs:
           body_path: CHANGELOG.md
           name: Fimbulwinter v${{ needs.build-and-publish.outputs.version }}
           generate_release_notes: true
+
