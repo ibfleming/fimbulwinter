@@ -93,17 +93,5 @@ valheim = ["modpacks"]
 [build]
 
 [[build.copy]]
-source = "icon.png"
-target = "/"
-
-[[build.copy]]
-source = "README.md"
-target = "/"
-
-[[build.copy]]
-source = "CHANGELOG.md"
-target = "/"
-
-[[build.copy]]
 source = "config/"
 target = "/config/"
