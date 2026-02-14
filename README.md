@@ -1,4 +1,4 @@
-![Build Status](https://github.com/ibfleming/fimbulwinter/actions/workflows/publish.yml/badge.svg)
+[![Build Status](https://github.com/ibfleming/fimbulwinter/actions/workflows/publish.yml/badge.svg)](https://github.com/ibfleming/fimbulwinter/actions/workflows/publish.yml)
 
 # Fimbulwinter - A Veteran's Valheim Modpack
 
