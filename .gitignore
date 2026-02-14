@@ -1,2 +1,36 @@
+# Project docs (tracked in parent repo, not the modpack package)
 PROJECT.md
 TASKS.md
+
+# Player-specific data
+*.dat
+
+# Runtime logs
+*.log
+
+# Binary assets (HD textures, bundles)
+*.bundle
+*.manifest
+config/Seasonality/Default/
+config/Seasonality/WillybachHD/
+config/Seasonality/LastSeasonChangeData/
+
+# Runtime save data
+config/EpicLoot/BountySaves/
+config/EpicLoot/MWL_Ports/
+config/EpicLoot/localizations/
+
+# Auto-generated configs (regenerated at runtime)
+config/custom_raids.raids.cfg
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Build output
+dist/
+*.zip

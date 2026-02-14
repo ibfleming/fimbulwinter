@@ -1,0 +1,2 @@
+dm=debugmode
+noon=/time 0.5

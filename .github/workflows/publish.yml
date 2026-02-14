@@ -1,0 +1,215 @@
+name: Publish to Thunderstore
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (build only, no publish)'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+env:
+  TCLI_VERSION: '0.2.3'
+
+jobs:
+  validate:
+    name: Validate Package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate manifest.json
+        run: |
+          echo "Validating manifest.json..."
+          python3 -c "
+          import json, sys
+
+          with open('manifest.json') as f:
+              manifest = json.load(f)
+
+          errors = []
+          if 'name' not in manifest:
+              errors.append('Missing required field: name')
+          if 'version_number' not in manifest:
+              errors.append('Missing required field: version_number')
+          if 'description' not in manifest:
+              errors.append('Missing required field: description')
+          elif len(manifest['description']) > 250:
+              errors.append(f'Description too long: {len(manifest[\"description\"])}/250 chars')
+          if 'dependencies' not in manifest:
+              errors.append('Missing required field: dependencies')
+
+          if errors:
+              for e in errors:
+                  print(f'ERROR: {e}', file=sys.stderr)
+              sys.exit(1)
+
+          print(f'Package: {manifest[\"name\"]} v{manifest[\"version_number\"]}')
+          print(f'Dependencies: {len(manifest[\"dependencies\"])}')
+          print(f'Description: {len(manifest[\"description\"])}/250 chars')
+          print('Manifest validation passed.')
+          "
+
+      - name: Validate icon.png
+        run: |
+          echo "Validating icon.png..."
+          python3 -c "
+          import struct, sys
+
+          with open('icon.png', 'rb') as f:
+              sig = f.read(8)
+              if sig != b'\x89PNG\r\n\x1a\n':
+                  print('ERROR: Not a valid PNG file', file=sys.stderr)
+                  sys.exit(1)
+              f.read(4)  # length
+              f.read(4)  # IHDR
+              w, h = struct.unpack('>II', f.read(8))
+
+          if w != 256 or h != 256:
+              print(f'ERROR: Icon must be 256x256, got {w}x{h}', file=sys.stderr)
+              sys.exit(1)
+
+          print(f'Icon: {w}x{h} PNG - valid')
+          "
+
+      - name: Check required files
+        run: |
+          for file in manifest.json icon.png README.md; do
+            if [ ! -f "$file" ]; then
+              echo "ERROR: Missing required file: $file"
+              exit 1
+            fi
+          done
+          echo "All required files present."
+
+  build-and-publish:
+    name: Build & Publish
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            VERSION="${{ github.ref_name }}"
+            VERSION="${VERSION#v}"
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "is_release=true" >> $GITHUB_OUTPUT
+          else
+            VERSION=$(python3 -c "import json; print(json.load(open('manifest.json'))['version_number'])")
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "is_release=false" >> $GITHUB_OUTPUT
+          fi
+          echo "Package version: $VERSION"
+
+      - name: Verify manifest version matches tag
+        if: github.ref_type == 'tag'
+        run: |
+          TAG_VERSION="${{ steps.version.outputs.version }}"
+          MANIFEST_VERSION=$(python3 -c "import json; print(json.load(open('manifest.json'))['version_number'])")
+          if [ "$TAG_VERSION" != "$MANIFEST_VERSION" ]; then
+            echo "ERROR: Tag version ($TAG_VERSION) does not match manifest version ($MANIFEST_VERSION)"
+            exit 1
+          fi
+          echo "Version match confirmed: $TAG_VERSION"
+
+      - name: Build package zip
+        run: |
+          PACKAGE_NAME="Fimbulwinter-${{ steps.version.outputs.version }}"
+          mkdir -p dist
+
+          # Create the package zip with required structure
+          zip -r "dist/${PACKAGE_NAME}.zip" \
+            manifest.json \
+            icon.png \
+            README.md \
+            CHANGELOG.md \
+            config/ \
+            -x "*.dat" "*.log" "*.bundle" "*.manifest"
+
+          echo "Built: dist/${PACKAGE_NAME}.zip"
+          ls -lh "dist/${PACKAGE_NAME}.zip"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: thunderstore-package
+          path: dist/*.zip
+          retention-days: 30
+
+      - name: Install Thunderstore CLI
+        if: (github.ref_type == 'tag') || (inputs.dry_run == 'false')
+        run: |
+          # Download tcli
+          curl -fsSL "https://github.com/thunderstore-io/thunderstore-cli/releases/download/${{ env.TCLI_VERSION }}/tcli-${{ env.TCLI_VERSION }}-linux-x64.tar.gz" \
+            -o tcli.tar.gz
+
+          tar xzf tcli.tar.gz
+          chmod +x tcli
+          echo "Thunderstore CLI installed"
+          ./tcli --version
+
+      - name: Publish to Thunderstore
+        if: (github.ref_type == 'tag') || (inputs.dry_run == 'false')
+        env:
+          TCLI_AUTH_TOKEN: ${{ secrets.THUNDERSTORE_TOKEN }}
+        run: |
+          PACKAGE_NAME="Fimbulwinter-${{ steps.version.outputs.version }}"
+
+          echo "Publishing dist/${PACKAGE_NAME}.zip to Thunderstore..."
+
+          # Retry logic for network issues
+          MAX_RETRIES=3
+          RETRY_DELAY=10
+
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "Attempt $i of $MAX_RETRIES..."
+            if ./tcli publish --file "dist/${PACKAGE_NAME}.zip" --token "$TCLI_AUTH_TOKEN"; then
+              echo "Successfully published to Thunderstore!"
+              exit 0
+            fi
+            if [ $i -lt $MAX_RETRIES ]; then
+              echo "Publish failed, retrying in ${RETRY_DELAY}s..."
+              sleep $RETRY_DELAY
+              RETRY_DELAY=$((RETRY_DELAY * 2))
+            fi
+          done
+
+          echo "ERROR: Failed to publish after $MAX_RETRIES attempts"
+          exit 1
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: build-and-publish
+    if: github.ref_type == 'tag'
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: thunderstore-package
+          path: dist/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          body_path: CHANGELOG.md
+          generate_release_notes: true
