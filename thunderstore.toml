@@ -99,4 +99,3 @@ target = "config"
 [[build.copy]]
 source = "CHANGELOG.md"
 target = "CHANGELOG.md"
-
