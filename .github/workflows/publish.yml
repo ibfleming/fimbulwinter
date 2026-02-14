@@ -19,6 +19,8 @@ jobs:
   build-and-publish:
     name: Build & Publish
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     permissions:
       contents: write
     steps:
