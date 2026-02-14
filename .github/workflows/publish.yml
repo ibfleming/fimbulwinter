@@ -57,7 +57,7 @@ jobs:
 
       - name: Install Thunderstore CLI
         run: |
-          TCLI_VERSION="0.2.5"
+          TCLI_VERSION="0.2.4"
           curl -fsSL "https://github.com/thunderstore-io/thunderstore-cli/releases/download/${TCLI_VERSION}/tcli-${TCLI_VERSION}-linux-x64.tar.gz" -o tcli.tar.gz
           tar xzf tcli.tar.gz
           chmod +x tcli
@@ -104,4 +104,3 @@ jobs:
           body_path: CHANGELOG.md
           name: Fimbulwinter v${{ needs.build-and-publish.outputs.version }}
           generate_release_notes: true
-
