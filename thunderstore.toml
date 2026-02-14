@@ -93,5 +93,6 @@ valheim = ["modpacks"]
 [build]
 
 [[build.copy]]
-source = "config/"
+source = "config"
 target = "config"
+
