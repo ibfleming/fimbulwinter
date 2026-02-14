@@ -1,3 +1,5 @@
+![Build Status](https://github.com/ibfleming/fimbulwinter/actions/workflows/publish.yml/badge.svg)
+
 # Fimbulwinter - A Veteran's Valheim Modpack
 
 **Tuned for veteran multiplayer. No shortcuts, no cheese -- just deeper Valheim.**
