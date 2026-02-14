@@ -96,6 +96,7 @@ valheim = ["modpacks"]
 source = "config"
 target = "config"
 
-[[builld.copy]]
+[[build.copy]]
 source = "CHANGELOG.md"
 target = "CHANGELOG.md"
+
