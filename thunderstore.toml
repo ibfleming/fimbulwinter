@@ -7,7 +7,7 @@ repository = "https://thunderstore.io"
 [package]
 namespace = "ibfleming"
 name = "Fimbulwinter"
-description = "A veteran's Valheim modpack: 78 mods tuned for challenging multiplayer with deeper combat, loot, creatures, magic, and QoL."
+description = "A veteran's Valheim modpack: tuned for challenging multiplayer with deeper combat, loot, creatures, magic, and QoL."
 versionNumber = "1.0.0"
 websiteUrl = "https://github.com/ibfleming/fimbulwinter"
 
@@ -95,4 +95,3 @@ valheim = ["modpacks"]
 [[build.copy]]
 source = "config"
 target = "config"
-

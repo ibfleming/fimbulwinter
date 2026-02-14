@@ -113,7 +113,7 @@ All other mods should be installed on both client and server.
 
 ## Version History
 
-See [CHANGELOG.md](CHANGELOG.md) for full version history.
+See [CHANGELOG.md](https://github.com/ibfleming/fimbulwinter/blob/main/CHANGELOG.md) for full version history.
 
 ## Links
 
