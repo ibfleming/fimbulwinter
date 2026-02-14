@@ -1,10 +1,8 @@
 # Fimbulwinter - A Veteran's Valheim Modpack
 
-**78 mods. Tuned for veteran multiplayer. No shortcuts, no cheese -- just deeper Valheim.**
+**Tuned for veteran multiplayer. No shortcuts, no cheese -- just deeper Valheim.**
 
 Fimbulwinter is a curated Valheim modpack designed for experienced players returning to Valheim in a multiplayer group. Every mod has been hand-picked, configured, and balance-tested to enhance combat, exploration, visuals, and quality of life -- without betraying the core spirit of Valheim.
-
----
 
 ## Design Principles
 
@@ -13,8 +11,6 @@ Fimbulwinter is a curated Valheim modpack designed for experienced players retur
 - **Depth Over Breadth** -- Each mod adds genuine depth, not just volume. Quality over quantity.
 - **Multiplayer-First** -- Every mod works on dedicated servers. Role specialization and group play are enhanced.
 - **Actively Maintained** -- All mods are confirmed working with the current Valheim version.
-
----
 
 ## What's Included
 
@@ -70,11 +66,9 @@ Fimbulwinter is a curated Valheim modpack designed for experienced players retur
 ### Admin Tools (3 mods)
 - **ConfigurationManager + Server Devcommands + Gungnir** -- Full server admin toolkit
 
----
-
 ## Key Configuration Highlights
 
-All 78 mods have been individually configured for balanced veteran multiplayer:
+All mods have been individually configured for balanced veteran multiplayer:
 
 - **Difficulty:** Hard mode, 5-star creatures, HP +50%/player scaling, elemental infusions
 - **Loot:** Balanced preset, 80% unidentified drops, boss trophies per nearby player
@@ -85,8 +79,6 @@ All 78 mods have been individually configured for balanced veteran multiplayer:
 - **Sailing:** Skill-based speed/health/exploration bonuses, raft gets 2x boost
 - **Raids:** ~Every 2 hours of play (36min interval, 30% chance)
 
----
-
 ## Installation
 
 ### With r2modman / Thunderstore Mod Manager
@@ -96,8 +88,6 @@ All 78 mods have been individually configured for balanced veteran multiplayer:
 3. Click **Install with dependencies**
 4. Click **Start modded** to launch
 
-All 71 Thunderstore-managed mods and their tuned configs will be installed automatically.
-
 ### Manual HD Visuals (Optional)
 
 4 standalone HD visual mods are NOT on Thunderstore and must be installed separately for the full visual experience:
@@ -106,10 +96,6 @@ All 71 Thunderstore-managed mods and their tuned configs will be installed autom
 - **ValheimHDTerrain** -- HD terrain textures + normal maps
 - **BadgersShadingOverhaul** -- Improved lighting/shading
 - **BadgersValheimSkies** -- 4K/8K skybox replacements
-
-Contact the modpack maintainer for the visual pack download link.
-
----
 
 ## Server Setup
 
@@ -123,19 +109,11 @@ This modpack is designed for dedicated server multiplayer. The server needs all 
 
 All other mods should be installed on both client and server.
 
----
-
 ## Version History
 
 See [CHANGELOG.md](CHANGELOG.md) for full version history.
-
----
 
 ## Links
 
 - **Source:** [GitHub](https://github.com/ibfleming/fimbulwinter)
 - **Thunderstore:** Coming soon
-
----
-
-*Curated and maintained for veteran Valheim multiplayer.*
