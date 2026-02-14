@@ -90,9 +90,7 @@ communities = ["valheim"]
 [publish.categories]
 valheim = ["modpacks"]
 
-# Build configuration
-# tcli auto-generates manifest.json from [package] fields above.
-# These mappings tell tcli which files to include in the package zip.
+[build]
 
 [[build.copy]]
 source = "icon.png"
