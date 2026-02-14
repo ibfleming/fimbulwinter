@@ -106,6 +106,8 @@ This modpack is designed for dedicated server multiplayer. The server needs all 
 
 All other mods should be installed on both client and server.
 
+> **Note:** A separate server-specific package is planned for easier dedicated server installation in the future.
+
 ## Version History
 
 See [CHANGELOG.md](https://github.com/ibfleming/fimbulwinter/blob/main/CHANGELOG.md) for full version history.
