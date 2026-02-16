@@ -286,6 +286,15 @@ scripts:
           cp -r "${STAGING_DIR}/modpack/config/"* "${CONFIG_DIR}/"
       fi
 
+      # ── Fix Permissions ────────────────────────────────────────────
+      # Install container runs as root, but runtime container runs as non-root.
+      # Ensure all server files are world-readable so the runtime user can access them.
+      log "Fixing file permissions for runtime container..."
+      find "${SERVER_DIR}" -type d -exec chmod 755 {} +
+      find "${SERVER_DIR}" -type f -exec chmod 644 {} +
+      chmod +x "${SERVER_DIR}/valheim_server.x86_64"
+      chmod +x "${SERVER_DIR}/steamcmd/steamcmd.sh"
+
       # ── Cleanup ────────────────────────────────────────────────────
       log "Cleaning up..."
       rm -rf "${STAGING_DIR}"
