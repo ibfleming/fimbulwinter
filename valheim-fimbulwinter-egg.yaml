@@ -100,20 +100,41 @@ scripts:
           local mod_name="$2"
           local dest="${PLUGINS_DIR}/${mod_name}"
 
-          if [ -d "${contents_dir}/plugins" ]; then
+          # Find standard BepInEx directories case-insensitively — some mods
+          # use "Plugins/" instead of "plugins/" which fails on Linux.
+          local plugins_dir patchers_dir config_dir
+          plugins_dir=$(find "${contents_dir}" -maxdepth 1 -type d -iname "plugins" -print -quit)
+          patchers_dir=$(find "${contents_dir}" -maxdepth 1 -type d -iname "patchers" -print -quit)
+          config_dir=$(find "${contents_dir}" -maxdepth 1 -type d -iname "config" -print -quit)
+
+          if [ -n "$plugins_dir" ]; then
               mkdir -p "$dest"
-              cp -r "${contents_dir}/plugins/"* "$dest/"
+              cp -r "${plugins_dir}/"* "$dest/"
           fi
 
-          if [ -d "${contents_dir}/patchers" ]; then
+          if [ -n "$patchers_dir" ]; then
               mkdir -p "${BEPINEX_DIR}/patchers"
-              cp -r "${contents_dir}/patchers/"* "${BEPINEX_DIR}/patchers/"
+              cp -r "${patchers_dir}/"* "${BEPINEX_DIR}/patchers/"
           fi
 
-          if [ -d "${contents_dir}/config" ]; then
+          if [ -n "$config_dir" ]; then
               mkdir -p "${CONFIG_DIR}"
-              cp -r "${contents_dir}/config/"* "${CONFIG_DIR}/"
+              cp -r "${config_dir}/"* "${CONFIG_DIR}/"
           fi
+
+          # Copy non-standard subdirectories as plugin content — handles mods
+          # like OdinShip that package files in their own named directory
+          # (e.g. OdinShip/OdinShip.dll) instead of using plugins/.
+          while IFS= read -r subdir; do
+              [ -z "$subdir" ] && continue
+              local dirname
+              dirname=$(basename "$subdir")
+              if echo "$dirname" | grep -qiE "^(plugins|patchers|config)$"; then
+                  continue
+              fi
+              mkdir -p "$dest"
+              cp -r "$subdir" "$dest/"
+          done < <(find "${contents_dir}" -maxdepth 1 -type d ! -path "${contents_dir}" -print)
 
           local root_files
           root_files=$(find "${contents_dir}" -maxdepth 1 -type f \
