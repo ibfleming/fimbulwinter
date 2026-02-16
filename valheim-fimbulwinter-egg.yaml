@@ -1,5 +1,6 @@
 meta:
   version: PLCN_v3
+  update_url: "https://raw.githubusercontent.com/ibfleming/fimbulwinter/refs/heads/main/valheim-fimbulwinter-egg.yaml"
 exported_at: "2026-02-15T00:00:00+00:00"
 name: "Fimbulwinter — Valheim BepInEx"
 author: ibfleming@github.com
@@ -327,7 +328,7 @@ variables:
     name: "Server Name"
     description: "Name that appears in the server browser."
     env_variable: SERVER_NAME
-    default_value: "Fimbulwinter"
+    default_value: "My Valheim Fimbulwinter Server"
     user_viewable: true
     user_editable: true
     rules:
