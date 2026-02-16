@@ -4,7 +4,7 @@
 
 **Tuned for veteran multiplayer. No shortcuts, no cheese -- just deeper Valheim.**
 
-Fimbulwinter is a curated Valheim modpack designed for experienced players returning to Valheim in a multiplayer group. Every mod has been hand-picked, configured, and balance-tested to enhance combat, exploration, visuals, and quality of life -- without betraying the core spirit of Valheim.
+Fimbulwinter is a curated modpack of **104 mods** designed for experienced players returning to Valheim in a multiplayer group. Every mod has been hand-picked, configured, and balance-tested to enhance combat, exploration, visuals, and quality of life -- without betraying the core spirit of Valheim.
 
 ## Design Principles
 
@@ -27,58 +27,69 @@ Fimbulwinter is a curated Valheim modpack designed for experienced players retur
 - **Armory** -- New armor sets with set bonuses
 - **Wizardry** -- Full magic system with staves, spells, and elemental damage
 
-### Content: Creatures & World (19 mods)
-- **Monstrum + Deep North + Ashlands** -- 100+ new creatures across every biome
-- **RtD Suite** (Ocean, Dungeons, Horrors, Monsters, Monstrum) -- Massive world expansion
+### Content: Creatures & World (15 mods)
+- **Monstrum + Deep North** -- 100+ new creatures across every biome
+- **RtD Suite** (Ocean, Dungeons, Horrors, Monsters, Monstrum) -- Massive world expansion with sea creatures, procedural dungeons, night horrors, and fantasy monsters
 - **Fee Fi Fo Fum** -- Giants roaming across biomes
 - **EpicValheimsAdditions** -- Mistlands, DeepNorth, and Ashlands content expansion
 - **Bestiary** -- 30+ new creatures (Crocodiles, Scorpions, Panthers, etc.)
 - **MushroomMonsters** -- Mushroom-themed creatures across biomes
 - **BeeQueen** -- BeeQueen boss with bee weapons and armor
-- **Custom Raids** -- Configurable raid events
-- **Forbidden Catacombs** -- Handcrafted swamp dungeon
+- **Custom Raids** -- Configurable raid events with custom creature spawns
+- **Forbidden Catacombs** -- Handcrafted swamp dungeon with bosses
 - **More World Locations AIO** -- 153 new points of interest
 
-### Content: Ships, Mounts & Cooking (5 mods)
+### Content: Ships, Mounts, Equipment & Cooking (6 mods)
 - **OdinShip** -- 14 new ships and boats
 - **SeaAnimals** -- Ocean creatures and rideable marine beasts
 - **OdinHorse** -- Tameable horses with saddles and armor
 - **DragoonCapes** -- 20+ capes with unique combat effects
+- **CircletExtended** -- Dverger circlet upgrades with light, demister, and overload
 - **CookingAdditions** -- 23 new foods and cooking stations
 
-### Combat & Progression (11 mods)
-- **Headshots + BetterArchery + ReliableBlock** -- Deeper, more rewarding combat
-- **Agility + Endurance + Tenacity + SmartSkills** -- 7 new progression skills
+### Combat & Progression (18 mods)
+- **Headshots + BetterArchery + ReliableBlock** -- Deeper, more rewarding ranged and melee combat
+- **DualWield** -- Dual-wield weapons with offhand skill progression
+- **ShieldBash** -- Shield bash attack for melee combat depth
+- **ProjectileTweaks** -- Improved arrow and projectile physics
+- **Agility + Endurance + Tenacity + SmartSkills** -- Movement, stamina, stagger, and skill recovery progression
+- **Evasion** -- Dodge/evasion skill that rewards combat timing
+- **Lumberjacking + Building + Blacksmithing** -- Woodcutting, construction, and crafting skills
 - **Mining + Farming + Foraging** -- Resource gathering scales with skill
 - **SkilledCarryWeight** -- Carry weight scales with skill levels
 
-### Visual & Atmosphere (8 mods)
+### Visual & Atmosphere (9 mods)
 - **Seasonality + HD Seasonality** -- Dynamic 4-season system with HD textures
 - **GammaOfNightLights** -- Darker, moodier nights
 - **HUDCompass** -- Map-pin compass with dynamic markers
 - **BetterUI** -- Enemy HP bars, XP tracking, skill display
+- **CameraTweaks** -- FOV and zoom distance adjustments
+- **BreatheEasy** -- Removes annoying smoke and dust screen effects
 - **Birds + Scenic** -- Ambient wildlife and visual scene tools
 
-### Quality of Life (25 mods)
+### Quality of Life (27 mods)
 - **Extended Inventory + CraftyBoxes + AutoStore + ContainerSizes** -- Inventory overhaul
-- **Quick Stack + Recycle + AAA Crafting** -- Streamlined crafting
-- **LazyVikings + Eternal Fire + PetPantry** -- Automation
-- **PlantEverything + PlantEasily** -- Advanced farming
-- **SpeedyPaths + TeleportEverything** -- Movement QoL (ore teleport with 10% tax)
+- **Quick Stack + Recycle + AAA Crafting + HoverStats** -- Streamlined crafting with item details
+- **AdventureBackpacks** -- Tiered backpacks with biome-specific perks
+- **LazyVikings + Eternal Fire + PetPantry** -- Automation for smelters, fires, and animal feeding
+- **PlantEverything + PlantEasily** -- Advanced farming with grid planting and bulk harvest
+- **SpeedyPaths + TeleportEverything** -- Movement QoL (ore teleport with 20% transport tax)
 - **MissingPieces + NoRainDamage + Structure Tweaks + MyPitsDontLeak** -- Building improvements
+- **AdvancedTerrainModifiers** -- Improved hoe and cultivator tools
 - **TrueInstantLootDrop** -- Loot drops instantly at creature death location
 - **TradersExtended** -- Expanded trader UI with sell lists and economy
 - **WieldEquipmentWhileSwimming** -- Use equipment while swimming
-- **ShutUp** -- Suppresses repetitive in-game messages
+- **SaveCrossbowState + StumpsAreOneHp + ShutUp** -- Small polish fixes
 
 ### Sailing (2 mods)
 - **Sailing Skill + SailingSpeed** -- Ship speed, health, and exploration scale with skill
 
-### Multiplayer & Server (4 mods)
+### Multiplayer & Server (5 mods)
 - **Groups** -- Party system with group chat, shared pings, friendly fire toggle
 - **ServerCharacters** -- Server-side character saves with encryption
 - **Resurrection** -- Resurrect dead players with configurable cost
 - **MultiUserChest** -- Multiple players access chests simultaneously
+- **BetterCartographyTable** -- Better map sharing with public/guild pin modes
 
 ### Network & Performance (4 mods)
 - **LeanNet + NetworkTweaks** -- Network optimization for smoother multiplayer
@@ -88,13 +99,15 @@ Fimbulwinter is a curated Valheim modpack designed for experienced players retur
 ### Admin Tools (3 mods)
 - **ConfigurationManager + Server Devcommands + Gungnir** -- Full server admin toolkit
 
+*Plus 5 framework libraries (BepInEx, Jotunn, etc.) and 3 spawn/drop infrastructure mods that run invisibly in the background.*
+
 ## Key Configuration Highlights
 
 All mods have been individually configured for balanced veteran multiplayer:
 
 - **Difficulty:** Hard mode, 5-star creatures, HP +50%/player scaling, elemental infusions
 - **Loot:** Balanced preset, 80% unidentified drops, boss trophies per nearby player
-- **Ore Teleporting:** Enabled with 10% transport tax (vanilla spirit preserved)
+- **Ore Teleporting:** Enabled with 20% transport tax (vanilla spirit preserved)
 - **Seasons:** 5-day cycles with gameplay modifiers (Winter is harsh, Fall boosts damage)
 - **Night Danger:** Darker nights (0.65 luminance) + horror spawns
 - **Death Penalty:** No skill loss on death for mod skills; 75% vanilla skill recovery via SmartSkills
@@ -115,14 +128,10 @@ All mods have been individually configured for balanced veteran multiplayer:
 This modpack is designed for dedicated server multiplayer. The server needs all gameplay mods but NOT the client-only visual/UI mods.
 
 **Client-only mods** (server does not need):
-- HD Seasonality textures
-- HUDCompass, CameraTweaks, BetterUI
-- BreatheEasy, GammaOfNightLights, Scenic
-- Birds (ambient wildlife)
+- HD Seasonality textures, HUDCompass, CameraTweaks, BetterUI
+- GammaOfNightLights, Scenic, Birds
 
 All other mods should be installed on both client and server.
-
-> **Note:** A separate server-specific package is planned for easier dedicated server installation in the future.
 
 ## Version History
 

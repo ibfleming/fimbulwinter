@@ -5,6 +5,24 @@ All notable changes to Fimbulwinter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-02-15
+
+### Added
+- Smoothbrain-DualWield 1.0.10 -- Dual-wield weapons for deeper combat
+- Smoothbrain-Evasion 1.0.4 -- Evasion skill that rewards dodge timing
+- Smoothbrain-Lumberjacking 1.0.6 -- Woodcutting skill with yield scaling
+- Smoothbrain-Building 1.2.6 -- Building skill that improves structure HP
+- Smoothbrain-Blacksmithing 1.3.3 -- Crafting skill that improves upgrade quality
+- Searica-ProjectileTweaks 1.6.0 -- Improved arrow and projectile physics
+- shudnal-CircletExtended 1.1.9 -- Dverger circlet upgrades and progression
+- Mexanik-ShieldBash 1.5.1 -- Shield bash attack for melee combat depth
+- nbusseneau-Better_Cartography_Table 0.8.1 -- Better map sharing for multiplayer
+
+### Changed
+- DualWield and Evasion skill death penalty set to 0% (SmartSkills handles vanilla recovery)
+- CircletExtended toggle light keybind changed from G to K (G/H used by EpicLoot Ability Hotkeys 1/2)
+- Total mod count: 101 → 110
+
 ## [1.2.0] - 2026-02-14
 
 ### Added

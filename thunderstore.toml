@@ -8,7 +8,7 @@ repository = "https://thunderstore.io"
 namespace = "ibfleming"
 name = "Fimbulwinter"
 description = "A veteran's Valheim modpack: tuned for challenging multiplayer with deeper combat, loot, creatures, magic, and QoL."
-versionNumber = "1.2.0"
+versionNumber = "1.3.0"
 websiteUrl = "https://github.com/ibfleming/fimbulwinter"
 
 [package.dependencies]
@@ -107,6 +107,15 @@ Smoothbrain-ServerCharacters = "1.4.16"
 Smoothbrain-Foraging = "1.0.10"
 Smoothbrain-Farming = "2.2.2"
 Radamanto-Bestiary = "1.1.4"
+Smoothbrain-DualWield = "1.0.10"
+Smoothbrain-Evasion = "1.0.4"
+Smoothbrain-Lumberjacking = "1.0.6"
+Smoothbrain-Building = "1.2.6"
+Smoothbrain-Blacksmithing = "1.3.3"
+Searica-ProjectileTweaks = "1.6.0"
+shudnal-CircletExtended = "1.1.9"
+Mexanik-ShieldBash = "1.5.1"
+nbusseneau-Better_Cartography_Table = "0.8.1"
 
 [publish]
 communities = ["valheim"]
