@@ -4,7 +4,7 @@
 
 **Tuned for veteran multiplayer. No shortcuts, no cheese -- just deeper Valheim.**
 
-Fimbulwinter is a curated modpack of **104 mods** designed for experienced players returning to Valheim in a multiplayer group. Every mod has been hand-picked, configured, and balance-tested to enhance combat, exploration, visuals, and quality of life -- without betraying the core spirit of Valheim.
+Fimbulwinter is a curated modpack of **many mods** designed for experienced players returning to Valheim in a multiplayer group. Every mod has been hand-picked, configured, and balance-tested to enhance combat, exploration, visuals, and quality of life -- without betraying the core spirit of Valheim.
 
 ## Design Principles
 
@@ -132,6 +132,8 @@ This modpack is designed for dedicated server multiplayer. The server needs all 
 - GammaOfNightLights, Scenic, Birds
 
 All other mods should be installed on both client and server.
+
+> Note: In the future, I will be curating an easy server installation.
 
 ## Version History
 
