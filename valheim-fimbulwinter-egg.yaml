@@ -157,12 +157,18 @@ scripts:
       chown -R root:root /mnt
       export HOME="${SERVER_DIR}"
 
+      # Let SteamCMD self-update before the real install — a freshly extracted
+      # SteamCMD will update and restart, losing command-line arguments.
+      log "Updating SteamCMD..."
+      "${SERVER_DIR}/steamcmd/steamcmd.sh" +quit || true
+
       # ── Valheim Dedicated Server ───────────────────────────────────
       SRCDS_APPID="${SRCDS_APPID:-896660}"
       log "Installing Valheim dedicated server (AppID: ${SRCDS_APPID})..."
       "${SERVER_DIR}/steamcmd/steamcmd.sh" \
           +force_install_dir "${SERVER_DIR}" \
           +login "${STEAM_USER}" "${STEAM_PASS:-}" "${STEAM_AUTH:-}" \
+          +app_info_update 1 \
           +app_update "${SRCDS_APPID}" ${EXTRA_FLAGS:-} \
           +quit
 
