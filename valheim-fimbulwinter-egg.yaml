@@ -49,7 +49,9 @@ scripts:
       BEPINEX_DIR="${SERVER_DIR}/BepInEx"
       PLUGINS_DIR="${BEPINEX_DIR}/plugins"
       CONFIG_DIR="${BEPINEX_DIR}/config"
-      STAGING_DIR="/tmp/fimbulwinter_staging"
+      # Use the server volume for staging, NOT /tmp — Wings mounts /tmp as a
+      # small tmpfs (default 100MB) which can't hold large mods like Therzie (200MB+)
+      STAGING_DIR="${SERVER_DIR}/.fimbulwinter_staging"
 
       MODPACK_NAMESPACE="ibfleming"
       MODPACK_NAME="Fimbulwinter"
@@ -240,8 +242,27 @@ scripts:
           dep_staging="${STAGING_DIR}/deps/${DEP_FULLNAME}"
           mkdir -p "${dep_staging}"
 
-          if ! wget -q -O "${dep_staging}/mod.zip" "$download_url"; then
-              warn "  Failed to download ${DEP_FULLNAME} v${DEP_VERSION} — skipping"
+          # Download with retries — browser UA avoids CDN bot detection on datacenter IPs
+          downloaded=false
+          for attempt in 1 2 3; do
+              http_code=$(curl -sL -o "${dep_staging}/mod.zip" -w "%{http_code}" \
+                  --connect-timeout 10 --max-time 300 \
+                  -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/131.0.0.0" \
+                  "$download_url")
+
+              if [ "$http_code" = "200" ] && [ -s "${dep_staging}/mod.zip" ]; then
+                  downloaded=true
+                  break
+              fi
+
+              if [ "$attempt" -lt 3 ]; then
+                  warn "  HTTP ${http_code} on attempt ${attempt} for ${DEP_FULLNAME} — retrying in 3s..."
+                  sleep 3
+              fi
+          done
+
+          if [ "$downloaded" = false ]; then
+              warn "  Failed to download ${DEP_FULLNAME} v${DEP_VERSION} after 3 attempts (HTTP ${http_code}) — skipping"
               fail_count=$((fail_count + 1))
               continue
           fi
