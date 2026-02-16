@@ -73,7 +73,7 @@ Fimbulwinter is a curated modpack of **104 mods** designed for experienced playe
 - **AdventureBackpacks** -- Tiered backpacks with biome-specific perks
 - **LazyVikings + Eternal Fire + PetPantry** -- Automation for smelters, fires, and animal feeding
 - **PlantEverything + PlantEasily** -- Advanced farming with grid planting and bulk harvest
-- **SpeedyPaths + TeleportEverything** -- Movement QoL (ore teleport with 20% transport tax)
+- **SpeedyPaths + TeleportEverything** -- Movement QoL (ore teleport with 10% transport tax)
 - **MissingPieces + NoRainDamage + Structure Tweaks + MyPitsDontLeak** -- Building improvements
 - **AdvancedTerrainModifiers** -- Improved hoe and cultivator tools
 - **TrueInstantLootDrop** -- Loot drops instantly at creature death location
@@ -107,7 +107,7 @@ All mods have been individually configured for balanced veteran multiplayer:
 
 - **Difficulty:** Hard mode, 5-star creatures, HP +50%/player scaling, elemental infusions
 - **Loot:** Balanced preset, 80% unidentified drops, boss trophies per nearby player
-- **Ore Teleporting:** Enabled with 20% transport tax (vanilla spirit preserved)
+- **Ore Teleporting:** Enabled with 10% transport tax (vanilla spirit preserved)
 - **Seasons:** 5-day cycles with gameplay modifiers (Winter is harsh, Fall boosts damage)
 - **Night Danger:** Darker nights (0.65 luminance) + horror spawns
 - **Death Penalty:** No skill loss on death for mod skills; 75% vanilla skill recovery via SmartSkills
