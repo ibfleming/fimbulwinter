@@ -135,6 +135,9 @@ scripts:
               cp -r "$subdir" "$dest/"
           done < <(find "${contents_dir}" -maxdepth 1 -type d ! -path "${contents_dir}" -print)
 
+          # Always copy root-level mod files (DLLs, asset bundles, etc.)
+          # into an isolated plugin subdirectory. Many mods place their DLL
+          # at the ZIP root alongside a config/ directory (flat packaging).
           local root_files
           root_files=$(find "${contents_dir}" -maxdepth 1 -type f \
               ! -name "icon.png" \
@@ -147,9 +150,19 @@ scripts:
 
           if [ -n "$root_files" ]; then
               mkdir -p "$dest"
-              echo "$root_files" | while IFS= read -r f; do
+              while IFS= read -r f; do
+                  [ -z "$f" ] && continue
                   cp "$f" "$dest/"
-              done
+                  log "  → root file: $(basename "$f") → ${dest}/"
+              done <<< "$root_files"
+          fi
+
+          # Verify at least one DLL was installed — catch silent failures
+          # from flat-packaged mods where the DLL sits at the zip root
+          local dll_count
+          dll_count=$(find "$dest" -maxdepth 2 -name "*.dll" 2>/dev/null | wc -l)
+          if [ "$dll_count" -eq 0 ] && [ -z "$plugins_dir" ] && [ -z "$patchers_dir" ]; then
+              warn "  No DLLs installed for ${mod_name} — possible flat-packaging issue"
           fi
       }
 
