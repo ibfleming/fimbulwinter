@@ -94,75 +94,47 @@ scripts:
           DEP_NAME="${DEP_FULLNAME#*-}"
       }
 
+      # Install an extracted mod into BepInEx directories.
+      # config/ → BepInEx/config/, patchers/ → BepInEx/patchers/,
+      # everything else → plugins/<ModName>/ (preserving asset-relative paths).
       install_mod_files() {
           local contents_dir="$1"
           local mod_name="$2"
           local dest="${PLUGINS_DIR}/${mod_name}"
 
-          # Find standard BepInEx directories case-insensitively — some mods
-          # use "Plugins/" instead of "plugins/" which fails on Linux.
-          local plugins_dir patchers_dir config_dir
-          plugins_dir=$(find "${contents_dir}" -maxdepth 1 -type d -iname "plugins" -print -quit)
-          patchers_dir=$(find "${contents_dir}" -maxdepth 1 -type d -iname "patchers" -print -quit)
-          config_dir=$(find "${contents_dir}" -maxdepth 1 -type d -iname "config" -print -quit)
-
-          if [ -n "$plugins_dir" ]; then
-              mkdir -p "$dest"
-              cp -r "${plugins_dir}/"* "$dest/"
+          # Collect non-metadata entries; unwrap if sole top-level directory
+          local entries=()
+          for item in "${contents_dir}"/*; do
+              [ -e "$item" ] || continue
+              case "$(basename "$item")" in
+                  icon.png|manifest.json|README.md|CHANGELOG.md|LICENSE|LICENSE.md) continue ;;
+              esac
+              entries+=("$item")
+          done
+          if [ "${#entries[@]}" -eq 1 ] && [ -d "${entries[0]}" ]; then
+              log "  → unwrapped: $(basename "${entries[0]}")"
+              entries=("${entries[0]}"/*)
           fi
 
-          if [ -n "$patchers_dir" ]; then
-              mkdir -p "${BEPINEX_DIR}/patchers"
-              cp -r "${patchers_dir}/"* "${BEPINEX_DIR}/patchers/"
-          fi
+          # Route each entry to its BepInEx destination
+          mkdir -p "$dest"
+          local has_patchers=false
+          for item in "${entries[@]}"; do
+              [ -e "$item" ] || continue
+              local name
+              name=$(basename "$item")
+              case "${name,,}" in
+                  config)   mkdir -p "${CONFIG_DIR}" && cp -r "$item/"* "${CONFIG_DIR}/" ;;
+                  patchers) mkdir -p "${BEPINEX_DIR}/patchers" && cp -r "$item/"* "${BEPINEX_DIR}/patchers/" && has_patchers=true ;;
+                  *)        cp -r "$item" "$dest/" ;;
+              esac
+          done
 
-          if [ -n "$config_dir" ]; then
-              mkdir -p "${CONFIG_DIR}"
-              cp -r "${config_dir}/"* "${CONFIG_DIR}/"
-          fi
-
-          # Copy non-standard subdirectories as plugin content — handles mods
-          # like OdinShip that package files in their own named directory
-          # (e.g. OdinShip/OdinShip.dll) instead of using plugins/.
-          while IFS= read -r subdir; do
-              [ -z "$subdir" ] && continue
-              local dirname
-              dirname=$(basename "$subdir")
-              if echo "$dirname" | grep -qiE "^(plugins|patchers|config)$"; then
-                  continue
-              fi
-              mkdir -p "$dest"
-              cp -r "$subdir" "$dest/"
-          done < <(find "${contents_dir}" -maxdepth 1 -type d ! -path "${contents_dir}" -print)
-
-          # Always copy root-level mod files (DLLs, asset bundles, etc.)
-          # into an isolated plugin subdirectory. Many mods place their DLL
-          # at the ZIP root alongside a config/ directory (flat packaging).
-          local root_files
-          root_files=$(find "${contents_dir}" -maxdepth 1 -type f \
-              ! -name "icon.png" \
-              ! -name "manifest.json" \
-              ! -name "README.md" \
-              ! -name "CHANGELOG.md" \
-              ! -name "LICENSE" \
-              ! -name "LICENSE.md" \
-              -print)
-
-          if [ -n "$root_files" ]; then
-              mkdir -p "$dest"
-              while IFS= read -r f; do
-                  [ -z "$f" ] && continue
-                  cp "$f" "$dest/"
-                  log "  → root file: $(basename "$f") → ${dest}/"
-              done <<< "$root_files"
-          fi
-
-          # Verify at least one DLL was installed — catch silent failures
-          # from flat-packaged mods where the DLL sits at the zip root
+          # Verify DLLs — catch packaging issues that cause server incompatibility
           local dll_count
-          dll_count=$(find "$dest" -maxdepth 2 -name "*.dll" 2>/dev/null | wc -l)
-          if [ "$dll_count" -eq 0 ] && [ -z "$plugins_dir" ] && [ -z "$patchers_dir" ]; then
-              warn "  No DLLs installed for ${mod_name} — possible flat-packaging issue"
+          dll_count=$(find "$dest" -name "*.dll" 2>/dev/null | wc -l)
+          if [ "$dll_count" -eq 0 ] && [ "$has_patchers" = false ]; then
+              warn "  No DLLs installed for ${mod_name} — check zip packaging"
           fi
       }
 
