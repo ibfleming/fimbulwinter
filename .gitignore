@@ -1,6 +1,7 @@
 # Project docs (tracked in parent repo, not the modpack package)
 PROJECT.md
 TASKS.md
+CLAUDE.md
 
 # Player-specific data
 *.dat

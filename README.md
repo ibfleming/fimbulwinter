@@ -27,14 +27,13 @@ Fimbulwinter is a curated modpack of **many mods** designed for experienced play
 - **Armory** -- New armor sets with set bonuses
 - **Wizardry** -- Full magic system with staves, spells, and elemental damage
 
-### Content: Creatures & World (15 mods)
+### Content: Creatures & World (14 mods)
 - **Monstrum + Deep North** -- 100+ new creatures across every biome
 - **RtD Suite** (Ocean, Dungeons, Horrors, Monsters, Monstrum) -- Massive world expansion with sea creatures, procedural dungeons, night horrors, and fantasy monsters
 - **Fee Fi Fo Fum** -- Giants roaming across biomes
 - **EpicValheimsAdditions** -- Mistlands, DeepNorth, and Ashlands content expansion
 - **Bestiary** -- 30+ new creatures (Crocodiles, Scorpions, Panthers, etc.)
 - **MushroomMonsters** -- Mushroom-themed creatures across biomes
-- **BeeQueen** -- BeeQueen boss with bee weapons and armor
 - **Custom Raids** -- Configurable raid events with custom creature spawns
 - **Forbidden Catacombs** -- Handcrafted swamp dungeon with bosses
 - **More World Locations AIO** -- 153 new points of interest
@@ -84,8 +83,7 @@ Fimbulwinter is a curated modpack of **many mods** designed for experienced play
 ### Sailing (2 mods)
 - **Sailing Skill + SailingSpeed** -- Ship speed, health, and exploration scale with skill
 
-### Multiplayer & Server (5 mods)
-- **Groups** -- Party system with group chat, shared pings, friendly fire toggle
+### Multiplayer & Server (4 mods)
 - **ServerCharacters** -- Server-side character saves with encryption
 - **Resurrection** -- Resurrect dead players with configurable cost
 - **MultiUserChest** -- Multiple players access chests simultaneously

@@ -5,6 +5,30 @@ All notable changes to Fimbulwinter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-02-18
+
+### Removed
+- OdinPlus-BeeQueen 1.1.0 -- Bugged items and broken boss AI; removed for quality
+- Smoothbrain-Groups 1.2.10 -- Groups are not persistent across sessions (disbands on logout); not suitable for ongoing multiplayer groups
+
+### Changed
+- EpicLoot: Disabled hot reloading patches (removes unnecessary filesystem watcher overhead in production)
+- Drop_That: Set DropLimit to 200 (safety net against CLLC multiplier edge cases producing excessive item drops)
+- LeanNet: Increased NetRatePhysics from 8 to 12 (reduces door and collectible interaction latency)
+- AzuAutoStore: Increased IntervalSeconds from 10 to 15 (reduces background container scanning for less pickup contention)
+- HUDCompass: Disabled dynamic pins on map (fixes minimap duplicate player markers caused by parallel pin tracking conflicting with Better_Cartography_Table)
+- CLLC: Reduced Splitting effect chance from 5% to 2% (prevents entity explosion cascades with 9 creature mods stacking spawn density)
+- CLLC CreatureConfig.yml: Reduced Deep North WL4-5 star chances (WL4: 80%→74% starred, WL5: 100%→89% starred; ensures some base creatures remain for breathing room)
+- Spawn_That: WriteSpawnTablesToFileAfterChanges disabled (diagnostic completed)
+- AzuCraftyBoxes: Reduced Container Range from 30 to 20 (reduces container scanning overhead at crafting stations)
+- LeanNet: Increased Vec3CullSize from 0.05 to 0.1 (reduces ZDO network traffic by culling tiny position updates)
+- BepInEx: Disabled WriteUnityLog to disk (eliminates Unity font/rendering warning spam from log files)
+- BepInEx: Removed Warning from console LogLevels (cleans up server console output)
+- ServerCharacters: Reduced backup count from 25 to 10 (reduces disk I/O during auto-saves)
+- ServerCharacters: Enabled AFK Kick Timer at 15 minutes (frees server resources from idle players)
+- AzuAutoStore: Updated from 3.0.11 to 3.0.13
+- Total mod count: 110 → 108
+
 ## [1.3.1] - 2026-02-16
 
 ### Fixed
