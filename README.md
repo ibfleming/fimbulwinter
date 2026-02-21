@@ -57,16 +57,16 @@ Fimbulwinter is a curated modpack of **many mods** designed for experienced play
 - **Mining + Farming + Foraging** -- Resource gathering scales with skill
 - **SkilledCarryWeight** -- Carry weight scales with skill levels
 
-### Visual & Atmosphere (9 mods)
+### Visual & Atmosphere (8 mods)
 - **Seasonality + HD Seasonality** -- Dynamic 4-season system with HD textures
 - **GammaOfNightLights** -- Darker, moodier nights
 - **HUDCompass** -- Map-pin compass with dynamic markers
 - **BetterUI** -- Enemy HP bars, XP tracking, skill display
 - **CameraTweaks** -- FOV and zoom distance adjustments
 - **BreatheEasy** -- Removes annoying smoke and dust screen effects
-- **Birds + Scenic** -- Ambient wildlife and visual scene tools
+- **Scenic** -- Client-side visual scene tools
 
-### Quality of Life (27 mods)
+### Quality of Life (29 mods)
 - **Extended Inventory + CraftyBoxes + AutoStore + ContainerSizes** -- Inventory overhaul
 - **Quick Stack + Recycle + AAA Crafting + HoverStats** -- Streamlined crafting with item details
 - **AdventureBackpacks** -- Tiered backpacks with biome-specific perks
@@ -78,24 +78,28 @@ Fimbulwinter is a curated modpack of **many mods** designed for experienced play
 - **TrueInstantLootDrop** -- Loot drops instantly at creature death location
 - **TradersExtended** -- Expanded trader UI with sell lists and economy
 - **WieldEquipmentWhileSwimming** -- Use equipment while swimming
+- **AzuWorkbenchTweaks** -- Auto-repair items at workbenches
+- **Venture Floating Items** -- Items float on water instead of sinking
 - **SaveCrossbowState + StumpsAreOneHp + ShutUp** -- Small polish fixes
 
 ### Sailing (2 mods)
 - **Sailing Skill + SailingSpeed** -- Ship speed, health, and exploration scale with skill
 
-### Multiplayer & Server (4 mods)
+### Multiplayer & Server (5 mods)
 - **ServerCharacters** -- Server-side character saves with encryption
 - **Resurrection** -- Resurrect dead players with configurable cost
 - **MultiUserChest** -- Multiple players access chests simultaneously
 - **BetterCartographyTable** -- Better map sharing with public/guild pin modes
+- **Venture Logout Tweaks** -- Preserves status effects across logout (no combat-logging)
 
 ### Network & Performance (4 mods)
 - **LeanNet + NetworkTweaks** -- Network optimization for smoother multiplayer
 - **TimeoutLimit** -- Prevents disconnects during heavy loading
 - **LocalizationCache** -- Faster game startup
 
-### Admin Tools (3 mods)
+### Admin Tools (4 mods)
 - **ConfigurationManager + Server Devcommands + Gungnir** -- Full server admin toolkit
+- **Upgrade_World** -- Console commands for regenerating world zones (used for mod migration)
 
 *Plus 5 framework libraries (BepInEx, Jotunn, etc.) and 3 spawn/drop infrastructure mods that run invisibly in the background.*
 
@@ -106,7 +110,7 @@ All mods have been individually configured for balanced veteran multiplayer:
 - **Difficulty:** Hard mode, 5-star creatures, HP +50%/player scaling, elemental infusions
 - **Loot:** Balanced preset, 80% unidentified drops, boss trophies per nearby player
 - **Ore Teleporting:** Enabled with 10% transport tax (vanilla spirit preserved)
-- **Seasons:** 5-day cycles with gameplay modifiers (Winter is harsh, Fall boosts damage)
+- **Seasons:** 3-day cycles with gameplay modifiers (Winter is harsh, Fall boosts damage)
 - **Night Danger:** Darker nights (0.65 luminance) + horror spawns
 - **Death Penalty:** No skill loss on death for mod skills; 75% vanilla skill recovery via SmartSkills
 - **Sailing:** Skill-based speed/health/exploration bonuses, raft gets 2x boost
@@ -127,7 +131,7 @@ This modpack is designed for dedicated server multiplayer. The server needs all 
 
 **Client-only mods** (server does not need):
 - HD Seasonality textures, HUDCompass, CameraTweaks, BetterUI
-- GammaOfNightLights, Scenic, Birds
+- GammaOfNightLights, Scenic
 
 All other mods should be installed on both client and server.
 

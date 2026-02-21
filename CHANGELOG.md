@@ -5,6 +5,36 @@ All notable changes to Fimbulwinter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-02-20
+
+### Added
+- JereKuusela-Upgrade_World 1.76.0 -- Console commands for regenerating explored world zones (needed for RtDDungeons 1.0.0 migration)
+- VentureValheim-Venture_Logout_Tweaks 0.6.0 -- Preserves status effects across logout (anti-combat-logging for multiplayer integrity)
+- VentureValheim-Venture_Floating_Items 0.3.3 -- Items float on water instead of sinking (prevents losing drops near coastlines and ocean fights)
+- Azumatt-AzuWorkbenchTweaks 1.0.5 -- Auto-repair items at workbenches (reduces tedious manual repair clicks)
+
+### Changed
+- **CLLC Difficulty Rebalance:** HP per star reduced from 100% to 50% (1-star = 1.5x HP, not 2x); damage per star reduced from 50% to 30%
+- **CLLC Quick Effect:** Global chance reduced from 10% to 5%; Meadows Quick = 0% (blocked), Black Forest Quick = 2% (heavily gated)
+- **CLLC Star Chances:** Meadows WL0-WL2 reduced ~30% (WL0: 8%→5%); Black Forest WL0-WL1 reduced ~20% (WL0: 12%→9%)
+- **CLLC Dungeon Respawn:** Disabled (was 30 min) -- dungeons now stay cleared permanently (vanilla behavior)
+- **CLLC Camp Respawn:** Disabled (was 30 min) -- camps stay cleared permanently
+- **CLLC Item Respawn:** Disabled (was 150 min) -- dungeon loot stays collected permanently
+- **Seasonality:** All seasons shortened from 5 days to 3 days per season (6-hour full year cycle)
+- **OdinHorse:** Creature Faction changed from ForestMonsters to AnimalsVeg (horses no longer aggro with hostile mobs); Health reduced from 200 to 100
+- **HUDCompass:** Added "Death" to pin ignore list (fixes duplicate death marker on minimap)
+- **Quick Stack Store:** Simplified UI -- disabled Quick Stack, Restock, Trash Can, and Favorite Toggle buttons (Sort, Store All, Take All remain)
+- **AzuExtendedPlayerInventory:** Enabled Legacy Layout for vanilla-style UI
+- **CreatureConfig.yml:** Deathsquito movement speed reduced to 0.8x; tamed animal health boosted to 1.5x
+- ASharpPen-Drop_That updated from 3.1.3 to 3.1.4
+- Azumatt-AzuAutoStore updated from 3.0.13 to 3.0.14
+- Azumatt-AzuExtendedPlayerInventory updated from 2.3.4 to 2.3.7
+- Soloredis-RtDDungeons updated from 0.4.3 to 1.0.0 (major update -- requires world migration via Upgrade_World)
+- Total mod count: 108 → 111 (4 added, 1 removed)
+
+### Removed
+- coemt-Birds 0.2.0 -- Removed for being useless and annoying; AirAnimals remains for ambient atmosphere
+
 ## [1.4.0] - 2026-02-18
 
 ### Removed
