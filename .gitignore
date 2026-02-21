@@ -33,6 +33,7 @@ Thumbs.db
 *.swo
 .vscode/
 .idea/
+.claude/
 
 # Build output (tcli build/ dir, dist/, zips)
 build/
