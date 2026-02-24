@@ -5,6 +5,13 @@ All notable changes to Fimbulwinter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.1] - 2026-02-24
+
+### Changed
+- RandyKnapp-EpicLoot updated from 0.12.10 to 0.12.11
+- warpalicious-More_World_Locations_AIO updated from 4.1.1 to 4.2.0
+- Mexanik-ShieldBash updated from 1.5.1 to 1.5.2
+
 ## [1.5.0] - 2026-02-20
 
 ### Added
