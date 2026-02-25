@@ -66,8 +66,8 @@ Fimbulwinter is a curated modpack of **many mods** designed for experienced play
 - **BreatheEasy** -- Removes annoying smoke and dust screen effects
 - **Scenic** -- Client-side visual scene tools
 
-### Quality of Life (29 mods)
-- **Extended Inventory + CraftyBoxes + AutoStore + ContainerSizes** -- Inventory overhaul
+### Quality of Life (32 mods)
+- **Extended Inventory + CraftyBoxes + AutoStore + ContainerSizes + ItemDrawers** -- Inventory overhaul
 - **Quick Stack + Recycle + AAA Crafting + HoverStats** -- Streamlined crafting with item details
 - **AdventureBackpacks** -- Tiered backpacks with biome-specific perks
 - **LazyVikings + Eternal Fire + PetPantry** -- Automation for smelters, fires, and animal feeding
@@ -80,6 +80,8 @@ Fimbulwinter is a curated modpack of **many mods** designed for experienced play
 - **WieldEquipmentWhileSwimming** -- Use equipment while swimming
 - **AzuWorkbenchTweaks** -- Auto-repair items at workbenches
 - **Venture Floating Items** -- Items float on water instead of sinking
+- **QuickConnect** -- Quick connect window with configurable server list
+- **ChangelogEditor** -- Customize or hide the main menu changelog
 - **SaveCrossbowState + StumpsAreOneHp + ShutUp** -- Small polish fixes
 
 ### Sailing (2 mods)
@@ -110,7 +112,7 @@ All mods have been individually configured for balanced veteran multiplayer:
 - **Difficulty:** Hard mode, 5-star creatures, HP +50%/player scaling, elemental infusions
 - **Loot:** Balanced preset, 80% unidentified drops, boss trophies per nearby player
 - **Ore Teleporting:** Enabled with 10% transport tax (vanilla spirit preserved)
-- **Seasons:** 3-day cycles with gameplay modifiers (Winter is harsh, Fall boosts damage)
+- **Seasons:** 4-hour real-time cycles with gameplay modifiers (Winter is harsh, Fall boosts damage)
 - **Night Danger:** Darker nights (0.65 luminance) + horror spawns
 - **Death Penalty:** No skill loss on death for mod skills; 75% vanilla skill recovery via SmartSkills
 - **Sailing:** Skill-based speed/health/exploration bonuses, raft gets 2x boost
@@ -131,7 +133,7 @@ This modpack is designed for dedicated server multiplayer. The server needs all 
 
 **Client-only mods** (server does not need):
 - HD Seasonality textures, HUDCompass, CameraTweaks, BetterUI
-- GammaOfNightLights, Scenic
+- GammaOfNightLights, Scenic, ChangelogEditor, QuickConnect
 
 All other mods should be installed on both client and server.
 

@@ -8,7 +8,7 @@ repository = "https://thunderstore.io"
 namespace = "ibfleming"
 name = "Fimbulwinter"
 description = "A veteran's Valheim modpack: tuned for challenging multiplayer with deeper combat, loot, creatures, magic, and QoL."
-versionNumber = "1.5.1"
+versionNumber = "1.6.0"
 websiteUrl = "https://github.com/ibfleming/fimbulwinter"
 
 [package.dependencies]
@@ -117,6 +117,9 @@ Mexanik-ShieldBash = "1.5.2"
 nbusseneau-Better_Cartography_Table = "0.8.1"
 VentureValheim-Venture_Floating_Items = "0.3.3"
 Azumatt-AzuWorkbenchTweaks = "1.0.5"
+KGvalheim-ItemDrawers = "1.2.0"
+Azumatt-ChangelogEditor = "1.0.9"
+bdew-QuickConnect = "1.7.0"
 
 [publish]
 communities = ["valheim"]

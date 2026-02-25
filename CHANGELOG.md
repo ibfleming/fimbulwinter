@@ -5,6 +5,18 @@ All notable changes to Fimbulwinter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-02-24
+
+### Added
+- KGvalheim-ItemDrawers 1.2.0 -- Single-item bulk storage drawers with visual display (works with AzuAutoStore)
+- Azumatt-ChangelogEditor 1.0.9 -- Customize or hide the main menu changelog (client-only)
+- bdew-QuickConnect 1.7.0 -- Quick connect window with configurable server list (client-only)
+
+### Changed
+- Seasonality: Disabled Sleep Override so seasons rotate automatically on a timer instead of requiring players to sleep
+- Seasonality: Changed season duration from 3 in-game days to 4 real-time hours per season (16-hour full year cycle)
+- HUDCompass: Set Player Pin Visibility to ForceOff and Show My Player Pin to false (fixes red player icon appearing on map/minimap)
+
 ## [1.5.1] - 2026-02-24
 
 ### Changed

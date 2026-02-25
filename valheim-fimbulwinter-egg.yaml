@@ -70,6 +70,8 @@ scripts:
           "zamboni-Gungnir"
           "Advize-PlantEasily"
           "Azumatt-SaveCrossbowState"
+          "Azumatt-ChangelogEditor"
+          "bdew-QuickConnect"
       )
 
       # ── Helpers ───────────────────────────────────────────────────
