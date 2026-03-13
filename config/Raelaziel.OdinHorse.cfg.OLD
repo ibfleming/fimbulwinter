@@ -1,4 +1,4 @@
-## Settings file was created by plugin OdinHorse v1.6.1
+## Settings file was created by plugin OdinHorse v1.5.7
 ## Plugin GUID: Raelaziel.OdinHorse
 
 [Cooked Horse Meat]
@@ -621,7 +621,7 @@ Trader Required Global Key =
 
 [General]
 
-## If on, the configuration is locked and can be changed by server admins only. [Synced with Server]
+## If on, the configuration is locked and can be changed by server admins only.
 # Setting type: Toggle
 # Default value: On
 # Acceptable values: Off, On
@@ -629,7 +629,7 @@ Lock Configuration = On
 
 [Headless Horse Hide Rug]
 
-## Build Category where Headless Horse Hide Rug is available.
+## Build Category where [horse_rug_headless] is available.
 # Setting type: BuildPieceCategory
 # Default value: Furniture
 # Acceptable values: Misc, Crafting, BuildingWorkbench, BuildingStonecutter, Furniture, Custom, All
@@ -639,12 +639,12 @@ Build Table Category = Furniture
 # Default value: 
 Custom Build Category = 
 
-## Comma separated list of tools where Headless Horse Hide Rug is available.
+## Comma separated list of tools where [horse_rug_headless] is available.
 # Setting type: String
 # Default value: Hammer
 Tools = Hammer
 
-## Crafting station where Headless Horse Hide Rug is available.
+## Crafting station where [horse_rug_headless] is available.
 # Setting type: CraftingTable
 # Default value: Workbench
 # Acceptable values: None, Workbench, Cauldron, Forge, ArtisanTable, StoneCutter, MageTable, BlackForge, Custom
@@ -654,54 +654,44 @@ Crafting Station = Workbench
 # Default value: 
 Custom Crafting Station = 
 
-## Item costs to craft Headless Horse Hide Rug
+## Item costs to craft [horse_rug_headless]
 # Setting type: String
 # Default value: rae_HorseHide:20:True
 Crafting Costs = rae_HorseHide:20:True
 
 [Horse]
 
-## Horse's gallop speed when sprinting/riding. Affects unmounted running too. [Synced with Server]
+## Declare running speed for Horse
 # Setting type: Int32
-# Default value: 12
+# Default value: 8
 Running Speed = 8
 
-## Horse's walking speed when not tamed or mounted. Has no effect on mounted walk speed — use Speed Modifier for that. [Synced with Server]
+## Declare walking speed for Horse
 # Setting type: Int32
 # Default value: 5
 Walking Speed = 5
 
-## Global speed multiplier applied on top of all other speed values. Affects walking, running, and mounted movement. Setting this to 2 doubles all speeds. Primary control for mounted walk speed. [Synced with Server]
+## Declare speed modified for Horse
 # Setting type: Int32
-# Default value: 1
-Speed Modifier = 1
+# Default value: 7
+Speed Modifier = 7
 
-## Declare turning speed for Horse [Synced with Server]
-# Setting type: Int32
-# Default value: 75
-Turn Speed = 75
-
-## Declare turning speed when running for Horse [Synced with Server]
-# Setting type: Int32
-# Default value: 120
-Run Turn Speed = 120
-
-## Declare health points for Horse [Synced with Server]
+## Declare health points for Horse
 # Setting type: Int32
 # Default value: 200
 Health = 100
 
-## Declare stamina for Horse [Synced with Server]
+## Declare stamina for Horse
 # Setting type: Single
 # Default value: 400
 Stamina = 400
 
-## Declare stamina regen for Horse [Synced with Server]
+## Declare stamina regen for Horse
 # Setting type: Single
 # Default value: 2
 Stamina Regen = 2
 
-## Declare stamina regen when hungry for Horse [Synced with Server]
+## Declare stamina regen when hungry for Horse
 # Setting type: Single
 # Default value: 1
 Stamina Regen Hungry = 1
@@ -839,183 +829,6 @@ Drop config = rae_HorseMeat:1-2:100:unrestricted:multiplyByLevel,rae_HorseHide:1
 # Default value: ForestMonsters
 # Acceptable values: Players, AnimalsVeg, ForestMonsters, Undead, Demon, MountainMonsters, SeaMonsters, PlainsMonsters, Boss, MistlandsMonsters, Dverger, PlayerSpawned, TrainingDummy
 Creature Faction = AnimalsVeg
-
-[horse bite]
-
-## Weight of horse bite.
-# Setting type: Single
-# Default value: 1
-Weight = 1
-
-## Trader value of horse bite.
-# Setting type: Int32
-# Default value: 0
-Trader Value = 0
-
-## Durability of horse bite.
-# Setting type: Single
-# Default value: 100
-Durability = 100
-
-## Durability gain per level of horse bite.
-# Setting type: Single
-# Default value: 50
-Durability per Level = 50
-
-## Movement speed modifier of horse bite.
-# Setting type: Single
-# Default value: 0
-Movement Speed Modifier = 0
-
-## Block armor of horse bite.
-# Setting type: Single
-# Default value: 10
-Block Armor = 10
-
-## Block armor per level for horse bite.
-# Setting type: Single
-# Default value: 0
-Block Armor per Level = 0
-
-## Block force of horse bite.
-# Setting type: Single
-# Default value: 0
-Block Force = 0
-
-## Block force per level for horse bite.
-# Setting type: Single
-# Default value: 0
-Block Force per Level = 0
-
-## Parry bonus of horse bite.
-# Setting type: Single
-# Default value: 1.5
-Parry Bonus = 1.5
-
-## Knockback of horse bite.
-# Setting type: Single
-# Default value: 40
-Knockback = 40
-
-## Backstab bonus of horse bite.
-# Setting type: Single
-# Default value: 4
-Backstab Bonus = 4
-
-## Attack stamina of horse bite.
-# Setting type: Single
-# Default value: 20
-Attack Stamina = 20
-
-## True damage dealt by horse bite.
-# Setting type: Single
-# Default value: 0
-True Damage = 0
-
-## True damage dealt increase per level for horse bite.
-# Setting type: Single
-# Default value: 0
-True Damage Per Level = 0
-
-## Slash damage dealt by horse bite.
-# Setting type: Single
-# Default value: 0
-Slash Damage = 0
-
-## Slash damage dealt increase per level for horse bite.
-# Setting type: Single
-# Default value: 0
-Slash Damage Per Level = 0
-
-## Pierce damage dealt by horse bite.
-# Setting type: Single
-# Default value: 0
-Pierce Damage = 0
-
-## Pierce damage dealt increase per level for horse bite.
-# Setting type: Single
-# Default value: 0
-Pierce Damage Per Level = 0
-
-## Blunt damage dealt by horse bite.
-# Setting type: Single
-# Default value: 10
-Blunt Damage = 10
-
-## Blunt damage dealt increase per level for horse bite.
-# Setting type: Single
-# Default value: 0
-Blunt Damage Per Level = 0
-
-## Chop damage dealt by horse bite.
-# Setting type: Single
-# Default value: 0
-Chop Damage = 0
-
-## Chop damage dealt increase per level for horse bite.
-# Setting type: Single
-# Default value: 0
-Chop Damage Per Level = 0
-
-## Pickaxe damage dealt by horse bite.
-# Setting type: Single
-# Default value: 0
-Pickaxe Damage = 0
-
-## Pickaxe damage dealt increase per level for horse bite.
-# Setting type: Single
-# Default value: 0
-Pickaxe Damage Per Level = 0
-
-## Fire damage dealt by horse bite.
-# Setting type: Single
-# Default value: 0
-Fire Damage = 0
-
-## Fire damage dealt increase per level for horse bite.
-# Setting type: Single
-# Default value: 0
-Fire Damage Per Level = 0
-
-## Poison damage dealt by horse bite.
-# Setting type: Single
-# Default value: 0
-Poison Damage = 0
-
-## Poison damage dealt increase per level for horse bite.
-# Setting type: Single
-# Default value: 0
-Poison Damage Per Level = 0
-
-## Frost damage dealt by horse bite.
-# Setting type: Single
-# Default value: 0
-Frost Damage = 0
-
-## Frost damage dealt increase per level for horse bite.
-# Setting type: Single
-# Default value: 0
-Frost Damage Per Level = 0
-
-## Lightning damage dealt by horse bite.
-# Setting type: Single
-# Default value: 0
-Lightning Damage = 0
-
-## Lightning damage dealt increase per level for horse bite.
-# Setting type: Single
-# Default value: 0
-Lightning Damage Per Level = 0
-
-## Spirit damage dealt by horse bite.
-# Setting type: Single
-# Default value: 0
-Spirit Damage = 0
-
-## Spirit damage dealt increase per level for horse bite.
-# Setting type: Single
-# Default value: 0
-Spirit Damage Per Level = 0
 
 [Horse Cape]
 
@@ -1172,7 +985,7 @@ Trader Required Global Key =
 
 [Horse Cart]
 
-## Build Category where Horse Cart is available.
+## Build Category where [horse_cart] is available.
 # Setting type: BuildPieceCategory
 # Default value: Misc
 # Acceptable values: Misc, Crafting, BuildingWorkbench, BuildingStonecutter, Furniture, Custom, All
@@ -1182,12 +995,12 @@ Build Table Category = Misc
 # Default value: 
 Custom Build Category = 
 
-## Comma separated list of tools where Horse Cart is available.
+## Comma separated list of tools where [horse_cart] is available.
 # Setting type: String
 # Default value: Hammer
 Tools = Hammer
 
-## Crafting station where Horse Cart is available.
+## Crafting station where [horse_cart] is available.
 # Setting type: CraftingTable
 # Default value: Workbench
 # Acceptable values: None, Workbench, Cauldron, Forge, ArtisanTable, StoneCutter, MageTable, BlackForge, Custom
@@ -1197,7 +1010,7 @@ Crafting Station = Workbench
 # Default value: 
 Custom Crafting Station = 
 
-## Item costs to craft Horse Cart
+## Item costs to craft [horse_cart]
 # Setting type: String
 # Default value: BronzeNails:60:True,FineWood:40:True
 Crafting Costs = BronzeNails:60:True,FineWood:40:True
@@ -1243,7 +1056,7 @@ Trader Required Global Key =
 
 [Horse hide rug]
 
-## Build Category where Horse hide rug is available.
+## Build Category where [horse_rug] is available.
 # Setting type: BuildPieceCategory
 # Default value: Furniture
 # Acceptable values: Misc, Crafting, BuildingWorkbench, BuildingStonecutter, Furniture, Custom, All
@@ -1253,12 +1066,12 @@ Build Table Category = Furniture
 # Default value: 
 Custom Build Category = 
 
-## Comma separated list of tools where Horse hide rug is available.
+## Comma separated list of tools where [horse_rug] is available.
 # Setting type: String
 # Default value: Hammer
 Tools = Hammer
 
-## Crafting station where Horse hide rug is available.
+## Crafting station where [horse_rug] is available.
 # Setting type: CraftingTable
 # Default value: Workbench
 # Acceptable values: None, Workbench, Cauldron, Forge, ArtisanTable, StoneCutter, MageTable, BlackForge, Custom
@@ -1268,7 +1081,7 @@ Crafting Station = Workbench
 # Default value: 
 Custom Crafting Station = 
 
-## Item costs to craft Horse hide rug
+## Item costs to craft [horse_rug]
 # Setting type: String
 # Default value: rae_HorseHide:20:True
 Crafting Costs = rae_HorseHide:20:True
@@ -1314,79 +1127,79 @@ Trader Required Global Key =
 
 [Horse Offspring]
 
-## Declare health points for Horse Offspring [Synced with Server]
+## Declare health points for Horse Offspring
 # Setting type: Int32
 # Default value: 60
 Health = 60
 
-## Declare growup time needed to convert offspring into Horse. Time in seconds. [Synced with Server]
+## Declare growup time needed to convert offspring into Horse. Time in seconds.
 # Setting type: Int32
 # Default value: 2000
 Grow-up time = 2000
 
-## Declare drop chance for Horse Meat from offspring [Synced with Server]
+## Declare drop chance for Horse Meat from offspring
 # Setting type: Single
 # Default value: 1
 Meat Drop Chance = 1
 
-## Declare minimum amount of Horse Meat to drop from offspring [Synced with Server]
+## Declare minimum amount of Horse Meat to drop from offspring
 # Setting type: Int32
 # Default value: 1
 Meat Amount Min = 1
 
-## Declare maximum amount of Horse Meat to drop from offspring [Synced with Server]
+## Declare maximum amount of Horse Meat to drop from offspring
 # Setting type: Int32
 # Default value: 2
 Meat Amount Max = 2
 
-## Declare drop chance for Horse Hide from offspring [Synced with Server]
+## Declare drop chance for Horse Hide from offspring
 # Setting type: Single
 # Default value: 0.33
 Hide Drop Chance = 0.33
 
-## Declare minimum amount of Horse Hide to drop from offspring [Synced with Server]
+## Declare minimum amount of Horse Hide to drop from offspring
 # Setting type: Int32
 # Default value: 1
 Hide Amount Min = 1
 
-## Declare maximum amount of Horse Hide to drop from offspring [Synced with Server]
+## Declare maximum amount of Horse Hide to drop from offspring
 # Setting type: Int32
 # Default value: 1
 Hide Amount Max = 1
 
 [Horse Procreation]
 
-## Time interval in seconds to check for procreation. [Synced with Server]
+## Time interval in seconds to check for procreation.
 # Setting type: Single
 # Default value: 10
 Update Interval = 10
 
-## Range in meters to check for total creatures. [Synced with Server]
+## Range in meters to check for total creatures.
 # Setting type: Single
 # Default value: 10
 Total Check Range = 10
 
-## Maximum number of creatures allowed in range. [Synced with Server]
+## Maximum number of creatures allowed in range.
 # Setting type: Int32
 # Default value: 4
 Max Creatures = 4
 
-## Range in meters to find a procreation partner. [Synced with Server]
+## Range in meters to find a procreation partner.
 # Setting type: Single
 # Default value: 3
 Partner Check Range = 3
 
-## Chance of becoming pregnant per check. [Synced with Server]
+## Chance of becoming pregnant per check.
 # Setting type: Single
 # Default value: 0.5
 Pregnancy Chance = 0.5
 
-## Duration of pregnancy in seconds. [Synced with Server]
+## Duration of pregnancy in seconds.
 # Setting type: Single
 # Default value: 10
 Pregnancy Duration = 10
 
-## Number of love points required to trigger pregnancy. [Synced with Server]
+## Number of love points required to trigger pregnancy.
 # Setting type: Int32
 # Default value: 4
 Required Love Points = 4
@@ -1905,7 +1718,7 @@ Trader Required Global Key =
 
 [Horsie Chair]
 
-## Build Category where Horsie Chair is available.
+## Build Category where [horse_chair] is available.
 # Setting type: BuildPieceCategory
 # Default value: Furniture
 # Acceptable values: Misc, Crafting, BuildingWorkbench, BuildingStonecutter, Furniture, Custom, All
@@ -1915,12 +1728,12 @@ Build Table Category = Furniture
 # Default value: 
 Custom Build Category = 
 
-## Comma separated list of tools where Horsie Chair is available.
+## Comma separated list of tools where [horse_chair] is available.
 # Setting type: String
 # Default value: Hammer
 Tools = Hammer
 
-## Crafting station where Horsie Chair is available.
+## Crafting station where [horse_chair] is available.
 # Setting type: CraftingTable
 # Default value: Workbench
 # Acceptable values: None, Workbench, Cauldron, Forge, ArtisanTable, StoneCutter, MageTable, BlackForge, Custom
@@ -1930,27 +1743,22 @@ Crafting Station = Workbench
 # Default value: 
 Custom Crafting Station = 
 
-## Item costs to craft Horsie Chair
+## Item costs to craft [horse_chair]
 # Setting type: String
 # Default value: rae_HorseHide:2:True,FineWood:3:True
 Crafting Costs = rae_HorseHide:2:True,FineWood:3:True
 
 [Hotkeys]
 
-## The key needed to be held while interacting with the horse to remove the armor. [Synced with Server]
+## The key needed to be held while interacting with the horse to remove the armor.
 # Setting type: KeyboardShortcut
 # Default value: R
 Remove Armor Key = R
 
-## The key needed to be held while interacting with the horse to make it wait in place. [Synced with Server]
+## The key needed to be held while interacting with the horse to make it wait in place.
 # Setting type: KeyboardShortcut
 # Default value: T
 Wait Here Key = T
-
-## The key needed to be held while interacting with the saddled horse to open its saddlebag inventory. [Synced with Server]
-# Setting type: KeyboardShortcut
-# Default value: B
-Saddlebags Key = B
 
 [Iron Horse Armor]
 
@@ -2024,35 +1832,15 @@ Trader Required Global Key =
 
 [Map Icons]
 
-## If true, disables the map icon for the Odin Horse. [Synced with Server]
+## If true, disables the map icon for the Odin Horse.
 # Setting type: Boolean
 # Default value: false
 HideHorsePin = false
 
-## If true, disables the map icon for the Odin Cart. [Synced with Server]
+## If true, disables the map icon for the Odin Cart.
 # Setting type: Boolean
 # Default value: false
 HideCartPin = false
-
-[Saddlebags]
-
-## If On, a saddlebag inventory is available on tamed, saddled horses, this setting is still being tested. For performance reasons and memory usage, it is off by default. [Synced with Server]
-# Setting type: Toggle
-# Default value: On
-# Acceptable values: Off, On
-Disable = On
-
-## Number of columns in the saddlebag inventory. [Synced with Server]
-# Setting type: Int32
-# Default value: 2
-# Acceptable value range: From 1 to 8
-Width = 2
-
-## Number of rows in the saddlebag inventory. [Synced with Server]
-# Setting type: Int32
-# Default value: 1
-# Acceptable value range: From 1 to 4
-Height = 1
 
 [Shaslik]
 

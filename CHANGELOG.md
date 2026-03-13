@@ -5,10 +5,29 @@ All notable changes to Fimbulwinter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.6.1] - 2026-02-24
+## [1.6.1] - 2026-03-13
+
+### Changed
+- ValheimModding-Jotunn updated from 2.27.1 to 2.28.0
+- shudnal-ConfigurationManager updated from 1.1.12 to 1.1.13
+- JereKuusela-Upgrade_World updated from 1.76.0 to 1.77.0
+- Soloredis-RtDOcean updated from 1.5.2 to 2.1.0 (major rewrite -- creature factions reassigned, RtDItems decoupled)
+- Soloredis-RtDDungeons updated from 1.0.0 to 1.0.3
+- Soloredis-RtDHorrors updated from 0.4.9 to 0.5.1
+- Soloredis-RtDMonsters updated from 2.2.8 to 2.3.1 (~50% polygon reduction, remodeled enemies)
+- Soloredis-RtDMonstrum updated from 0.8.1 to 0.8.4
+- OdinPlus-OdinHorse updated from 1.5.8 to 1.6.1 (speed system reworked, new horse bite attack, saddlebag support)
+- RustyMods-Seasonality updated from 3.7.9 to 3.8.0
+- shudnal-GammaOfNightLights updated from 1.0.8 to 1.0.9
+- Vapok-AdventureBackpacks updated from 1.9.10 to 1.9.12 (backpack nesting now blocked)
+- Azumatt-AzuExtendedPlayerInventory updated from 2.3.7 to 2.4.1
+- Azumatt-AzuCraftyBoxes updated from 1.8.13 to 1.8.14
+- Azumatt-Recycle_N_Reclaim updated from 1.3.10 to 1.4.0 (new undo recycle feature, tooltip yield preview)
+- Radamanto-Bestiary updated from 1.1.4 to 1.1.5
 
 ### Fixed
-- Fixed game crashing because of QuickConnect and its configuration file.
+- OdinHorse: Reset Speed Modifier from 7 to 1 (field changed from absolute value to multiplier in v1.6.0)
+- Fixed game crashing because of QuickConnect and its configuration file
 
 ## [1.6.0] - 2026-02-24
 
