@@ -1,149 +1,226 @@
 [![Build Status](https://github.com/ibfleming/fimbulwinter/actions/workflows/publish.yml/badge.svg)](https://github.com/ibfleming/fimbulwinter/actions/workflows/publish.yml)
 
-# Fimbulwinter - A Veteran's Valheim Modpack
+# Fimbulwinter - A Veteran's Valheim Overhaul
 
-**Tuned for veteran multiplayer. No shortcuts, no cheese -- just deeper Valheim.**
+**Valheim was never this dangerous. 103 mods of starred monsters, enchanted loot, and blood-earned mastery — built for players who think vanilla is too easy.**
 
-Fimbulwinter is a curated modpack of **many mods** designed for experienced players returning to Valheim in a multiplayer group. Every mod has been hand-picked, configured, and balance-tested to enhance combat, exploration, visuals, and quality of life -- without betraying the core spirit of Valheim.
+Fimbulwinter is a curated overhaul modpack for veteran multiplayer crews. CLLC difficulty scaling turns every biome into a gauntlet of starred creatures, Epic Loot fills the world with enchantable gear worth chasing, and the full Therzie suite (Warfare, Armory, Monstrum, Wizardry) hands you the arsenal to survive it — backed by new creatures, world locations, seasons, ships, and mounts, all wrapped in a polished QoL and UI layer so none of it gets in your way. Every mod is verified non-deprecated against Thunderstore.
 
 ## Design Principles
 
-- **Preserve the Spirit of Valheim** -- No flying, no teleport-cheese, no game-breaking shortcuts. Progression still requires biome exploration and earned power.
-- **Reward Skill & Mastery** -- New content rewards experienced players with meaningful choices, deeper combat, and harder-earned victories.
-- **Depth Over Breadth** -- Each mod adds genuine depth, not just volume. Quality over quantity.
-- **Multiplayer-First** -- Every mod works on dedicated servers. Role specialization and group play are enhanced.
-- **Actively Maintained** -- All mods are confirmed working with the current Valheim version.
+- **Preserve the Spirit of Valheim** — No teleport-cheese (ore transport carries a 10% tax), no game-breaking shortcuts. Progression still requires biome exploration and earned power.
+- **Reward Skill & Mastery** — Harder than vanilla from the Meadows onward: starred creatures, elemental infusions, tuned raids.
+- **Depth Over Breadth** — Quality content that extends the game's systems, not kitchen-sink bloat.
+- **Multiplayer-First** — Every mod works on dedicated servers, with server-enforced config sync.
+- **Actively Maintained** — Every mod verified current against Thunderstore; no deprecated or abandoned mods.
 
 ## What's Included
 
-### Difficulty & Loot (3 mods)
-- **CreatureLevelAndLootControl** -- Hard difficulty, 5-star creatures, biome-scaling sectors
-- **EpicLoot** -- Diablo-style magic/rare/epic/legendary loot with enchanting
-- **EpicLoot_Therzie** -- Bridge patch integrating EpicLoot with all Therzie content
+### Core & Frameworks (6 mods)
+- **BepInExPack_Valheim** — Mod loader
+- **Jotunn** — Modding framework
+- **JsonDotNET / YamlDotNet** — Shared libraries
+- **ConfigurationManager** (shudnal) — In-game config editing (F3)
+- **ConditionalConfigSync** — Server-enforced config ownership and sync policies
 
-### Content: Weapons, Armor & Magic (4 mods)
-- **Warfare** -- 200+ new weapons across all biome tiers
-- **WarfareFireAndIce** -- Deep North endgame weapons
-- **Armory** -- New armor sets with set bonuses
-- **Wizardry** -- Full magic system with staves, spells, and elemental damage
+### Difficulty & Loot Core (7 mods)
+- **Creature Level and Loot Control** — Starred creatures (up to 5), per-player difficulty scaling, world levels
+- **Epic Loot** — Magic item drops, enchanting, bounties, and gambling
+- **EpicLoot_Therzie** — Bridge patches so Therzie gear rolls Epic Loot magic
+- **Custom Raids** — Tuned raid tables with custom events
+- **Drop That / Spawn That / This Goes Here** — Loot-table and spawner control
 
-### Content: Creatures & World (14 mods)
-- **Monstrum + Deep North** -- 100+ new creatures across every biome
-- **RtD Suite** (Ocean, Dungeons, Horrors, Monsters, Monstrum) -- Massive world expansion with sea creatures, procedural dungeons, night horrors, and fantasy monsters
-- **Fee Fi Fo Fum** -- Giants roaming across biomes
-- **EpicValheimsAdditions** -- Mistlands, DeepNorth, and Ashlands content expansion
-- **Bestiary** -- 30+ new creatures (Crocodiles, Scorpions, Panthers, etc.)
-- **MushroomMonsters** -- Mushroom-themed creatures across biomes
-- **Custom Raids** -- Configurable raid events with custom creature spawns
-- **Forbidden Catacombs** -- Handcrafted swamp dungeon with bosses
-- **More World Locations AIO** -- 153 new points of interest
+### Weapons, Armor & Magic (7 mods)
+- **Warfare + Warfare Fire and Ice** — Massive weapon/shield expansion through Deep North
+- **Armory** — New armor variants that upgrade across tiers
+- **Wizardry** — Full magic system: staves, spells, and casting progression
+- **Monstrum + Monstrum Deep North** — New monsters, mini-bosses, and forsaken bosses
+- **DragoonCapes** — Capes with unique effects, vanilla capes revamped
 
-### Content: Ships, Mounts, Equipment & Cooking (6 mods)
-- **OdinShip** -- 14 new ships and boats
-- **SeaAnimals** -- Ocean creatures and rideable marine beasts
-- **OdinHorse** -- Tameable horses with saddles and armor
-- **DragoonCapes** -- 20+ capes with unique combat effects
-- **CircletExtended** -- Dverger circlet upgrades with light, demister, and overload
-- **CookingAdditions** -- 23 new foods and cooking stations
+### Creatures & World (6 mods)
+- **Bestiary** — New creatures with configurable spawns
+- **SeaAnimals** — Ocean life: dangerous and rideable marine creatures
+- **RtDOcean** — Ocean expansion: sea life, crops, agriculture
+- **Forbidden Catacombs** — Randomized Swamp dungeon
+- **More World Locations AIO** — 181 new POIs: dungeons, traders, ports
+- **Seasons** — Four rotating seasons with visual and gameplay variety (7-day seasons)
 
-### Combat & Progression (18 mods)
-- **Headshots + BetterArchery + ReliableBlock** -- Deeper, more rewarding ranged and melee combat
-- **DualWield** -- Dual-wield weapons with offhand skill progression
-- **ShieldBash** -- Shield bash attack for melee combat depth
-- **ProjectileTweaks** -- Improved arrow and projectile physics
-- **Agility + Endurance + Tenacity + SmartSkills** -- Movement, stamina, stagger, and skill recovery progression
-- **Evasion** -- Dodge/evasion skill that rewards combat timing
-- **Lumberjacking + Building + Blacksmithing** -- Woodcutting, construction, and crafting skills
-- **Mining + Farming + Foraging** -- Resource gathering scales with skill
-- **SkilledCarryWeight** -- Carry weight scales with skill levels
+### Ships, Mounts & Trade (5 mods)
+- **OdinShip** — 7 new ships plus docks and fishing gear
+- **LongshipUpgrades** — Modular longship upgrades: mast, storage, hull HP
+- **OdinHorse** — Tameable, rideable horses with carts and armor
+- **TradersExtended** — Extended trader inventories and UI
+- **CookingAdditions** — 23 new cookable foods
 
-### Visual & Atmosphere (8 mods)
-- **Seasonality + HD Seasonality** -- Dynamic 4-season system with HD textures
-- **GammaOfNightLights** -- Darker, moodier nights
-- **HUDCompass** -- Map-pin compass with dynamic markers
-- **BetterUI** -- Enemy HP bars, XP tracking, skill display
-- **CameraTweaks** -- FOV and zoom distance adjustments
-- **BreatheEasy** -- Removes annoying smoke and dust screen effects
-- **Scenic** -- Client-side visual scene tools
+### Combat Mechanics (5 mods)
+- **BetterArchery** — Improved bow gameplay, retrievable arrows (zoom off — ProjectileTweaks owns zoom)
+- **ProjectileTweaks** — Arrows launch from where you aim, bow/crossbow zoom, ammo counter
+- **Headshots** — Head weakspots reward precise pierce shots
+- **ShieldBash** — Active shield bash attack (Middle Mouse while blocking)
+- **DualWield** — Fight with a weapon in each hand
 
-### Quality of Life (32 mods)
-- **Extended Inventory + CraftyBoxes + AutoStore + ContainerSizes + ItemDrawers** -- Inventory overhaul
-- **Quick Stack + Recycle + AAA Crafting + HoverStats** -- Streamlined crafting with item details
-- **AdventureBackpacks** -- Tiered backpacks with biome-specific perks
-- **LazyVikings + Eternal Fire + PetPantry** -- Automation for smelters, fires, and animal feeding
-- **PlantEverything + PlantEasily** -- Advanced farming with grid planting and bulk harvest
-- **SpeedyPaths + TeleportEverything** -- Movement QoL (ore teleport with 10% transport tax)
-- **MissingPieces + NoRainDamage + Structure Tweaks + MyPitsDontLeak** -- Building improvements
-- **AdvancedTerrainModifiers** -- Improved hoe and cultivator tools
-- **TrueInstantLootDrop** -- Loot drops instantly at creature death location
-- **TradersExtended** -- Expanded trader UI with sell lists and economy
-- **WieldEquipmentWhileSwimming** -- Use equipment while swimming
-- **AzuWorkbenchTweaks** -- Auto-repair items at workbenches
-- **Venture Floating Items** -- Items float on water instead of sinking
-- **QuickConnect** -- Quick connect window with configurable server list
-- **ChangelogEditor** -- Customize or hide the main menu changelog
-- **SaveCrossbowState + StumpsAreOneHp + ShutUp** -- Small polish fixes
+### Skills & Progression (15 mods)
+- **SmartSkills** — 75% skill recovery after death; death matters but isn't crushing
+- **Smoothbrain skill roster** — Tenacity, Evasion, Mining, Foraging, Farming, Lumberjacking, Building, Blacksmithing, Sailing (+ SailingSpeed base tuning)
+- **Agility / Endurance** — Movement and stamina skills
+- **SkilledCarryWeight** — Carry weight grows with your skills
+- **CircletExtended** — Upgradeable circlet light with new abilities
 
-### Sailing (2 mods)
-- **Sailing Skill + SailingSpeed** -- Ship speed, health, and exploration scale with skill
+### Inventory & Crafting (10 mods)
+- **AzuExtendedPlayerInventory** — Dedicated equipment and quick slots
+- **AzuCraftyBoxes** — Craft using materials from nearby containers
+- **AzuAutoStore** — Auto-deposit items into nearby containers
+- **AzuContainerSizes** — Larger chest capacities
+- **AAA Crafting** — Improved crafting UI with bulk crafting and upgrades
+- **Recycle N Reclaim** — Recycle items back into materials
+- **Quick Stack Store Sort Trash Restock** — One-key chest stacking, sorting, and trash
+- **MultiUserChest** — Multiple players can use one chest simultaneously
+- **AdventureBackpacks** — Progression-gated craftable backpacks
+- **TrueInstantLootDrop** — Loot drops instantly on kill
 
-### Multiplayer & Server (5 mods)
-- **ServerCharacters** -- Server-side character saves with encryption
-- **Resurrection** -- Resurrect dead players with configurable cost
-- **MultiUserChest** -- Multiple players access chests simultaneously
-- **BetterCartographyTable** -- Better map sharing with public/guild pin modes
-- **Venture Logout Tweaks** -- Preserves status effects across logout (no combat-logging)
+### UI & HUD (6 mods)
+- **MyLittleUI** — Lightweight UI upgrades: timers, stats, chest contents, weather
+- **VNEI** — In-game item and recipe browser
+- **HUDCompass** — Compass bar with map pins
+- **AzuHoverStats** — Detailed hover tooltips
+- **Better Cartography Table** — Precise control over pin sharing and map exploration
+- **ChangelogEditor** — Clean main-menu changelog
 
-### Network & Performance (4 mods)
-- **LeanNet + NetworkTweaks** -- Network optimization for smoother multiplayer
-- **TimeoutLimit** -- Prevents disconnects during heavy loading
-- **LocalizationCache** -- Faster game startup
+### Visual & Atmosphere (1 mod)
+- **CameraTweaks** — Configurable FoV and camera distance (vanilla atmosphere otherwise untouched — no lighting or weather-effect mods)
 
-### Admin Tools (4 mods)
-- **ConfigurationManager + Server Devcommands + Gungnir** -- Full server admin toolkit
-- **Upgrade_World** -- Console commands for regenerating world zones (used for mod migration)
+### Building (8 mods)
+- **Gizmo** — Precise build-piece rotation on all axes
+- **Extra Snap Points Made Easy** — More snap points on every piece
+- **AzuAreaRepair** — Repair all nearby build pieces with one hammer hit
+- **MissingPieces** — Vanilla-styled build pieces that should have existed
+- **AdvancedTerrainModifiers** — Precision terraforming with square/circle modes and undo
+- **AzuWorkbenchTweaks** — Workbench behavior improvements
+- **Structure Tweaks** — Advanced structure behavior control
+- **MyPitsDontLeak** — Fixes the vanilla tarpit memory leak
 
-*Plus 5 framework libraries (BepInEx, Jotunn, etc.) and 3 spawn/drop infrastructure mods that run invisibly in the background.*
+### Farming & Nature (3 mods)
+- **PlantEverything** — Plant every gatherable resource and tree
+- **PlantEasily** — Grid-aligned planting and mass harvesting
+- **MassFarming** — Bulk plant and pick with a modifier key
 
-## Key Configuration Highlights
+### Gameplay QoL (11 mods)
+- **ComfyAutoRepair** — Opening a crafting station repairs everything
+- **AutomaticFuel** — Fireplaces and smelters feed from nearby chests (F7 toggle)
+- **PetPantry** — Tamed animals feed from nearby containers
+- **SaveCrossbowState** — Crossbows stay loaded when switching weapons
+- **WieldEquipmentWhileSwimming** — Keep gear in hand while swimming
+- **AzuMiscPatches** — Collection of small vanilla fixes
+- **Venture Floating Items** — Dropped items float on water
+- **StumpsAreOneHp** — Tree stumps fall in a single hit
+- **NoRainDamage** — Buildings no longer take weather damage
+- **SpeedyPaths** — Move faster on paths, roads, and cleared ground
+- **TeleportEverything** — Portal everything, with a 10% ore transport tax
 
-All mods have been individually configured for balanced veteran multiplayer:
+### Fixes & Performance (5 mods)
+- **LocalizationCache** — Dramatically faster load times
+- **TimeoutLimit** — Fixes join timeouts on modded servers
+- **NetworkTweaks** — Improved network throughput
+- **ShutUp** — Silences console log spam
+- **Scenic** — Improved scene error handling
 
-- **Difficulty:** Hard mode, 5-star creatures, HP +50%/player scaling, elemental infusions
-- **Loot:** Balanced preset, 80% unidentified drops, boss trophies per nearby player
-- **Ore Teleporting:** Enabled with 10% transport tax (vanilla spirit preserved)
-- **Seasons:** 4-hour real-time cycles with gameplay modifiers (Winter is harsh, Fall boosts damage)
-- **Night Danger:** Darker nights (0.65 luminance) + horror spawns
-- **Death Penalty:** No skill loss on death for mod skills; 75% vanilla skill recovery via SmartSkills
-- **Sailing:** Skill-based speed/health/exploration bonuses, raft gets 2x boost
-- **Raids:** ~Every 2 hours of play (36min interval, 30% chance)
+### Multiplayer & Server (8 mods)
+- **ServerCharacters** — Server-side character saves (anti-dupe, anti-cheat)
+- **Groups** — Party system with shared map pings and chat
+- **Resurrection** — Ritual to bring dead friends back
+- **SleepSkip** — Majority-rules night skipping
+- **Server devcommands** — Better admin commands and permissions
+- **Upgrade World** — Regenerate world locations after game updates
+- **QuickConnect** — One-click server join
+- **Venture Logout Tweaks** — Safe logout handling
+
+## Keyboard Shortcuts
+
+All mod keybinds have been audited against Valheim's default bindings — nothing shadows a vanilla control. Modifier-based binds only act in their context (build mode, planting, menus) and don't interfere with the base action.
+
+| Key | Mod | Action | Context |
+|-----|-----|--------|---------|
+| `Alt + Z / X / C` | AzuExtendedPlayerInventory | Use quick slot 1 / 2 / 3 | Anywhere |
+| `Alt + V` | AzuExtendedPlayerInventory | Use quick slot 4 | Anywhere (shares base key with vanilla voice chat — low-risk, playtest if mic behaves oddly) |
+| `Alt + 3 / 4` | AzuExtendedPlayerInventory | Use quick slot 5 / 6 | Anywhere (moved off `B`/`N` — collided with ESPME/OdinHorse and CircletExtended) |
+| `Alt + 1 / 2` | AzuExtendedPlayerInventory | Use quick slot 7 / 8 | Anywhere (Quiver slots on BetterArchery disabled to avoid this) |
+| `G` / `H` / `J` | Epic Loot | Magic item ability 1 / 2 / 3 | Anywhere |
+| `I` | AdventureBackpacks | Open equipped backpack | Anywhere |
+| `L` | AdventureBackpacks | Toggle Wisplight effect | Anywhere |
+| `Y` | AdventureBackpacks | Quickdrop backpack contents | Anywhere |
+| `N` | CircletExtended | Toggle circlet light | Circlet equipped (moved off `K` = admin fly) |
+| `,` (comma) | CircletExtended | Overload circlet flash | Circlet equipped (moved off `T` = Gizmo reset-all) |
+| `Ctrl + Left/Right Arrow` | CircletExtended | Narrow / widen beam | Circlet equipped (moved off bare arrows — collided with VNEI recipe-history nav) |
+| `Ctrl + Down Arrow` | CircletExtended | Toggle demister | Circlet equipped (moved off bare `DownArrow` — collided with PlantEasily grid resize) |
+| `Shift + Left/Right/Up/Down Arrow` | CircletExtended | Toggle shadows / radiance / adjust intensity | Circlet equipped |
+| `Middle Mouse` | ShieldBash | Shield bash | While blocking (moved off `F` = vanilla Forsaken Power) |
+| `Period` | SkilledCarryWeight | Quick-attach cart | Near cart (moved off `Y` — collided with AdventureBackpacks Quickdrop) |
+| `Alt + H` | VNEI | Open item/recipe browser | Anywhere |
+| `R` | VNEI | View recipe of hovered item | Menus only (vanilla sheath unaffected) |
+| `Left/Right Arrow` | VNEI | Recipe history back / forward | VNEI window |
+| `Ctrl + Z` | Recycle N Reclaim | Undo last recycle | Inventory |
+| `Delete` | Quick Stack Store | Trash hovered item | Inventory |
+| `Shift` (hold) | AzuCraftyBoxes | Craft max / fill all | Crafting menu |
+| `Shift` (hold) | Gizmo | Rotate build piece on X axis | Build mode (hammer only — terrain tools stay vanilla) |
+| `Alt` (hold) | Gizmo | Rotate build piece on Z axis | Build mode (hammer only — terrain tools stay vanilla) |
+| `U` | Gizmo | Reset selected-axis rotation | Build mode (moved off `G` = Epic Loot ability 1) |
+| `T` | Gizmo | Reset ALL axis rotations | Build mode |
+| `P` | Gizmo | Copy rotation from targeted piece | Build mode |
+| `B` | Extra Snap Points | Toggle Manual+ snap mode | Build mode |
+| `CapsLock` | Extra Snap Points | Toggle manual closest-snap mode | Build mode |
+| `Q` / `E` | Extra Snap Points | Cycle snap point on placing / targeted piece | Manual snap modes only |
+| `F11` | Extra Snap Points | Toggle grid snapping | Build mode |
+| `F4` | Extra Snap Points | Cycle grid snap precision | Grid snap mode |
+| `Shift` (hold) | MassFarming | Mass plant / mass pick | Cultivator / interact |
+| `F8` | PlantEasily | Toggle grid planting | Cultivator |
+| `F10` | PlantEasily | Toggle grid snapping | Cultivator |
+| `F6` | PlantEasily | Toggle auto-replant | Anywhere |
+| `RCtrl + Arrows` | PlantEasily | Resize planting grid | Cultivator |
+| `Shift` (hold) | PlantEasily | Harvest whole grid | Interact |
+| `R` / `T` / `B` | OdinHorse | Remove armor / wait here / saddlebags | Pointing at tamed horse |
+| `Alt + 1/2/3` | BetterArchery | Quiver slots | **Disabled** (collides with AzuEPI quick slots) |
+| `Alt + click` | Groups | Ping map for your group | Map |
+| `Shift` (hold) | Better Cartography Table | Modifier for pin sharing actions | Cartography table |
+| `Shift` (hold) | Sailing | Nudge ship | Sailing |
+| `F3` | ConfigurationManager | Open in-game mod settings | Anywhere |
+| `Ctrl + Semicolon` | TradersExtended | Open trader configuration editor | Anywhere (moved off default `Ctrl + P` — collided with Gizmo's target-piece select) |
+| `F7` | AutomaticFuel | Toggle auto-fueling on/off | Anywhere |
+| `Alt + scroll` | AdvancedTerrainModifiers | Adjust tool radius | Hoe/cultivator/shovel |
+| `Ctrl + scroll` | AdvancedTerrainModifiers | Adjust tool hardness | Hoe/cultivator/shovel |
+| `Right Mouse` (hold) | ProjectileTweaks | Zoom while drawing bow/crossbow | Bow drawn (BetterArchery zoom disabled — one zoom owner) |
+| `E` | ProjectileTweaks | Cancel bow draw | While drawing only |
+| `O` | Server devcommands | Toggle debug mode + no-cost building + god mode | Admin only |
+| `K` | Server devcommands | Toggle fly mode | Admin only |
+| `Ctrl + Right-click` | Server devcommands | Teleport to map location | Admin only, map open |
+
+Rebind anything in-game: press `F3` → find the mod → change the key (stored in that mod's config file).
+
+## Key Gameplay Rules
+
+- **Death:** SmartSkills grants 75% skill recovery — all other mod skills have 0% death loss.
+- **Ore transport:** TeleportEverything charges a 10% transport tax. No portal-bypass mods.
+- **Creature stars:** CLLC Hard mode, up to 5 stars, +50% HP / +6% damage per extra player.
+- **Seasons:** 7 in-game days per season, full year in ~14 hours of play.
+- **Raids:** 36-minute interval at 30% chance (~every 2 hours).
+
+## For Server Admins: World Modifier Recommendation
+
+**Leave Valheim's built-in "Combat" world modifier at its default (Hard) when creating your world. Do not raise it further to try to make the pack harder.**
+
+All of this pack's difficulty is already tuned through CLLC's star system — biome-progressive star chances, per-star HP/damage scaling, and boss star chances are hand-calibrated assuming vanilla's default combat baseline. Vanilla's Combat modifier is a blunt global damage multiplier that has no awareness of stars, biomes, or CLLC's curve — stacking a harsher setting on top compounds unpredictably (worst on high-star Deep North/Mistlands spawns, where CLLC already pushes HP/DMG near its tuned ceiling) and it also scales *player-dealt* damage, which can undercut progression rather than reward it.
+
+If the pack ever feels too easy for your group, adjust difficulty through the config values you can already see and reason about — CLLC's per-star/per-biome percentages in `org.bepinex.plugins.creaturelevelcontrol.cfg` and `config/CreatureConfig.yml`, or Custom Raids frequency — rather than introducing a second, uncontrolled global multiplier from the world-creation screen.
 
 ## Installation
 
-### With r2modman / Thunderstore Mod Manager
+**Client:** Install via [r2modman](https://thunderstore.io/c/valheim/p/ebkr/r2modman/) or the Thunderstore App — search for `Fimbulwinter` by `ibfleming`.
 
-1. Open **r2modman** and select **Valheim**
-2. Search for **Fimbulwinter** in the online mods tab
-3. Click **Install with dependencies**
-4. Click **Start modded** to launch
+**Alternative (profile import):** Each [GitHub release](https://github.com/ibfleming/fimbulwinter/releases) ships a ready-made `.r2z` profile with all mods at pinned versions plus the tuned configs. In r2modman: Profiles → Import / Update → From file.
 
-## Server Setup
-
-This modpack is designed for dedicated server multiplayer. The server needs all gameplay mods but NOT the client-only visual/UI mods.
-
-**Client-only mods** (server does not need):
-- HD Seasonality textures, HUDCompass, CameraTweaks, BetterUI
-- GammaOfNightLights, Scenic, ChangelogEditor, QuickConnect
-
-All other mods should be installed on both client and server.
-
-> Note: In the future, I will be curating an easy server installation.
-
-## Version History
-
-See [CHANGELOG.md](https://github.com/ibfleming/fimbulwinter/blob/main/CHANGELOG.md) for full version history.
+**Server:** Install all mods except client-only UI/visual mods. A Pelican/Pterodactyl server egg is provided in the [GitHub repo](https://github.com/ibfleming/fimbulwinter) (`server/valheim-fimbulwinter-egg.yaml`) that automates the full dedicated server install: SteamCMD, BepInEx, all server-side mods, and modpack configs.
 
 ## Links
 
-- **Source:** [GitHub](https://github.com/ibfleming/fimbulwinter)
-- **Thunderstore:** [Fimbulwinter](https://thunderstore.io/c/valheim/p/ibfleming/Fimbulwinter/)
+- **GitHub:** [github.com/ibfleming/fimbulwinter](https://github.com/ibfleming/fimbulwinter)
+- **Issues & suggestions:** [GitHub Issues](https://github.com/ibfleming/fimbulwinter/issues)
+- **Changelog:** [CHANGELOG.md](https://github.com/ibfleming/fimbulwinter/blob/main/CHANGELOG.md)

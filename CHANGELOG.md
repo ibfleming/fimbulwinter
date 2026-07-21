@@ -5,6 +5,215 @@ All notable changes to Fimbulwinter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed — 2026-07-21 full-pack audit
+Systematic pass over every config for syntax errors, keybind conflicts,
+documented-rule drift, cross-mod contradictions, out-of-range values, and
+performance red flags.
+
+- **JSON syntax error**: `EpicLoot/patches/TherzieMods_2.0/Lootables_Gear_Wizardry.json`
+  had a trailing comma in the Tier6Circlets loot array — would have failed
+  to parse at runtime, silently dropping that entire loot patch
+- **Keybind: SkilledCarryWeight quick-cart** (`Y`) collided with
+  AdventureBackpacks' own default `Quickdrop Backpack = Y` — pressing Y near
+  a cart would also instantly dump your backpack's contents on the ground.
+  Moved to `Period`
+- **Keybind: CircletExtended beam/demister controls** (bare arrow keys)
+  collided with PlantEasily's grid-resize (`RightControl` + arrows) — since
+  BepInEx shortcuts fire on their own keys regardless of what else is held,
+  every grid-resize keypress while wearing a circlet also adjusted beam
+  width or toggled the demister. Added `+ LeftControl` (a distinct KeyCode
+  from PlantEasily's `RightControl`)
+- **Keybind: AzuExtendedPlayerInventory quick-slots 5 and 6** (`Alt+B`,
+  `Alt+N`) collided with OdinHorse Saddlebags / ExtraSnapPointsMadeEasy
+  Manual+ Snap (`B`) and CircletExtended Toggle light (`N`) — swapping gear
+  mid-build or mid-ride would also fire those. Moved to `Alt+3`/`Alt+4`,
+  extending the pack's existing Alt+1/Alt+2 numbering (slots 7-8) instead of
+  claiming more letters
+- **Keybind: TradersExtended's new 2.0.0 in-game editor** defaulted to
+  `Ctrl+P`, colliding with Gizmo's bare `selectTargetPieceKey = P`. Moved to
+  `Ctrl+Semicolon`
+- **Keybind (highest severity): AzuCraftyBoxes' `Prevent Pulling Logic`**
+  defaulted to `Alt+O`, colliding with the admin bind bundle (`O` =
+  `debugmode`+`nocost`+`god`, binds.yaml). Any admin using this ordinary
+  client convenience mod would accidentally toggle god mode / no-cost
+  building / debug mode on themselves. Moved to `Alt+Slash`
+- Also previously undocumented in README: AzuExtendedPlayerInventory quick
+  slots 4-8 (only 1-3 were ever listed), AdventureBackpacks' Quickdrop key,
+  and CircletExtended's beam-width controls — all added to the Keyboard
+  Shortcuts table
+
+### Verified (no changes needed)
+- All 46 YAML/JSON configs parse cleanly (post JSON fix)
+- 556 range-bounded settings checked against their own declared acceptable
+  range: zero violations
+- 2,701 enum-constrained settings checked against their own declared
+  acceptable-values list: zero real violations (one KeyboardShortcut false
+  positive from the checker's comma-splitting, not an actual bug)
+- Documented pack rules match actual config values exactly: death penalty
+  (0% skill loss across all 9 Smoothbrain/blacks7ar skill mods, SmartSkills
+  75% recovery), TeleportEverything 10% tax, CLLC (+50% HP/+6% DMG per
+  player, splitting 2%, boss stars 15/5/2%), Custom Raids (36min/30%),
+  Sailing (125% base, 1.5x at skill 100, raft 2.0x), AdventureBackpacks
+  (-0.15 speed on all 8 backpacks), Epic Loot economy (balanced, 20% set
+  items, 80/70 unidentified/materials split, boss-gated items and bounties)
+- ConditionalConfigSync's SyncPolicy/HiddenConfigs have no stale references
+  to the mods removed this week (GammaOfNightLights/BreatheEasy/LazyVikings
+  were never ConditionalConfigSync-managed)
+- Spawn_That's tracked config stays vanilla-creatures-only per pack policy;
+  the auto-generated per-creature sidecar scaffolds are untracked and empty
+  by default, so no accidental modded-creature spawner duplication risk
+- BetterArchery's `Bow Draw Cancel Hotkey = E` lives inside its already-disabled
+  `[Bow Zoom]` section — its apparent overlap with ProjectileTweaks/ESPME's
+  own E-key bindings is inert, not a live conflict
+- OdinHorse's hover-context R/T/B keys are naturally exclusive with
+  Gizmo/ESPME's build-mode-only bindings on the same letters (different
+  equip states) — re-confirmed, not a live conflict
+- Repair stacking (ComfyAutoRepair + AzuWorkbenchTweaks Auto Repair +
+  MyLittleUI repair-on-hold) is redundant but harmless — repairing an
+  already-full-durability item is a no-op, so three triggers on one
+  interaction cost a negligible amount of overhead, not a bug
+- BepInEx logging levels, ShutUp.cfg per-mod overrides, and NetworkTweaks/
+  TimeoutLimit/LocalizationCache/container-scan-range settings are all sane;
+  no debug-level log spam or excessive scan ranges/intervals found
+
+### Changed
+- QuickConnect UI tuned: `ButtonFontSize`/`LabelFontSize` 0→16, `WindowWidth`
+  250→384, `WindowHeight` 50→72, `WindowPosX`/`WindowPosY` 20→50 (matches
+  the same change applied to Fimbulwinter Lite)
+
+### Tooling
+- `scripts/deploy.sh full` now calls `disable_auto_update()` before staging,
+  which sets the egg's `AUTO_UPDATE_MODS` startup variable to `0` via the
+  Pelican Client API. Fixes a recurring edge case: a `full` deploy pushes
+  unpublished local state for testing, but if `AUTO_UPDATE_MODS=1`, the
+  post-deploy restart's boot-time `server-autoupdate.sh` could re-sync to
+  the latest *published* Thunderstore pack and clobber the test deploy. The
+  existing `local-*` manifest-marker skip was meant to prevent this but
+  isn't relied on anymore — the variable is now switched off outright.
+  **Deploy.sh does not re-enable it automatically** — flip `AUTO_UPDATE_MODS`
+  back to `1` yourself once testing is done and you're ready to publish.
+
+## [2.0.0] - UNRELEASED
+
+Ground-up rebuild on the Fimbulwinter Lite foundation (103 mods). The entire Lite
+QoL/UI/fix/server stack and its tuned configs replace the old equivalents, with
+Fimbulwinter's overhaul content (CLLC, Epic Loot, Therzie suite, creatures,
+locations, skills) layered back on top. All mods verified non-deprecated against
+the Thunderstore API; all versions bumped to latest.
+
+### Added (from Fimbulwinter Lite)
+- shudnal-ConditionalConfigSync 1.0.3 (server-enforced config ownership; required by Seasons)
+- shudnal-Seasons 1.8.1 (replaces RustyMods Seasonality; 7-day seasons, tuned sync policy)
+- shudnal-MyLittleUI 1.2.15 (replaces BetterUI_ForeverMaintained)
+- MSchmoecker-VNEI 0.17.5 (item/recipe browser)
+- ComfyMods-Gizmo 1.15.0 (build rotation; reset key moved G→U for Epic Loot)
+- Searica-Extra_Snap_Points_Made_Easy 2.0.5
+- Azumatt-AzuAreaRepair 1.1.6
+- Azumatt-AzuMiscPatches 1.2.8
+- Azumatt-SleepSkip 1.3.0 (majority-rules night skip)
+- ComfyMods-ComfyAutoRepair 1.0.0
+- TastyChickenLegs-AutomaticFuel 1.4.8 (torches/ground-pull off, 5m range, F7 toggle)
+- k942-MassFarming 1.11.0
+- Smoothbrain-Groups 1.2.10 (party system)
+- shudnal-LongshipUpgrades 1.0.17 (turrets and 2nd Forsaken power disabled per pack rules)
+- Lite server tooling: shared installer (scripts/install-mods.sh), thin Pelican egg
+  (server/valheim-fimbulwinter-egg.yaml), deploy.sh, server-autoupdate.sh,
+  export-profile.sh, Makefile, permissions.yaml (deny-all default), upgrade_world.cfg
+
+### Removed (deprecated on Thunderstore)
+- MSchmoecker-StartupHotfix, KGvalheim-ItemDrawers
+- Soloredis-RtDDungeons, RtDHorrors, RtDMonsters, RtDMonstrum (author mass-deprecated the suite; RtDOcean kept)
+- Horem-Fee_Fi_Fo_Fum, Horem-MushroomMonsters
+
+### Removed (superseded or unmaintained)
+- BetterUI_ForeverMaintained → MyLittleUI
+- RustyMods-Seasonality + Willybach-HD_Seasonality (texture pack) → shudnal Seasons
+- CacoFFF-LeanNet → NetworkTweaks
+- zamboni-Gungnir → Server_devcommands
+- Huntardys-EpicValheimsAdditions (unmaintained since 2024-06; overlaps Therzie + official biome content)
+- Korppis-ReliableBlock (unmaintained since 2022)
+- Digitalroot-Eternal_Fire (redundant with AutomaticFuel; removed fuel gameplay entirely)
+- Smoothbrain-TargetPortal (Lite-only convenience; conflicts with the pack's travel-cost design)
+
+### Removed (Vanilla++ preservation — keep vanilla visuals and core gameplay loops)
+- shudnal-GammaOfNightLights (night lighting overhaul — vanilla night atmosphere restored)
+- RandomSteve-BreatheEasy (smoke/dust/heat-wave removal — vanilla visual effects restored)
+- blacks7ar-LazyVikings (auto-feeding/auto-collecting stations removed a core gameplay loop for a veteran pack)
+
+### Changed
+- All shared mods now use Lite's newer versions and tuned configs (BepInEx.cfg,
+  server_devcommands + binds.yaml/permissions.yaml, AzuEPI quick slots Alt+Z/X/C, etc.)
+- Version bumps (previous → now): Jotunn 2.28.0→2.29.2, EpicLoot 0.12.11→0.12.15,
+  RtDOcean 2.1.0→2.2.38, More_World_Locations_AIO 4.2.0→5.0.6, OdinShip 0.7.4→0.7.6,
+  OdinHorse 1.6.1→1.6.2, SeaAnimals 0.3.4→0.3.6, TradersExtended 1.3.12→2.0.0
+  (major: in-game trader editor, YAML/CSV item lists, per-trader currencies and buyback),
+  Structure_Tweaks 1.35.0→1.36.0, Bestiary 1.1.5→1.1.6, ShieldBash 1.5.2→1.5.5,
+  MissingPieces 2.2.2→2.2.3, PlantEasily 2.0.3→2.1.1, HUDCompass 1.1.7→1.1.9,
+  AdventureBackpacks 1.9.12→1.9.13, ConfigurationManager 1.1.13→1.1.15,
+  Server_devcommands 1.102.0→1.108.0, Upgrade_World 1.77.0→1.80.0
+- Keybind conflict resolutions for the merged pack:
+  - Gizmo reset-rotation G→U (G = Epic Loot ability 1)
+  - SkilledCarryWeight quick-cart V→Y (V = vanilla voice chat)
+  - CircletExtended toggle light K→N (K = admin fly), overload T→Comma (T = Gizmo reset-all)
+  - ShieldBash F→Middle Mouse (F = vanilla Forsaken Power)
+  - BetterArchery bow zoom disabled (ProjectileTweaks owns zoom); quiver stays disabled
+- AdventureBackpacks keeps the original tuned drop lists (CLLC/Epic Loot economy)
+- HUDCompass: dynamic map pins stay off (Better Cartography Table owns map pins)
+- Epic Loot: bounties now gated by biome boss kills (`Gated Bounty Mode =
+  BossKillUnlocksCurrentBiomeBounties`) to match item-drop gating — closes an
+  early-game currency leak; economy otherwise verified (balanced template, 20% set
+  items, 80% unidentified + 70% materials, global drop rate 1.0)
+- CLLC scaling verified: Hard + BossesKilled, 50% HP / 30% DMG per star (bosses
+  25/10), biome-progressive star ramps in CreatureConfig.yml, splitting 2%,
+  Serpent/Deathsquito/Eikthyr guardrails intact
+- AAA Crafting: `Paginator = Off` — mitigates crafting-menu search breaking
+  (filtered list could land beyond the current page and render empty)
+- ItemConfig.yml: stale "20% tax" comments corrected to the actual 10% TeleportEverything fee
+- MyLittleUI: `Show slots space taken = true` — inventory grid now shows free/used slot count
+
+### Fixed
+- **ShieldBash keybind was never actually applied.** The repo shipped
+  `alexbez.valheim.shieldbash.cfg` (GUID `alexbez.valheim.shieldbash`, a
+  different/unrelated ShieldBash build, v2.2.0) — a stale leftover the
+  installed `Mexanik-ShieldBash` mod (GUID `mexanik.shieldbash`) never reads.
+  All BashKey tuning, including the F→Mouse2 fix, was silently inert; the
+  live game still ran BashKey=F colliding with vanilla Forsaken Power.
+  Replaced with the correct `mexanik.shieldbash.cfg` (real 1.5.5 schema,
+  BashKey=Mouse2 applied). The orphan `alexbez.*` file is deleted.
+- Synced 16 configs against a fresh game-launch regen (profile
+  `Fimbulwinter-v2.0.0`), pulling forward version-bump schema changes with
+  zero loss of tuned values (verified key-by-key before merging):
+  Raelaziel.OdinHorse.cfg (1.6.1→1.6.2), Soloredis.RtDOcean.cfg
+  (2.1.0→2.2.38), marlthon.SeaAnimals.cfg (+33 new HP/regen keys),
+  radamanto.Bestiary.cfg (+216 new per-creature keys), shudnal.TradersExtended.cfg
+  (1.3.12→2.0.0, +17 new in-game trader-editor keys), vapok.mods.adventurebackpacks.cfg
+  (1.9.10→1.9.13), warpalicious.More_World_Locations_AIO.cfg (4.2.0→5.0.6,
+  +1 new key), _shudnal.ConfigurationManager.cfg (1.1.14→1.1.15),
+  Searica.Valheim.ExtraSnapPointsMadeEasy.cfg (+290 new per-piece snap
+  entries for content added since the merge — Wizardry tables, Armory forge,
+  OdinHorse rugs, LongshipUpgrades pulleys, CookingAdditions stations, RtD/TW
+  saplings), blacks7ar.CookingAdditions.cfg, Azumatt.SleepSkip.cfg,
+  Azumatt.ChangelogEditor.cfg, bruce.valheim.comfymods.gizmo.cfg (also
+  picked up `isLocalFrameModeEnabled = true` from live playtesting),
+  org.bepinex.plugins.{farming,mining,foraging,resurrection}.cfg
+- `.gitignore`: corrected `config/EpicLoot/MWL_Ports/` → `config/MWL_Ports/`
+  (More World Locations writes port data at config root, not inside
+  EpicLoot/); added ignores for Neobotics/, TherzieTranslations/, and
+  LongshipUpgrades' asset-dump images/folders — all runtime-extracted,
+  non-customized data confirmed present in a live profile
+- Left untouched (repo already correct, live profile was simply stale):
+  randyknapp.mods.epicloot.cfg (repo has the 2026-07-20 bounty-gating fix;
+  live pre-dates it), ItemConfig.yml (repo has the 10%-tax comment fix),
+  org.bepinex.plugins.sailing.cfg and drop_that.cfg (repo's design-rationale
+  comments are stripped by BepInEx's own regen but no values differ — kept
+  the documented version), ShutUp.cfg (live picked up log-level entries for
+  BreatheEasy/GammaOfNightLights/LazyVikings because that profile still has
+  their orphaned DLLs installed — resolves on next full mod resync),
+  org.bepinex.plugins.servercharacters.cfg (repo's empty `Server key` is
+  intentional; never commit a live key)
+
 ## [1.6.1] - 2026-03-13
 
 ### Changed

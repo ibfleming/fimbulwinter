@@ -1,4 +1,8 @@
-- keys: p
-  command: /creative
-- keys: p
+- keys: o
+  command: debugmode
+- keys: o
   command: nocost
+- keys: o
+  command: god
+- keys: k
+  command: fly

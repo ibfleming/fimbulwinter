@@ -59,7 +59,7 @@ jobs:
 
       - name: Install Thunderstore CLI
         run: |
-          TCLI_VERSION="0.2.4"
+          TCLI_VERSION="0.2.4"  # 0.2.5 is a tag only -- no release binaries published
           curl -fsSL "https://github.com/thunderstore-io/thunderstore-cli/releases/download/${TCLI_VERSION}/tcli-${TCLI_VERSION}-linux-x64.tar.gz" -o tcli.tar.gz
           tar xzf tcli.tar.gz
           find . -maxdepth 2 -name "tcli" -type f -exec mv {} . \;
@@ -69,11 +69,16 @@ jobs:
       - name: Build Package
         run: ./tcli build --config-path thunderstore.toml
 
+      - name: Build r2modman Profile (.r2z)
+        run: bash scripts/export-profile.sh "build/Fimbulwinter-v${{ steps.version.outputs.version }}-profile.r2z"
+
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: thunderstore-package
-          path: build/*.zip
+          path: |
+            build/*.zip
+            build/*.r2z
           retention-days: 14
 
       - name: Publish to Thunderstore
@@ -104,7 +109,9 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/*.zip
+          files: |
+            dist/*.zip
+            dist/*.r2z
           body_path: CHANGELOG.md
           name: Fimbulwinter v${{ needs.build-and-publish.outputs.version }}
           generate_release_notes: true

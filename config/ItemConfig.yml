@@ -1,6 +1,6 @@
 # Zionith Modpack - ItemConfig.yml
 # Tuned for veteran multiplayer: challenge-oriented with targeted QoL.
-# Metal teleportation is handled by TeleportEverything (20% tax) -- NOT bypassed here.
+# Metal teleportation is handled by TeleportEverything (10% tax) -- NOT bypassed here.
 # Death should have consequences -- food is NOT kept on death.
 
 # ─── Custom Groups ───
@@ -61,7 +61,7 @@ Building Wood:
 
 # ─── Ore & Metal ───
 # Ores: slightly increased stacks for less tedious mining runs. Weight stays vanilla.
-# Metal is NOT teleportable or floating here -- TeleportEverything handles transport with its 20% fee.
+# Metal is NOT teleportable or floating here -- TeleportEverything handles transport with its 10% fee.
 Ores:
   stack factor: 1.25
 
