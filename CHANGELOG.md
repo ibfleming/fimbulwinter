@@ -5,103 +5,7 @@ All notable changes to Fimbulwinter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Fixed — 2026-07-21 full-pack audit
-Systematic pass over every config for syntax errors, keybind conflicts,
-documented-rule drift, cross-mod contradictions, out-of-range values, and
-performance red flags.
-
-- **JSON syntax error**: `EpicLoot/patches/TherzieMods_2.0/Lootables_Gear_Wizardry.json`
-  had a trailing comma in the Tier6Circlets loot array — would have failed
-  to parse at runtime, silently dropping that entire loot patch
-- **Keybind: SkilledCarryWeight quick-cart** (`Y`) collided with
-  AdventureBackpacks' own default `Quickdrop Backpack = Y` — pressing Y near
-  a cart would also instantly dump your backpack's contents on the ground.
-  Moved to `Period`
-- **Keybind: CircletExtended beam/demister controls** (bare arrow keys)
-  collided with PlantEasily's grid-resize (`RightControl` + arrows) — since
-  BepInEx shortcuts fire on their own keys regardless of what else is held,
-  every grid-resize keypress while wearing a circlet also adjusted beam
-  width or toggled the demister. Added `+ LeftControl` (a distinct KeyCode
-  from PlantEasily's `RightControl`)
-- **Keybind: AzuExtendedPlayerInventory quick-slots 5 and 6** (`Alt+B`,
-  `Alt+N`) collided with OdinHorse Saddlebags / ExtraSnapPointsMadeEasy
-  Manual+ Snap (`B`) and CircletExtended Toggle light (`N`) — swapping gear
-  mid-build or mid-ride would also fire those. Moved to `Alt+3`/`Alt+4`,
-  extending the pack's existing Alt+1/Alt+2 numbering (slots 7-8) instead of
-  claiming more letters
-- **Keybind: TradersExtended's new 2.0.0 in-game editor** defaulted to
-  `Ctrl+P`, colliding with Gizmo's bare `selectTargetPieceKey = P`. Moved to
-  `Ctrl+Semicolon`
-- **Keybind (highest severity): AzuCraftyBoxes' `Prevent Pulling Logic`**
-  defaulted to `Alt+O`, colliding with the admin bind bundle (`O` =
-  `debugmode`+`nocost`+`god`, binds.yaml). Any admin using this ordinary
-  client convenience mod would accidentally toggle god mode / no-cost
-  building / debug mode on themselves. Moved to `Alt+Slash`
-- Also previously undocumented in README: AzuExtendedPlayerInventory quick
-  slots 4-8 (only 1-3 were ever listed), AdventureBackpacks' Quickdrop key,
-  and CircletExtended's beam-width controls — all added to the Keyboard
-  Shortcuts table
-
-### Verified (no changes needed)
-- All 46 YAML/JSON configs parse cleanly (post JSON fix)
-- 556 range-bounded settings checked against their own declared acceptable
-  range: zero violations
-- 2,701 enum-constrained settings checked against their own declared
-  acceptable-values list: zero real violations (one KeyboardShortcut false
-  positive from the checker's comma-splitting, not an actual bug)
-- Documented pack rules match actual config values exactly: death penalty
-  (0% skill loss across all 9 Smoothbrain/blacks7ar skill mods, SmartSkills
-  75% recovery), TeleportEverything 10% tax, CLLC (+50% HP/+6% DMG per
-  player, splitting 2%, boss stars 15/5/2%), Custom Raids (36min/30%),
-  Sailing (125% base, 1.5x at skill 100, raft 2.0x), AdventureBackpacks
-  (-0.15 speed on all 8 backpacks), Epic Loot economy (balanced, 20% set
-  items, 80/70 unidentified/materials split, boss-gated items and bounties)
-- ConditionalConfigSync's SyncPolicy/HiddenConfigs have no stale references
-  to the mods removed this week (GammaOfNightLights/BreatheEasy/LazyVikings
-  were never ConditionalConfigSync-managed)
-- Spawn_That's tracked config stays vanilla-creatures-only per pack policy;
-  the auto-generated per-creature sidecar scaffolds are untracked and empty
-  by default, so no accidental modded-creature spawner duplication risk
-- BetterArchery's `Bow Draw Cancel Hotkey = E` lives inside its already-disabled
-  `[Bow Zoom]` section — its apparent overlap with ProjectileTweaks/ESPME's
-  own E-key bindings is inert, not a live conflict
-- OdinHorse's hover-context R/T/B keys are naturally exclusive with
-  Gizmo/ESPME's build-mode-only bindings on the same letters (different
-  equip states) — re-confirmed, not a live conflict
-- Repair stacking (ComfyAutoRepair + AzuWorkbenchTweaks Auto Repair +
-  MyLittleUI repair-on-hold) is redundant but harmless — repairing an
-  already-full-durability item is a no-op, so three triggers on one
-  interaction cost a negligible amount of overhead, not a bug
-- BepInEx logging levels, ShutUp.cfg per-mod overrides, and NetworkTweaks/
-  TimeoutLimit/LocalizationCache/container-scan-range settings are all sane;
-  no debug-level log spam or excessive scan ranges/intervals found
-
-### Changed
-- QuickConnect UI tuned: `ButtonFontSize`/`LabelFontSize` 0→16, `WindowWidth`
-  250→384, `WindowHeight` 50→72, `WindowPosX`/`WindowPosY` 20→50 (matches
-  the same change applied to Fimbulwinter Lite)
-
-### Tooling
-- `scripts/deploy.sh full` now calls `disable_auto_update()` before staging,
-  which sets the egg's `AUTO_UPDATE_MODS` startup variable to `0` via the
-  Pelican Client API. Fixes a recurring edge case: a `full` deploy pushes
-  unpublished local state for testing, but if `AUTO_UPDATE_MODS=1`, the
-  post-deploy restart's boot-time `server-autoupdate.sh` could re-sync to
-  the latest *published* Thunderstore pack and clobber the test deploy. The
-  existing `local-*` manifest-marker skip was meant to prevent this but
-  isn't relied on anymore — the variable is now switched off outright.
-  **Deploy.sh does not re-enable it automatically** — flip `AUTO_UPDATE_MODS`
-  back to `1` yourself once testing is done and you're ready to publish.
-
-### Changed
-- warpalicious-More_World_Locations_AIO updated from 5.0.6 to 5.0.7 — MWL
-  port, trader, and trainer location pieces set to 9999 health so they can
-  no longer be broken for progression skips. No config schema change; no
-  action needed on `warpalicious.More_World_Locations_AIO.cfg`.
-
-## [2.0.0] - UNRELEASED
+## [2.0.0] - 2026-07-21
 
 Ground-up rebuild on the Fimbulwinter Lite foundation (103 mods). The entire Lite
 QoL/UI/fix/server stack and its tuned configs replace the old equivalents, with
@@ -219,6 +123,112 @@ the Thunderstore API; all versions bumped to latest.
   their orphaned DLLs installed — resolves on next full mod resync),
   org.bepinex.plugins.servercharacters.cfg (repo's empty `Server key` is
   intentional; never commit a live key)
+
+### Fixed — 2026-07-21 full-pack audit
+Systematic pass over every config for syntax errors, keybind conflicts,
+documented-rule drift, cross-mod contradictions, out-of-range values, and
+performance red flags.
+
+- **JSON syntax error**: `EpicLoot/patches/TherzieMods_2.0/Lootables_Gear_Wizardry.json`
+  had a trailing comma in the Tier6Circlets loot array — would have failed
+  to parse at runtime, silently dropping that entire loot patch
+- **Keybind: SkilledCarryWeight quick-cart** (`Y`) collided with
+  AdventureBackpacks' own default `Quickdrop Backpack = Y` — pressing Y near
+  a cart would also instantly dump your backpack's contents on the ground.
+  Moved to `Period`
+- **Keybind: CircletExtended beam/demister controls** (bare arrow keys)
+  collided with PlantEasily's grid-resize (`RightControl` + arrows) — since
+  BepInEx shortcuts fire on their own keys regardless of what else is held,
+  every grid-resize keypress while wearing a circlet also adjusted beam
+  width or toggled the demister. Added `+ LeftControl` (a distinct KeyCode
+  from PlantEasily's `RightControl`)
+- **Keybind: AzuExtendedPlayerInventory quick-slots 5 and 6** (`Alt+B`,
+  `Alt+N`) collided with OdinHorse Saddlebags / ExtraSnapPointsMadeEasy
+  Manual+ Snap (`B`) and CircletExtended Toggle light (`N`) — swapping gear
+  mid-build or mid-ride would also fire those. Moved to `Alt+3`/`Alt+4`,
+  extending the pack's existing Alt+1/Alt+2 numbering (slots 7-8) instead of
+  claiming more letters
+- **Keybind: TradersExtended's new 2.0.0 in-game editor** defaulted to
+  `Ctrl+P`, colliding with Gizmo's bare `selectTargetPieceKey = P`. Moved to
+  `Ctrl+Semicolon`
+- **Keybind (highest severity): AzuCraftyBoxes' `Prevent Pulling Logic`**
+  defaulted to `Alt+O`, colliding with the admin bind bundle (`O` =
+  `debugmode`+`nocost`+`god`, binds.yaml). Any admin using this ordinary
+  client convenience mod would accidentally toggle god mode / no-cost
+  building / debug mode on themselves. Moved to `Alt+Slash`
+- Also previously undocumented in README: AzuExtendedPlayerInventory quick
+  slots 4-8 (only 1-3 were ever listed), AdventureBackpacks' Quickdrop key,
+  and CircletExtended's beam-width controls — all added to the Keyboard
+  Shortcuts table
+
+### Verified (no changes needed)
+- All 46 YAML/JSON configs parse cleanly (post JSON fix)
+- 556 range-bounded settings checked against their own declared acceptable
+  range: zero violations
+- 2,701 enum-constrained settings checked against their own declared
+  acceptable-values list: zero real violations (one KeyboardShortcut false
+  positive from the checker's comma-splitting, not an actual bug)
+- Documented pack rules match actual config values exactly: death penalty
+  (0% skill loss across all 9 Smoothbrain/blacks7ar skill mods, SmartSkills
+  75% recovery), TeleportEverything 10% tax, CLLC (+50% HP/+6% DMG per
+  player, splitting 2%, boss stars 15/5/2%), Custom Raids (36min/30%),
+  Sailing (125% base, 1.5x at skill 100, raft 2.0x), AdventureBackpacks
+  (-0.15 speed on all 8 backpacks), Epic Loot economy (balanced, 20% set
+  items, 80/70 unidentified/materials split, boss-gated items and bounties)
+- ConditionalConfigSync's SyncPolicy/HiddenConfigs have no stale references
+  to the mods removed this week (GammaOfNightLights/BreatheEasy/LazyVikings
+  were never ConditionalConfigSync-managed)
+- Spawn_That's tracked config stays vanilla-creatures-only per pack policy;
+  the auto-generated per-creature sidecar scaffolds are untracked and empty
+  by default, so no accidental modded-creature spawner duplication risk
+- BetterArchery's `Bow Draw Cancel Hotkey = E` lives inside its already-disabled
+  `[Bow Zoom]` section — its apparent overlap with ProjectileTweaks/ESPME's
+  own E-key bindings is inert, not a live conflict
+- OdinHorse's hover-context R/T/B keys are naturally exclusive with
+  Gizmo/ESPME's build-mode-only bindings on the same letters (different
+  equip states) — re-confirmed, not a live conflict
+- Repair stacking (ComfyAutoRepair + AzuWorkbenchTweaks Auto Repair +
+  MyLittleUI repair-on-hold) is redundant but harmless — repairing an
+  already-full-durability item is a no-op, so three triggers on one
+  interaction cost a negligible amount of overhead, not a bug
+- BepInEx logging levels, ShutUp.cfg per-mod overrides, and NetworkTweaks/
+  TimeoutLimit/LocalizationCache/container-scan-range settings are all sane;
+  no debug-level log spam or excessive scan ranges/intervals found
+
+### Changed (post-audit)
+- QuickConnect UI tuned: `ButtonFontSize`/`LabelFontSize` 0→16, `WindowWidth`
+  250→384, `WindowHeight` 50→72, `WindowPosX`/`WindowPosY` 20→50 (matches
+  the same change applied to Fimbulwinter Lite)
+- warpalicious-More_World_Locations_AIO updated from 5.0.6 to 5.0.7 — MWL
+  port, trader, and trainer location pieces set to 9999 health so they can
+  no longer be broken for progression skips. No config schema change; no
+  action needed on `warpalicious.More_World_Locations_AIO.cfg`.
+
+### Tooling
+- `scripts/deploy.sh full` now calls `disable_auto_update()` before staging,
+  which sets the egg's `AUTO_UPDATE_MODS` startup variable to `0` via the
+  Pelican Client API. Fixes a recurring edge case: a `full` deploy pushes
+  unpublished local state for testing, but if `AUTO_UPDATE_MODS=1`, the
+  post-deploy restart's boot-time `server-autoupdate.sh` could re-sync to
+  the latest *published* Thunderstore pack and clobber the test deploy. The
+  existing `local-*` manifest-marker skip was meant to prevent this but
+  isn't relied on anymore — the variable is now switched off outright.
+  **Deploy.sh does not re-enable it automatically** — flip `AUTO_UPDATE_MODS`
+  back to `1` yourself once testing is done and you're ready to publish.
+- `scripts/install-mods.sh`: `unzip` exit status 1 (warnings-only, e.g. a
+  dependency zip using backslash path separators) is no longer treated as a
+  fatal extraction failure — only 2+ aborts. Extracted contents are also
+  `chmod -R u+rwX`'d immediately after extraction, since some Windows-built
+  mod zips store DOS read-only attributes that otherwise leave a directory
+  unreadable/undeletable (hit by HappyDragoon-DragoonCapes during a
+  `deploy-full` run).
+- `scripts/deploy.sh`: server power-state wait (`power()`) extended from
+  120s to 5 minutes to tolerate slower stop/start cycles.
+- `scripts/server-autoupdate.sh`: boot-time Thunderstore version check now
+  retries transient failures (`--retry 2 --retry-delay 2`) and suppresses
+  `curl`'s own stderr to match the existing `jq` suppression, so a brief API
+  hiccup (which the script already failed soft on) doesn't leave a scary
+  raw curl error in the boot log.
 
 ## [1.6.1] - 2026-03-13
 
