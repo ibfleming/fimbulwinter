@@ -95,6 +95,12 @@ performance red flags.
   **Deploy.sh does not re-enable it automatically** — flip `AUTO_UPDATE_MODS`
   back to `1` yourself once testing is done and you're ready to publish.
 
+### Changed
+- warpalicious-More_World_Locations_AIO updated from 5.0.6 to 5.0.7 — MWL
+  port, trader, and trainer location pieces set to 9999 health so they can
+  no longer be broken for progression skips. No config schema change; no
+  action needed on `warpalicious.More_World_Locations_AIO.cfg`.
+
 ## [2.0.0] - UNRELEASED
 
 Ground-up rebuild on the Fimbulwinter Lite foundation (103 mods). The entire Lite
