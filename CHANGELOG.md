@@ -5,6 +5,30 @@ All notable changes to Fimbulwinter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-07-26
+
+### Changed
+- shudnal-ConfigurationManager 1.1.15 → 1.1.16 — uses ConditionalConfigSync's
+  effective administrator state when deciding whether server-provided hidden
+  settings apply (avoids stale vanilla `AdminList` state). Requires
+  ConditionalConfigSync 1.0.4+ (bumped alongside it below).
+- shudnal-ConditionalConfigSync 1.0.3 → 1.0.4 — internal handshake/protocol
+  reliability fixes (fail-closed replica state, disconnect diagnostics). No
+  config or gameplay-visible change; required as ConfigurationManager
+  1.1.16's dependency floor.
+- warpalicious-More_World_Locations_AIO 5.0.7 → 5.0.8 — **rollback release**:
+  the author reverted the 5.0.7 change (setting MWL port/trader/trainer
+  pieces to 9999 health) back to 5.0.6 behavior while reworking the
+  protected-location damage approach. Supersedes the 5.0.7 entry below; no
+  config schema change.
+- Radamanto-Bestiary 1.1.6 → 1.1.7 — fixed the config watcher causing
+  repeated config rewrites. No schema change.
+- OdinPlus-OdinHorse 1.6.2 → 1.6.5 — adds a `horse_setcolor <0-5>` console
+  command, two new config options (`Horse Color` for biome-specific spawn
+  colors, `Stam per Star Level`) that will appear with mod defaults on next
+  config regen, and offspring now inherit a parent's color pattern. No
+  manual config edit needed; admins may want to review the two new options.
+
 ## [2.0.0] - 2026-07-21
 
 Ground-up rebuild on the Fimbulwinter Lite foundation (103 mods). The entire Lite
