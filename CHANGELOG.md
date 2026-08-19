@@ -5,6 +5,44 @@ All notable changes to Fimbulwinter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - 2026-08-19
+
+### Changed
+- RandyKnapp-EpicLoot 0.12.15 → 0.13.1 — **content update**: adds Shardstones
+  (a new socketable item type, dropped by every boss plus rare elite/chest
+  drops, ~90 new magic effects) and Tempering (pay to raise or risk
+  downgrading an existing enchantment). Both are new player-facing systems
+  layered on top of the existing enchanting economy, not replacements for
+  it — the balanced-template/boss-gating tuning audited in 2.0.0 is
+  untouched. The update also regroups the config file into numbered
+  sections; per the mod's own changelog this migrates every customized
+  setting (including our `Gated Bounty Mode` fix) to its new section
+  automatically on first load, so no manual config edit was made here.
+  **Recommend a live-server verification pass after the next boot** to
+  confirm the migration landed as documented — see CLAUDE.md Known Issues.
+- Soloredis-RtDOcean 2.2.38 → 2.2.39 — patch release; upstream gates its
+  changelog behind Discord, so no detail is available. Low-risk patch bump.
+- Marlthon-OdinShip 0.7.6 → 0.7.7 — patch release; no changelog shipped in
+  the package. Low-risk patch bump.
+- shudnal-Seasons 1.8.1 → 1.8.2 — bugfixes for Expand World Data
+  compatibility (biome/environment reload lifecycle, stale runtime
+  references on Control-environment changes). No config schema change.
+- Azumatt-AzuExtendedPlayerInventory 2.4.1 → 2.4.4 — stats-panel display
+  accuracy pass (Skill Raise Speed, Speed Modifier, Jump Height, Run
+  Stamina, resistances, and other HUD numbers were computed or labeled
+  incorrectly; actual gameplay values were never affected, only what was
+  shown) plus an equip-animation flicker fix and an AdventureBackpacks
+  stacking fix. No config or balance change.
+- Azumatt-AzuCraftyBoxes 1.8.14 → 1.8.15 — fixes an issue when destroying a
+  fireplace. No config schema change.
+- Azumatt-Recycle_N_Reclaim 1.4.0 → 1.4.1 — fixes armor recycling silently
+  returning only 75% of materials when a bad `Armor: 0.75` override shipped
+  active in 1.4.0's default template, and fixes an omitted `groups:` YAML
+  section breaking the reclaim list instead of defaulting to empty.
+  **Verified our shipped `Azumatt.Recycle_N_Reclaim_ExcludeLists.yml` has
+  neither issue** (no `recycleRates:` section, `groups:` present and
+  populated) — update applies cleanly with no manual config fix needed.
+
 ## [2.0.1] - 2026-07-26
 
 ### Changed
