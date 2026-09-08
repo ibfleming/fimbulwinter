@@ -5,6 +5,54 @@ All notable changes to Fimbulwinter will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.3] - 2026-09-08
+
+### Changed
+- RandyKnapp-EpicLoot 0.13.1 → 0.13.5 — rolls up four patch releases on top
+  of the 0.13.1 Shardstones/Tempering content drop. Additive systems and
+  fixes only, no rebalance of the enchanting economy: custom-biome support
+  (a new `biomedata.json` drives biome progression order and boss-key
+  assignments so mods like Expand World Data can slot in), a dedicated
+  "Upgrade Shardstones" mode, Brokkr's Gift artifact (adds shard slots to
+  existing gear), a Shardstone Compendium page, plus fixes for loot-gen
+  recursion with certain mods, a terrain-gen memory leak, bounty-system
+  crashes on partially-broken creatures, and shard handling in backpack-
+  style containers. New config lives in files we do not override
+  (`shardstones.json` `Global` block, `adventuredata.json`
+  `Tempering.CostsByRarity`) — our `randyknapp.mods.epicloot.cfg`
+  (balanced template, boss-gated items + bounties,
+  `Gated Bounty Mode = BossKillUnlocksCurrentBiomeBounties`) is unchanged.
+  The 0.13.1 config-migration verification called out in 2.0.2 is still
+  outstanding — see CLAUDE.md Known Issues; diff the server's post-boot
+  config against the repo next playtest.
+- JereKuusela-Server_devcommands 1.108.0 → 1.109.0 — admin/server tooling.
+  Fixes the console not always enabling, a permission check that misfired
+  during player-spawn events, and nested-directory handling in the file
+  loader; drops the Steamworks dependency so it runs on non-Steam hosts;
+  adds text-input prompts for `<value_title>` commands and skips console
+  history for commands typed with a leading space. No config schema change.
+- Soloredis-RtDOcean 2.2.39 → 2.2.41 — two patch releases; upstream gates
+  its changelog behind a Discord captcha, so no detail is available.
+  Low-risk patch bump, consistent with prior RtDOcean updates.
+- Marlthon-SeaAnimals 0.3.6 → 0.3.7 — patch release, no changelog shipped
+  with the package. Low-risk patch bump; creature mod keeps its internal
+  spawners (Spawn_That stays vanilla-only per CLAUDE.md).
+- Marlthon-OdinShip 0.7.7 → 0.7.8 — patch release, no changelog shipped
+  with the package. Low-risk patch bump.
+- OdinPlus-OdinHorse 1.6.5 → 1.6.6 — updated bundled PieceManager library
+  only. No config, keybind, or gameplay change.
+- Azumatt-AzuExtendedPlayerInventory 2.4.4 → 2.4.8 — updates to EpicLoot's
+  current API, adds retry logic so the bundled LocalizationManager no
+  longer errors when another mod inits Valheim localization first, keeps
+  the character preview in an idle pose, and — with AzuAutoStore or
+  Quick Stack Store installed (both are in this pack) — now defers
+  favorite/protected-item handling to them so Stack All won't move
+  flagged items. 2.4.8 adds one opt-in config toggle to re-impose
+  vanilla's one-active-utility limit while keeping the extra utility
+  slots; shipped at its default (off). Quick-slot hotkeys
+  (`Alt+Z/X/C/V`, `Alt+1`–`Alt+4`) are unchanged and no new binds were
+  added — keybind audit clean.
+
 ## [2.0.2] - 2026-08-19
 
 ### Changed
