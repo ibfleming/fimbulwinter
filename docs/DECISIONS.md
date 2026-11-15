@@ -55,15 +55,14 @@ their values were silently never read. The file is clean now (0/28 keys
 missing against the DLL via `strings -e l`). Any edit to this file should be
 confirmed in-game, not trusted from the file alone.
 
-Open question: a headless harvest of the pinned ATM version (the mod writing
-its own config from scratch) puts zero-width characters in five of its six
-section names and in the `RadiusModifier`, `HardnessModifier` and `Shovel`
-key names. BepInEx matches names exactly, and `strings -e l` skips those
-characters, so the check above can't tell the two spellings apart. If the
-mod's spelling is the real one, the plain-ASCII file is what's orphaned, and
-only two values are affected (`MaxRadius` 20 vs default 10,
-`HardnessScrollScale` 0.1 vs default 1). Settle it in game before changing
-the file.
+A headless harvest of the pinned ATM version (the mod writing its own config
+from scratch) puts zero-width characters in five of its six section names and
+in the `RadiusModifier`, `HardnessModifier` and `Shovel` key names. The plain
+file still works: checked in game on 2026-11-15, `MaxRadius = 20` takes effect
+(Alt+scroll goes past radius 10). So the file stays plain ASCII, and the
+config migration (`scripts/pipeline/config_diff.py`) keeps any plain-ASCII
+file plain instead of copying the mod's spelling, flagging the difference for
+an in-game check.
 
 ESPME ships per-piece extra-snap-point toggles for every ATM terrain-tool
 variant, gated by one master switch, `Extra Snap Points: Terrain`, which this

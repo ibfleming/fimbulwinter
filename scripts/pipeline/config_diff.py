@@ -14,8 +14,10 @@ For every shipped .cfg the rule per setting is:
   setting added in the new version           -> add at its default (auto)
 
 Section and key names are compared without zero-width characters (some
-mods use them for ordering); the rendered file keeps the names exactly as
-the new version writes them, because BepInEx matches names exactly.
+mods use them for ordering). When our file is plain ASCII the rendered file
+stays plain ASCII: ATM writes zero-width names but reads the plain ones
+(checked in game), and earlier zero-width copies orphaned keys. A file whose
+spelling differs from the mod's is flagged for an in-game check.
 
 "Old default" comes from the old-version harvest when given, otherwise from
 the `# Default value:` comment BepInEx wrote into the shipped file.
@@ -57,8 +59,7 @@ def norm(cfg: dict) -> dict:
 
     Some mods prefix section and key names with zero-width characters to
     control ordering in ConfigurationManager, and a new version may add or
-    drop them. BepInEx matches names exactly, so the rendered file always
-    uses the names the new version itself writes.
+    drop them.
     """
     return {(ZERO_WIDTH.sub("", sec), ZERO_WIDTH.sub("", key)): v
             for (sec, key), v in cfg.items()}
@@ -145,12 +146,14 @@ def diff_file(rel: str, shipped: Path, new: Path | None, old: Path | None) -> di
     res["auto"] = sum(1 for c in res["changes"] if not c["review"]
                       and c["kind"] != "kept-not-generated")
     res["kept"] = len(keep)
-    res["_render"] = (n_text, final, keep, bom, nl)
+    res["_render"] = (n_text, final, keep, bom, nl, not zw_ours)
     return res
 
 
-def render(n_text: str, final: dict, keep: list, bom: bool, nl: str) -> bytes:
-    """New harvest text with our values put back and kept lines re-added."""
+def render(n_text: str, final: dict, keep: list, bom: bool, nl: str,
+           plain: bool = False) -> bytes:
+    """New harvest text with our values put back and kept lines re-added.
+    plain=True strips zero-width characters (our file has none)."""
     out: list[str] = []
     section, pending = "", {}
     for sec, key, val in keep:
@@ -180,6 +183,8 @@ def render(n_text: str, final: dict, keep: list, bom: bool, nl: str) -> bytes:
     while out and out[-1] == "":
         out.pop()
     text = nl.join(out) + nl
+    if plain:
+        text = ZERO_WIDTH.sub("", text)
     return (b"\xef\xbb\xbf" if bom else b"") + text.encode("utf-8")
 
 
@@ -209,8 +214,9 @@ def to_md(results: list[dict]) -> str:
                 rows.append(f"| `{r['file']}` | (names) | the mod "
                             f"{'writes' if c['mod_writes'] else 'does not write'} zero-width "
                             f"characters in section/key names, our file "
-                            f"{'has' if c['ours_has'] else 'does not'}; BepInEx matches "
-                            f"names exactly | new file uses the mod's names | yes |")
+                            f"{'has' if c['ours_has'] else 'does not'} | new file keeps "
+                            f"{'plain names' if not c['ours_has'] else 'the mod names'}; "
+                            f"check in game that the values take effect | yes |")
                 continue
             else:
                 cands = ", ".join(f"`{x}`" for x in c["rename_candidates"]) or "none"

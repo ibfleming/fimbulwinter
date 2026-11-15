@@ -98,8 +98,8 @@ Full rationale: `docs/DECISIONS.md`.
 5. **Config regeneration:** let the mod write its config fresh, then carry forward customized values --
    don't assume the old file's schema still matches. `scripts/pipeline/boot-test.sh harvest` does the
    fresh write headless (every mod, empty config) and `scripts/pipeline/config_diff.py` does the 3-way
-   carry-forward. Section and key names must match what the mod writes **exactly**, zero-width
-   characters included -- `strings -e l` skips those characters, so it can't prove a key matches.
+   carry-forward. Don't add zero-width characters to a plain-ASCII file even when the mod writes them
+   (see the ATM row below); `strings -e l` skips those characters, so confirm key matches in game.
 6. If the mod is client-only, add it to `CLIENT_ONLY_MODS` in `scripts/install-mods.sh` (single source
    of truth). If server-only, add to `SERVER_ONLY_MODS` in `scripts/export-profile.sh`.
 7. Boot-verify: `scripts/pipeline/boot-test.sh verify` locally, or deploy and check `LogOutput.log` for
@@ -157,7 +157,7 @@ scripts and this file.
 | AdventureBackpacks occupies the Cape/Shoulder slot | Not a separate slot -- items are typed as capes internally. Can't wear a backpack and a cape together. No config option to change this. |
 | AdventureBackpacks `Outward Mode` / `Open with Inventory` | Both default `false` in `[Local Config]` (client-side, not server-synced). `Outward Mode` gates the whole `Y` quick-drop feature -- the keybind can be correctly set and still do nothing if this is off. Both shipped `true` in `config/`. |
 | AdventureBackpacks telemetry | `Send Error Reports` defaults to on upstream and makes outbound HTTP calls. Shipped `false`, with `Enable Anonymous Telemetry = false` and the splash screen off. Re-check after every AdventureBackpacks update. |
-| ATM config must stay plain ASCII | `Searica.Valheim.TerrainTools.cfg` must not contain zero-width characters (they orphan keys silently). Verify any edit to this file actually takes effect in-game. **Under review:** the pinned ATM version's own fresh config (headless harvest) puts zero-width characters in five of its six section names and in the `RadiusModifier`, `HardnessModifier` and `Shovel` key names, so the plain-ASCII file may be the one that's orphaned. Check in game whether `MaxRadius = 20` takes effect (Alt+scroll past radius 10) before changing either way. |
+| ATM config must stay plain ASCII | `Searica.Valheim.TerrainTools.cfg` must not contain zero-width characters (they orphan keys silently). The mod's own fresh config uses zero-width names, but the plain file is read correctly (checked in game: `MaxRadius = 20` takes effect). `config_diff.py` keeps it plain. Verify any edit to this file actually takes effect in-game. |
 | RecycleItemsIntoParts has no "discard anything" option | Needs some resolvable recipe to act at all -- not a general trash function. Re-run the club test (recycle a plain club, expect only wood back) after every update. |
 | ServersideQoL + AutoStore/CraftFromChests concurrency | Watch for item-count desync if two players hit the same chest while a smelter is feeding from it -- not deeply stress-tested. |
 | Server_devcommands: `Automatic devcommands` | `false` deliberately -- admins run `devcommands` explicitly rather than it auto-enabling on join. |
