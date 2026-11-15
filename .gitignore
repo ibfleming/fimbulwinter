@@ -34,3 +34,7 @@ manifest.json
 
 # Deploy credentials (deploy.sh)
 .env
+
+# Pipeline output (scripts/pipeline, mod-maintenance workflow)
+ci-out/
+__pycache__/
