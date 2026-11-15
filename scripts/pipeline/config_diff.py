@@ -3,7 +3,8 @@
 
 For every shipped .cfg the rule per setting is:
 
-  shipped == old default, default changed    -> follow the new default (auto)
+  shipped == old default, default changed    -> follow the new default (auto),
+                                                except keybinds: keep ours, review
   shipped customised, default unchanged      -> keep ours (auto)
   shipped customised, default also changed   -> keep ours, flag for review
   setting the old version wrote, the new not -> drop it, flag for review
@@ -89,7 +90,14 @@ def diff_file(rel: str, shipped: Path, new: Path | None, old: Path | None) -> di
         if od is None:
             od = sv
         entry.update(shipped=sv, old_default=od)
-        if sv == od:
+        if sv == od and entry["keybind"] and nv["value"] != od:
+            # Never move a key players already use (and the README lists)
+            # just because the mod changed its default; new defaults often
+            # collide with vanilla or other mods.
+            final[k] = sv
+            entry.update(kind="keybind-default-changed", result=sv, review=True)
+            res["changes"].append(entry)
+        elif sv == od:
             final[k] = nv["value"]
             if nv["value"] != od:
                 entry.update(kind="default-changed", result=nv["value"], review=False)
@@ -187,6 +195,10 @@ def to_md(results: list[dict]) -> str:
                 what, result = "new setting", f"`{c['result']}` (default)"
             elif c["kind"] == "default-changed":
                 what, result = f"default `{c['old_default']}` -> `{c['new_default']}`", f"`{c['result']}`"
+            elif c["kind"] == "keybind-default-changed":
+                what = (f"default `{c['old_default']}` -> `{c['new_default']}`; "
+                        f"ours was the old default")
+                result = f"`{c['result']}` (key kept)"
             elif c["kind"] == "customised-default-changed":
                 what = (f"default `{c['old_default']}` -> `{c['new_default']}`, "
                         f"ours is `{c['shipped']}`")
