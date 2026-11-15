@@ -1,0 +1,43 @@
+name: Checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/setup-tools
+
+      - name: Script syntax
+        run: |
+          for f in scripts/*.sh scripts/pipeline/*.sh; do bash -n "$f"; done
+          python3 -m py_compile scripts/pipeline/*.py
+
+      - name: Changelog
+        env:
+          SKIP_CHANGELOG: ${{ contains(github.event.pull_request.labels.*.name, 'skip-changelog') && '1' || '' }}
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            make changelog-lint ARGS="--base origin/${{ github.base_ref }}"
+          else
+            make changelog-lint
+          fi
+
+      - name: Keybinds
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            make keybind-audit ARGS="--base origin/${{ github.base_ref }}"
+          else
+            make keybind-audit
+          fi

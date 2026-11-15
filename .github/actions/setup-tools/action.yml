@@ -1,0 +1,33 @@
+name: Set up release tooling
+description: Installs pinned changie, git-cliff and tcli binaries onto PATH.
+
+inputs:
+  tcli:
+    description: Also install the Thunderstore CLI
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        CHANGIE_VERSION: "1.26.0"
+        GIT_CLIFF_VERSION: "2.14.2"
+        TCLI_VERSION: "0.2.4"   # 0.2.5 is a tag only -- no release binaries published
+        WANT_TCLI: ${{ inputs.tcli }}
+      run: |
+        set -euo pipefail
+        bin="$RUNNER_TEMP/tools"
+        mkdir -p "$bin"
+        cd "$RUNNER_TEMP"
+        curl -fsSL "https://github.com/miniscruff/changie/releases/download/v${CHANGIE_VERSION}/changie_${CHANGIE_VERSION}_linux_amd64.tar.gz" | tar xz -C "$bin" changie
+        curl -fsSL "https://github.com/orhun/git-cliff/releases/download/v${GIT_CLIFF_VERSION}/git-cliff-${GIT_CLIFF_VERSION}-x86_64-unknown-linux-gnu.tar.gz" | tar xz
+        mv "git-cliff-${GIT_CLIFF_VERSION}/git-cliff" "$bin/"
+        if [ "$WANT_TCLI" = "true" ]; then
+          curl -fsSL "https://github.com/thunderstore-io/thunderstore-cli/releases/download/${TCLI_VERSION}/tcli-${TCLI_VERSION}-linux-x64.tar.gz" | tar xz
+          find . -maxdepth 2 -name tcli -type f -exec mv {} "$bin/" \;
+          chmod +x "$bin/tcli"
+        fi
+        echo "$bin" >> "$GITHUB_PATH"
+        "$bin/changie" --version
+        "$bin/git-cliff" --version
