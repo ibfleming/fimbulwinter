@@ -9,11 +9,12 @@ admin binds in config/binds.yaml, then:
            conflicts that are new since REF are failures (exit 1); the ones
            already present at REF are reported as known.
   changes  lists binds added, removed or moved between --from REF and the
-           working tree (or --to REF). This feeds the player changelog.
+           working tree (or --to REF). With --players the labels use mod and
+           setting names; that form goes into the player changelog.
 
 Usage:
   keybind_audit.py audit [--base REF] [--md out.md]
-  keybind_audit.py changes --from REF [--to REF] [--md out.md]
+  keybind_audit.py changes --from REF [--to REF] [--players] [--md out.md]
 """
 from __future__ import annotations
 
@@ -113,6 +114,26 @@ def cmd_audit(a) -> int:
     return 0
 
 
+def player_label(name: str) -> str:
+    """'shudnal.ExtraSlots.cfg [Section] Next row shortcut' ->
+    'ExtraSlots: Next row shortcut' (the pinned mod's name when it matches
+    the config file name, otherwise the file name's last part)."""
+    if name.startswith("binds.yaml"):
+        return "Admin binds: " + name.split("(", 1)[-1].rstrip(")")
+    file, _, rest = name.partition(" ")
+    setting = rest.split("] ", 1)[-1]
+    tail = file.removesuffix(".cfg").split(".")[-1]
+    flat = lambda s: re.sub(r"[^a-z0-9]", "", s.lower())
+    mod = next((m.split("-", 1)[1].replace("_", " ") for m in tslib.pinned_deps()
+                if flat(m.split("-", 1)[1]) == flat(tail)), tail)
+    return f"{mod}: {setting}"
+
+
+def pretty_combo(main: str, mods: frozenset) -> str:
+    spaced = lambda k: re.sub(r"(?<=[a-z])(?=[A-Z0-9])", " ", k)
+    return " + ".join(spaced(k) for k in sorted(mods) + [main])
+
+
 def cmd_changes(a) -> int:
     old, new = binds(getattr(a, "from")), binds(a.to)
     rows = []
@@ -120,13 +141,19 @@ def cmd_changes(a) -> int:
         o, n = old.get(name), new.get(name)
         if o == n:
             continue
-        label = name.replace(".cfg", "")
-        if o is None:
-            rows.append(f"- New key: `{combo(*n)}` ({label})")
-        elif n is None:
-            rows.append(f"- Removed key: `{combo(*o)}` ({label})")
+        if a.players:
+            label, fmt = player_label(name), pretty_combo
         else:
-            rows.append(f"- `{combo(*o)}` -> `{combo(*n)}` ({label})")
+            label, fmt = name.replace(".cfg", ""), lambda *c: f"`{combo(*c)}`"
+        if o is None:
+            rows.append(f"- New: {fmt(*n)} -- {label}" if a.players
+                        else f"- New key: {fmt(*n)} ({label})")
+        elif n is None:
+            rows.append(f"- Removed: {fmt(*o)} -- {label}" if a.players
+                        else f"- Removed key: {fmt(*o)} ({label})")
+        else:
+            rows.append(f"- {fmt(*o)} is now {fmt(*n)} -- {label}" if a.players
+                        else f"- {fmt(*o)} -> {fmt(*n)} ({label})")
     md = "\n".join(rows) + "\n" if rows else ""
     if a.md:
         Path(a.md).write_text(md)
@@ -145,6 +172,8 @@ def main() -> int:
     p.add_argument("--from", required=True)
     p.add_argument("--to")
     p.add_argument("--md")
+    p.add_argument("--players", action="store_true",
+                   help="player-facing labels (mod and setting names, spaced key names)")
     a = ap.parse_args()
     return cmd_audit(a) if a.cmd == "audit" else cmd_changes(a)
 
