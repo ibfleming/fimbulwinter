@@ -1,0 +1,75 @@
+# ═══════════════════════════════════════════════════════════════
+# Fimbulwinter — server-side-first Valheim modpack
+#
+# If the server can do it, the server does it -- players install as
+# little as possible and console/vanilla clients are never locked out,
+# except AdventureBackpacks (ModRequired on both sides, see README).
+# ═══════════════════════════════════════════════════════════════
+
+[config]
+schemaVersion = "0.0.1"
+
+[general]
+repository = "https://thunderstore.io"
+
+[package]
+namespace = "ibfleming"
+name = "Fimbulwinter"
+description = "Server-side-first Valheim modpack: quality of life, building tools and biome backpacks, with most of the work done on the dedicated server so clients stay close to vanilla."
+versionNumber = "3.0.0"
+websiteUrl = "https://github.com/ibfleming/fimbulwinter"
+
+[package.dependencies]
+
+# ── Loader + shared libraries (both sides) ─────────────────────
+denikson-BepInExPack_Valheim = "5.4.2350"
+ValheimModding-YamlDotNet = "16.3.1"
+shudnal-ConditionalConfigSync = "1.0.8"
+ValheimModding-Jotunn = "2.30.1"
+
+# ── Content (both sides, ModRequired -- the one exception to the
+#    "no content mods" rule; needs Jotunn on both sides) ──────
+Vapok-AdventureBackpacks = "2.1.4"
+
+# ── Client UI / QoL ───────────────────────────────────────────
+shudnal-MyLittleUI = "1.2.22"
+shudnal-ExtraSlots = "1.2.12"
+Toxo-CraftFromChests = "0.4.0"
+Neobotics-HUDCompass = "1.2.0"
+JoelOliMclean-NoRainDamage = "1.3.0"
+korCaptain-NullReferenceFix = "1.0.20"
+JereKuusela-Server_devcommands = "1.113.0"
+Crystal-DeathPenalty = "1.3.1"
+cjayride-RecycleItemsIntoParts = "1.7.3"
+
+# ── Client-only building ────────────────────────────────────────
+ComfyMods-Gizmo = "1.16.0"
+Searica-Extra_Snap_Points_Made_Easy = "2.1.0"
+Ostrix-AdvancedTerrainModifiersCompatible = "1.4.8"
+Zenox-ServerConnect = "1.0.7"
+
+# ── Server-side only (never shipped to clients) ────────────────
+# Mirrored by SERVER_ONLY_MODS in scripts/export-profile.sh.
+ArgusMagnus-ServersideQoL = "2.0.13"
+ArgusMagnus-ServersideQoL_AutoStore = "2.0.11"
+ArgusMagnus-ServersideQoL_ContainerSizes = "2.0.11"
+ArgusMagnus-ServersideQoL_AutoProcess = "2.0.11"
+ArgusMagnus-ServersideQoL_LetItFloat = "2.0.11"
+ArgusMagnus-ServersideQoL_JustSleep = "2.0.11"
+ArgusMagnus-ServersideQoL_MultiplayerTweaks = "2.0.11"
+
+[publish]
+communities = ["valheim"]
+
+[publish.categories]
+valheim = ["modpacks", "tweaks", "server-side", "deep-north-update"]
+
+[build]
+
+[[build.copy]]
+source = "config"
+target = "config"
+
+[[build.copy]]
+source = "CHANGELOG.md"
+target = "CHANGELOG.md"

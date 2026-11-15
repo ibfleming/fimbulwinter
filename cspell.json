@@ -1,0 +1,19 @@
+{
+  "version": "0.2",
+  "ignorePaths": ["thunderstore.toml"],
+  "dictionaryDefinitions": [],
+  "dictionaries": [],
+  "words": [
+    "debugmode",
+    "devcommands",
+    "Fimbulwinter",
+    "ibfleming",
+    "nocost",
+    "pacc",
+    "tcli",
+    "teleporting",
+    "Thunderstore"
+  ],
+  "ignoreWords": [],
+  "import": []
+}

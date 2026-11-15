@@ -1,0 +1,34 @@
+name: Check Mod Updates
+
+on:
+  schedule:
+    # Every day at 08:00 UTC
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+jobs:
+  check-updates:
+    name: Check Thunderstore Updates
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # scripts/update-mods.sh writes updates_available / update_list to
+      # GITHUB_OUTPUT and a report to GITHUB_STEP_SUMMARY on its own.
+      - name: Check for mod updates
+        id: check
+        run: make updates
+
+      # Always runs: with updates it files/supersedes the single open
+      # mod-updates issue, with none it closes any that are still open.
+      - name: Sync tracking issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UPDATE_LIST: ${{ steps.check.outputs.update_list }}
+        run: bash scripts/ci-update-issue.sh

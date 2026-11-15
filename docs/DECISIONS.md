@@ -1,0 +1,112 @@
+# Decisions
+
+Why Fimbulwinter is the way it is. This is the rationale record, kept out of
+README.md and CHANGELOG.md so those stay readable for players, while the
+evidence behind each call stays available to whoever maintains the pack.
+Add to this file rather than letting README/CHANGELOG grow a diary.
+
+## Server-side first
+
+If the dedicated server can do something, the server does it. Players install
+as little as possible, and unmodded or console clients are never locked out of
+the server-side features. The ArgusMagnus ServersideQoL suite carries most of
+the quality of life for exactly this reason: storage, smelting, floating
+items, sleep voting and desync fixes are all server-authoritative.
+
+## Jotunn
+
+Jotunn is only in the pack because two mods need it:
+
+- **Ostrix-AdvancedTerrainModifiersCompatible** (client-only). It works
+  without Jotunn on the server: terrain syncs through vanilla RPCs, and
+  Jotunn's compatibility handshake is skipped when the server doesn't run it.
+- **Vapok-AdventureBackpacks** (both sides). Its own README requires it on
+  client and server with built-in version checking, which puts Jotunn on the
+  server too. This is a deliberate tradeoff: AdventureBackpacks is the one mod
+  in the pack that can turn a mismatched or missing client away on connect.
+
+## Terrain tools: why the ATM fork
+
+Square hoe/cultivator brushes are a hard requirement. The original
+Searica-AdvancedTerrainModifiers is unmaintained (last release 2024-12, pinned
+to Jotunn 2.22). Alternatives evaluated:
+
+- `Heimlife-Flattenheim` -- no Jotunn, but its `Shape: Square/Circle` option
+  only applies to its pickaxe-flatten tool (the DLL's hoe/cultivator radius
+  hook never sets `m_square`).
+- VentureValheim `Pathside_Assistance` + `Venture_Terrain_Reset` -- trusted
+  author, no dependencies, but circular brushes only.
+- `disregardthatisuck-PreciseRotation`, `PONEIS-TerrainShaperPlus`,
+  `MathiasDecrock-PlanBuild` -- all pull in Jotunn or HookGenPatcher for less
+  than the fork provides.
+
+`Ostrix-AdvancedTerrainModifiersCompatible` is a fork of ATM 1.4.1 (commit
+`e773c62`) with the same plugin GUID, and the only Valheim 1.0 option with
+square tools. It carries Thunderstore's "AI Generated" tag, but on a
+compatibility shim over Searica's original gameplay code rather than an
+AI-written rewrite.
+
+## ATM config must stay plain ASCII
+
+`Searica.Valheim.TerrainTools.cfg` once carried zero-width-space characters
+on several section headers (a ConfigurationManager artifact). Three keys --
+`RadiusModifier`, `HardnessModifier`, `Shovel` -- were orphaned by it, and
+their values were silently never read. The file is clean now (0/28 keys
+missing against the DLL via `strings -e l`). Any edit to this file should be
+confirmed in-game, not trusted from the file alone.
+
+ESPME ships per-piece extra-snap-point toggles for every ATM terrain-tool
+variant, gated by one master switch, `Extra Snap Points: Terrain`, which this
+pack turns on. The six plain-circle ATM tool variants (`raise_v2`,
+`mud_road_v2`, `path_v2`, `paved_road_v2`, `cultivate_v2`, `replant_v2`) are
+listed explicitly at their defaults rather than left to auto-populate.
+
+## Recycling: why RecycleItemsIntoParts
+
+`TastyChickenLegs-RecyclePlus` was rejected: it recycled a plain club (6 wood)
+into a Wooden Battle Idol, 100% reproducibly. Valheim 1.0's refinement forge
+has recipes that consume idols, and RecyclePlus resolves materials through
+`GetRecipe`, picking up the refinement recipe instead of the crafting one.
+Nothing in its config could prevent it.
+
+`cjayride-RecycleItemsIntoParts` fixes the same case on its own (its 1.7.2
+changelog) and passes the club test: craft a plain club, recycle it, get wood
+back and nothing else. Re-run that test after any update to it. It has no
+"discard anything" option -- the DLL exposes 8 config keys and needs a
+resolvable recipe to act at all.
+
+## Mods evaluated and rejected
+
+- **Swmarly-SwmarlyValheimQOL** -- boots clean alongside ServersideQoL, but
+  duplicates four behaviours already covered (floating items, sleep-skip
+  voting, no rain damage, eternal fires) and carries the "AI Generated" tag
+  with little history. Worth revisiting if it matures.
+- **VitByr-VBNetTweaks** -- its own README lists Searica NetworkTweaks' GUID
+  as a hard incompatibility, and it carries the "AI Generated" tag with little
+  history.
+- **BentoG-MissingPieces** -- writes custom prefabs into the world; removing
+  it later leaves holes in existing builds.
+
+## Keybinds
+
+The current bind table is in README.md "Keyboard Shortcuts". Why the
+non-default binds are where they are:
+
+- **ExtraSlots quick slots 5/6 on `Alt+U`/`Alt+Y`.** The mod's defaults
+  collide with its own food slots (`Alt+Q`, `Alt+R`); the food row keeps
+  `Alt+Q/E/R`.
+- **HUDCompass toggle on bare `J`.** Its default `Alt+C` collides with
+  ExtraSlots quick slot 3.
+- **ExtraSlots `Rebind Connect Panel = F2`.** This is vanilla's own F2
+  performance HUD (FPS/ping/ZDOs) exposed through ExtraSlots' config, not a
+  conflict. Leave it on F2.
+- **Gizmo reset on `G`.** `V` is vanilla voice chat.
+- **ESPME Manual+ toggle on `B`.** Its default `LeftAlt` is Gizmo's z-rotate
+  hold and ATM's radius-scroll modifier.
+- **Gizmo and ATM both use `LeftAlt`+scroll in build mode.** Resolved by
+  Gizmo's `ignoreTerrainOpPrefab = true`: Gizmo doesn't activate on
+  terrain-modifying tools, so the scroll goes to ATM whenever a terrain tool
+  (not the hammer) is equipped.
+- **Admin binds on plain letters** (`O` = `debugmode`+`nocost`+`god`, `K` =
+  `fly`). F9-F12 are common Steam Input, overlay and macro-software hotkeys
+  that can swallow the keypress before Valheim sees it.
