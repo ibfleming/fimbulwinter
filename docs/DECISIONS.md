@@ -55,6 +55,16 @@ their values were silently never read. The file is clean now (0/28 keys
 missing against the DLL via `strings -e l`). Any edit to this file should be
 confirmed in-game, not trusted from the file alone.
 
+Open question: a headless harvest of the pinned ATM version (the mod writing
+its own config from scratch) puts zero-width characters in five of its six
+section names and in the `RadiusModifier`, `HardnessModifier` and `Shovel`
+key names. BepInEx matches names exactly, and `strings -e l` skips those
+characters, so the check above can't tell the two spellings apart. If the
+mod's spelling is the real one, the plain-ASCII file is what's orphaned, and
+only two values are affected (`MaxRadius` 20 vs default 10,
+`HardnessScrollScale` 0.1 vs default 1). Settle it in game before changing
+the file.
+
 ESPME ships per-piece extra-snap-point toggles for every ATM terrain-tool
 variant, gated by one master switch, `Extra Snap Points: Terrain`, which this
 pack turns on. The six plain-circle ATM tool variants (`raise_v2`,
@@ -110,3 +120,27 @@ non-default binds are where they are:
 - **Admin binds on plain letters** (`O` = `debugmode`+`nocost`+`god`, `K` =
   `fly`). F9-F12 are common Steam Input, overlay and macro-software hotkeys
   that can swallow the keypress before Valheim sees it.
+
+## Maintenance pipeline and release notes
+
+- **Scripts first, AI last.** Everything checkable is a script: update and
+  deprecation detection, changelog slices, the DLL key check, headless boot
+  tests, the 3-way config migration and the keybind audit. The Claude step
+  only resolves what the scripts flag and writes notes, which keeps it cheap
+  enough for a Pro plan and keeps every run reproducible locally.
+- **One rolling PR, not one per mod.** A single branch, `bot/maintenance`,
+  with one commit per mod so any one can be reverted. Releases younger than
+  48 hours are skipped (authors here often ship same-day hotfixes), and the
+  batch runs weekly unless a new Valheim build or a deprecation makes it
+  urgent.
+- **Headless harvest for config defaults.** A dedicated server with every
+  mod, client-only ones included, and an empty config writes fresh defaults
+  for nearly every mod, so config migration doesn't need a game client.
+  Settings a mod only creates in a client (ESPME's per-piece toggles, some
+  ATM tool entries) are kept as shipped rather than treated as removed.
+- **changie for players, git-cliff for developers.** Player notes are small
+  files written and reviewed in the PR, because commit subjects for a
+  modpack are mostly "bump X" and make poor player notes. semantic-release
+  and release-please were rejected: both build notes from commits only, and
+  semantic-release would tag and publish on every merge. git-cliff supplies
+  only the commit list in the GitHub Release.
