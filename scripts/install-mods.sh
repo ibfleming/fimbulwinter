@@ -20,13 +20,17 @@
 #
 # Usage:
 #   install-mods.sh --server-dir DIR [--source thunderstore|local]
-#                   [--repo-dir DIR] [--full]
+#                   [--repo-dir DIR] [--full] [--include-client] [--no-config]
 #
 #   --server-dir DIR   Target server root (e.g. /mnt/server, /home/container)
 #   --source           thunderstore (default): latest published modpack
 #                      local: resolve from --repo-dir's thunderstore.toml + config/
 #   --repo-dir DIR     Repo checkout for --source local
 #   --full             Force full sync (ignore manifest / delta path)
+#   --include-client   Also install CLIENT_ONLY_MODS (CI config harvest only;
+#                      a real server never wants these)
+#   --no-config        Don't overlay the pack's config/ (CI config harvest:
+#                      every mod writes its own fresh defaults)
 #
 # Requires: bash, curl, jq, unzip
 # ═══════════════════════════════════════════════════════════════
@@ -57,12 +61,16 @@ SERVER_DIR=""
 SOURCE="thunderstore"
 REPO_DIR=""
 FORCE_FULL=false
+INCLUDE_CLIENT=false
+APPLY_CONFIG=true
 while [ $# -gt 0 ]; do
     case "$1" in
         --server-dir) SERVER_DIR="$2"; shift 2 ;;
         --source)     SOURCE="$2"; shift 2 ;;
         --repo-dir)   REPO_DIR="$2"; shift 2 ;;
         --full)       FORCE_FULL=true; shift ;;
+        --include-client) INCLUDE_CLIENT=true; shift ;;
+        --no-config)  APPLY_CONFIG=false; shift ;;
         *) fatal "Unknown argument: $1" ;;
     esac
 done
@@ -228,7 +236,9 @@ fi
 desired=()
 for dep in $dependencies; do
     parse_dependency "$dep"
-    is_client_only "$DEP_FULLNAME" || desired+=("$dep")
+    if $INCLUDE_CLIENT || ! is_client_only "$DEP_FULLNAME"; then
+        desired+=("$dep")
+    fi
 done
 
 mode="full"
@@ -342,7 +352,7 @@ for dep in ${to_install[@]+"${to_install[@]}"}; do
 done
 
 # ── Configs (always re-overlaid; applied last to override defaults) ──
-if [ -d "$config_source" ]; then
+if $APPLY_CONFIG && [ -d "$config_source" ]; then
     log "Installing modpack configuration files..."
     mkdir -p "${CONFIG_DIR}"
     cp -r "${config_source}/"* "${CONFIG_DIR}/"
