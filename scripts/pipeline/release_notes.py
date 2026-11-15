@@ -10,14 +10,15 @@
   github   Writes the GitHub Release body: the player notes, mod updates
            with links to each mod's changelog, the key-level config diff,
            and the git-cliff commit log ("Under the hood").
-  level    Prints the changie batch argument for the next release: auto
-           if there are notes, otherwise patch.
+  level    Prints the changie batch argument for the next release: minor
+           when a mod that runs on both sides changed (every player must
+           update), else auto if there are notes, else patch.
 
 Usage:
   release_notes.py prep [--from REF] [--repo-url URL]
   release_notes.py readme
   release_notes.py github --version X.Y.Z [--from REF] [--cliff PATH] --out FILE
-  release_notes.py level
+  release_notes.py level [--from REF]
 """
 from __future__ import annotations
 
@@ -84,7 +85,8 @@ def need_update(changes: list[dict], heads_up: bool) -> str:
 
 def keybind_changes(ref: str) -> str:
     r = subprocess.run(["python3", str(Path(__file__).with_name("keybind_audit.py")),
-                        "changes", "--from", ref], capture_output=True, text=True, check=True)
+                        "changes", "--from", ref, "--players"],
+                       capture_output=True, text=True, check=True)
     return r.stdout.strip()
 
 
@@ -100,7 +102,7 @@ def cmd_prep(a) -> int:
     header.append(need_update(changes, heads_up))
     (UNRELEASED / "header.md").write_text("\n\n".join(header))
 
-    footer = [""]
+    footer = []
     if changes:
         footer += ["", "### Mod updates"]
         for c in changes:
@@ -202,15 +204,21 @@ def cmd_github(a) -> int:
             out += ["## Under the hood", "", r.stdout.strip(), ""]
         else:
             tslib.log(f"git-cliff failed: {r.stderr.strip()}")
+    Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text("\n".join(out).strip() + "\n")
     tslib.log(f"wrote {a.out}")
     return 0
 
 
-def cmd_level(_a) -> int:
-    # With notes, changie picks the bump from their kinds (Heads-up, Added
-    # and Removed are minor). Mod bumps alone are a patch release.
-    print("auto" if any(UNRELEASED.glob("*.yaml")) else "patch")
+def cmd_level(a) -> int:
+    # A release every player must install (a mod that runs on both sides
+    # changed) is at least minor. Otherwise changie picks from the notes'
+    # kinds (Heads-up, Added and Removed are minor); mod bumps alone that
+    # players don't need are a patch.
+    if any(c["side"] == "both" for c in mod_changes(base_ref(a.ref))):
+        print("minor")
+    else:
+        print("auto" if any(UNRELEASED.glob("*.yaml")) else "patch")
     return 0
 
 
@@ -226,7 +234,8 @@ def main() -> int:
     p.add_argument("--from", dest="ref")
     p.add_argument("--cliff")
     p.add_argument("--out", required=True)
-    sub.add_parser("level")
+    p = sub.add_parser("level")
+    p.add_argument("--from", dest="ref")
     a = ap.parse_args()
     return {"prep": cmd_prep, "readme": cmd_readme, "github": cmd_github,
             "level": cmd_level}[a.cmd](a)
