@@ -105,9 +105,9 @@ while (( SECONDS - start < TIMEOUT )); do
     fi
     # Unity's own log reaches LogOutput.log only when BepInEx.cfg says so
     # (a harvest boot runs on defaults, where it doesn't), so watch stdout
-    # too. "Opened Steam server" comes after world load; "Loading: Done"
-    # alone would also match the earlier main-menu load.
-    if grep -qE "Game server connected|Opened Steam server" "${OUT}/stdout.log" "$LOGFILE" 2>/dev/null; then
+    # too. "Opened Steam server" is logged once the world is loaded or
+    # generated; "Game server connected" can come before world generation.
+    if grep -q "Opened Steam server" "${OUT}/stdout.log" "$LOGFILE" 2>/dev/null; then
         ready=true
         break
     fi
