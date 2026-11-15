@@ -1,9 +1,22 @@
 name: Publish to Thunderstore
 
+# Runs on a pushed v*.*.* tag, or is called by release.yml (a tag pushed with
+# the default GITHUB_TOKEN does not trigger other workflows, so release.yml
+# calls this one directly).
+
 on:
   push:
     tags:
       - "v*.*.*"
+  workflow_call:
+    inputs:
+      ref:
+        description: "Tag to publish (vX.Y.Z)"
+        required: true
+        type: string
+    secrets:
+      TCLI_AUTH_TOKEN:
+        required: true
   workflow_dispatch:
     inputs:
       dry_run:
@@ -21,49 +34,40 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
+      tag: ${{ steps.version.outputs.tag }}
     permissions:
-      contents: write
+      contents: read
     steps:
-      - name: Checkout (Shallow)
+      - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.ref || github.ref }}
           fetch-depth: 1
 
       - name: Extract & Verify Version
         id: version
+        env:
+          REF: ${{ inputs.ref || (github.ref_type == 'tag' && github.ref_name) || '' }}
         run: |
           TOML_VERSION=$(make -s version)
-
-          if [[ "${{ github.ref_type }}" == "tag" ]]; then
-            TAG_VERSION="${{ github.ref_name }}"
-            TAG_VERSION="${TAG_VERSION#v}"
+          if [ -n "$REF" ]; then
+            TAG_VERSION="${REF#v}"
             if [ "$TAG_VERSION" != "$TOML_VERSION" ]; then
               echo "::error::Tag ($TAG_VERSION) does not match TOML ($TOML_VERSION)"
               exit 1
             fi
-            VERSION=$TAG_VERSION
-          else
-            VERSION=$TOML_VERSION
           fi
-
-          # Ensure version exists in CHANGELOG
-          if ! grep -q "^## \[$VERSION\]" CHANGELOG.md; then
-            echo "::error::Version $VERSION not found in CHANGELOG.md"
+          if ! grep -q "^## \[$TOML_VERSION\]" CHANGELOG.md; then
+            echo "::error::Version $TOML_VERSION not found in CHANGELOG.md"
             exit 1
           fi
+          echo "version=$TOML_VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=${REF}" >> "$GITHUB_OUTPUT"
+          echo "Processing version: $TOML_VERSION"
 
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Processing version: $VERSION"
-
-      - name: Install Thunderstore CLI
-        run: |
-          TCLI_VERSION="0.2.4"  # 0.2.5 is a tag only -- no release binaries published
-          curl -fsSL "https://github.com/thunderstore-io/thunderstore-cli/releases/download/${TCLI_VERSION}/tcli-${TCLI_VERSION}-linux-x64.tar.gz" -o tcli.tar.gz
-          tar xzf tcli.tar.gz
-          find . -maxdepth 2 -name "tcli" -type f -exec mv {} . \;
-          chmod +x tcli
-          echo "$PWD" >> "$GITHUB_PATH"
-          ./tcli --version || true
+      - uses: ./.github/actions/setup-tools
+        with:
+          tcli: "true"
 
       - name: Build Package
         run: make build
@@ -81,7 +85,7 @@ jobs:
           retention-days: 14
 
       - name: Publish to Thunderstore
-        if: github.ref_type == 'tag' || inputs.dry_run == 'false'
+        if: steps.version.outputs.tag != '' || inputs.dry_run == 'false'
         env:
           TCLI_AUTH_TOKEN: ${{ secrets.TCLI_AUTH_TOKEN }}
         run: |
@@ -92,12 +96,17 @@ jobs:
     name: Create GitHub Release
     runs-on: ubuntu-latest
     needs: build-and-publish
-    if: github.ref_type == 'tag'
+    if: needs.build-and-publish.outputs.tag != ''
     permissions:
       contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.build-and-publish.outputs.tag }}
+          fetch-depth: 0   # release notes compare against the previous tag
+
+      - uses: ./.github/actions/setup-tools
 
       - name: Download Artifact
         uses: actions/download-artifact@v4
@@ -105,20 +114,21 @@ jobs:
           name: thunderstore-package
           path: dist/
 
-      - name: Extract Release Notes
+      - name: Release notes
         run: |
-          VERSION="${{ needs.build-and-publish.outputs.version }}"
-          awk -v ver="[$VERSION]" '
-            /^## \[/ { if (found) exit; if (index($0, ver)) { found=1; next } }
-            found { print }
-          ' CHANGELOG.md > release-notes.md
+          prev=$(git describe --tags --abbrev=0 --match 'v[0-9]*' HEAD^ 2>/dev/null || true)
+          python3 scripts/pipeline/release_notes.py github \
+            --version "${{ needs.build-and-publish.outputs.version }}" \
+            ${prev:+--from "$prev"} --cliff git-cliff --out release-notes.md
+          cat release-notes.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ needs.build-and-publish.outputs.tag }}
           files: |
             dist/*.zip
             dist/*.r2z
           body_path: release-notes.md
           name: Fimbulwinter v${{ needs.build-and-publish.outputs.version }}
-          generate_release_notes: true
+          generate_release_notes: false

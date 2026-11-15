@@ -1,0 +1,92 @@
+name: Release
+
+# One click, started by a person: batch the player notes into the next
+# version (CHANGELOG.md, thunderstore.toml, README "What's new"), commit to
+# main, tag, then publish to Thunderstore and cut the GitHub Release.
+# With dry_run (the default) it stops after showing what it would release.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run: prepare and show the notes, push nothing"
+        type: boolean
+        default: true
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    name: Prepare release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    outputs:
+      tag: ${{ steps.commit.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: ./.github/actions/setup-tools
+
+      - name: Git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Batch notes into the next version
+        run: |
+          last=$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)
+          if [ -n "$last" ] && [ -z "$(git log --oneline "$last..HEAD")" ]; then
+            echo "::error::Nothing to release: no commits since $last"
+            exit 1
+          fi
+          make release-prep
+
+      - name: Checks
+        run: |
+          make changelog-lint
+          make release-notes
+          {
+            echo "## Fimbulwinter v$(make -s version)"
+            echo
+            echo "### CHANGELOG.md entry (players, Thunderstore)"
+            echo
+            cat ".changes/v$(make -s version).md"
+            echo
+            echo "### GitHub Release body"
+            echo
+            cat build/release-notes.md
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit, tag and push
+        id: commit
+        if: ${{ !inputs.dry_run }}
+        run: |
+          v=$(make -s version)
+          git add -A .changes CHANGELOG.md README.md thunderstore.toml
+          git commit -m "chore(release): v$v"
+          make release-check
+          git tag -a "v$v" -m "Fimbulwinter v$v"
+          git push origin HEAD:main "v$v"
+          echo "tag=v$v" >> "$GITHUB_OUTPUT"
+
+  publish:
+    name: Publish
+    needs: prepare
+    if: needs.prepare.outputs.tag != ''
+    permissions:
+      contents: write
+    uses: ./.github/workflows/publish.yml
+    with:
+      ref: ${{ needs.prepare.outputs.tag }}
+    secrets:
+      TCLI_AUTH_TOKEN: ${{ secrets.TCLI_AUTH_TOKEN }}

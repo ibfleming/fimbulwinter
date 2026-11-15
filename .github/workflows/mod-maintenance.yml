@@ -1,0 +1,273 @@
+name: Mod maintenance
+
+# Daily: cheap detection only (Thunderstore + Steam build id, no AI).
+# Mondays, on an urgent signal (new Valheim build, deprecated mod) or on a
+# manual run: evidence, headless boots, one commit per mod, an optional
+# Claude review, and ONE rolling pull request on bot/maintenance.
+# Never merges, tags or publishes -- releasing stays a manual step.
+
+on:
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+    inputs:
+      skip_agent:
+        description: "Skip the Claude review (scripts only)"
+        type: boolean
+        default: false
+      cooldown_hours:
+        description: "Ignore releases younger than this many hours"
+        default: "48"
+
+concurrency:
+  group: mod-maintenance
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  BRANCH: bot/maintenance
+
+jobs:
+  detect:
+    name: Detect
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: read
+    outputs:
+      proceed: ${{ steps.gate.outputs.proceed }}
+      build: ${{ steps.build.outputs.id }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Valheim dedicated server build
+        id: build
+        run: echo "id=$(bash scripts/pipeline/steam.sh build-id)" >> "$GITHUB_OUTPUT"
+
+      - name: Check Thunderstore
+        id: detect
+        run: |
+          python3 scripts/pipeline/detect.py --out ci-out/detect.json \
+            --valheim-build "${{ steps.build.outputs.id }}" \
+            --cooldown-hours "${{ inputs.cooldown_hours || '48' }}"
+
+      - name: Deprecation notices
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/pipeline/notify_deprecations.py ci-out/detect.json
+
+      - name: Decide
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HAS_WORK: ${{ steps.detect.outputs.has_work }}
+          URGENT: ${{ steps.detect.outputs.urgent }}
+          FP: ${{ steps.detect.outputs.fingerprint }}
+        run: |
+          open_fp=$(gh pr list --head "$BRANCH" --state open --json body \
+            --jq '.[0].body // "" | capture("maintenance:fp=(?<f>[0-9a-f]+)").f // ""' || true)
+          proceed=false
+          if [ "$HAS_WORK" != "true" ]; then
+            reason="nothing to do"
+          elif [ "$FP" = "$open_fp" ]; then
+            reason="the open PR already covers this set"
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            proceed=true; reason="manual run"
+          elif [ "$URGENT" = "true" ]; then
+            proceed=true; reason="urgent (new Valheim build or deprecation)"
+          elif [ "$(date -u +%u)" = "1" ]; then
+            proceed=true; reason="weekly batch"
+          else
+            reason="waiting for the weekly batch (Monday)"
+          fi
+          echo "proceed=$proceed" >> "$GITHUB_OUTPUT"
+          echo "### Mod maintenance: $reason" >> "$GITHUB_STEP_SUMMARY"
+          jq -r '"updates \(.updates|length), waiting \(.waiting|length), deprecated \(.deprecated|length), Valheim build changed: \(.valheim.changed)"' \
+            ci-out/detect.json >> "$GITHUB_STEP_SUMMARY"
+          echo "$reason"
+
+  maintain:
+    name: Update, boot-test, review
+    needs: detect
+    if: needs.detect.outputs.proceed == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    env:
+      CI_OUT: ci-out
+      HAS_CLAUDE: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # The agent step must not be able to push; the push step below
+          # passes the token explicitly.
+          persist-credentials: false
+
+      - name: Git identity
+        run: |
+          echo "VALHEIM_DIR=$RUNNER_TEMP/valheim" >> "$GITHUB_ENV"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Select branch
+        id: branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git fetch --quiet origin "+refs/heads/${BRANCH}:refs/remotes/origin/${BRANCH}" 2>/dev/null || true
+          mode=fresh
+          if git rev-parse -q --verify "origin/${BRANCH}" >/dev/null; then
+            humans=$(git log --format='%ae' "origin/main..origin/${BRANCH}" \
+              | grep -vc -e 'github-actions\[bot\]' -e 'claude\[bot\]' -e 'noreply@anthropic.com' || true)
+            hold=$(gh pr list --head "$BRANCH" --state open --json labels \
+              --jq '[.[0].labels[]?.name] | index("hold") != null' || echo false)
+            if [ "${humans:-0}" -gt 0 ] || [ "$hold" = "true" ]; then mode=append; fi
+          fi
+          if [ "$mode" = append ]; then
+            git checkout -B "$BRANCH" "origin/${BRANCH}"
+            git merge --no-edit origin/main
+          else
+            git checkout -B "$BRANCH" origin/main
+          fi
+          echo "mode=$mode" >> "$GITHUB_OUTPUT"
+          echo "Branch mode: $mode"
+
+      - name: Detect (against this branch)
+        run: |
+          python3 scripts/pipeline/detect.py --out "$CI_OUT/detect.json" \
+            --valheim-build "${{ needs.detect.outputs.build }}" \
+            --cooldown-hours "${{ inputs.cooldown_hours || '48' }}"
+
+      - name: Cache Valheim dedicated server
+        id: valheim-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/valheim
+          key: valheim-server-${{ needs.detect.outputs.build }}
+
+      - name: Install Valheim dedicated server
+        if: steps.valheim-cache.outputs.cache-hit != 'true'
+        run: bash scripts/pipeline/steam.sh install "$VALHEIM_DIR"
+
+      - name: Evidence
+        run: |
+          python3 scripts/pipeline/evidence.py "$CI_OUT/detect.json" \
+            --out "$CI_OUT/evidence" --cache "$RUNNER_TEMP/pkgcache"
+
+      - name: Harvest default configs (current and new versions)
+        run: |
+          python3 scripts/pipeline/apply_updates.py stage-dir \
+            --evidence "$CI_OUT/evidence/index.json" --out "$RUNNER_TEMP/stage-new"
+          # A harvest boot exists to collect configs; a failure is reported
+          # by the verify boot, so don't stop here.
+          bash scripts/pipeline/boot-test.sh harvest --valheim "$VALHEIM_DIR" \
+            --repo-dir . --out "$CI_OUT/boot/harvest-old" || true
+          bash scripts/pipeline/boot-test.sh harvest --valheim "$VALHEIM_DIR" \
+            --repo-dir "$RUNNER_TEMP/stage-new" --out "$CI_OUT/boot/harvest-new" || true
+
+      - name: Apply updates (one commit per mod)
+        run: |
+          python3 scripts/pipeline/apply_updates.py apply \
+            --evidence "$CI_OUT/evidence/index.json" \
+            --old-harvest "$CI_OUT/boot/harvest-old/config" \
+            --new-harvest "$CI_OUT/boot/harvest-new/config" \
+            --report-dir "$CI_OUT"
+
+      - name: Verify boot
+        id: verify
+        run: |
+          if bash scripts/pipeline/boot-test.sh verify --valheim "$VALHEIM_DIR" \
+              --repo-dir . --out "$CI_OUT/boot/verify"; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Keybind audit
+        run: python3 scripts/pipeline/keybind_audit.py audit --base origin/main --md "$CI_OUT/keybinds.md" || true
+
+      - name: Claude review
+        id: agent
+        if: env.HAS_CLAUDE == 'true' && !inputs.skip_agent
+        continue-on-error: true
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          prompt: |
+            Follow the instructions in .github/agents/mod-maintainer.md for the
+            update batch on this branch. The evidence is in ci-out/. The
+            installed Valheim dedicated server is at ${{ runner.temp }}/valheim
+            (VALHEIM_DIR). Finish by writing ci-out/agent-summary.md.
+          claude_args: >-
+            --model claude-sonnet-5-5
+            --max-turns 80
+            --allowedTools "Read,Write,Edit,Glob,Grep,Bash(git add:*),Bash(git commit:*),Bash(git revert:*),Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git show:*),Bash(python3 scripts/pipeline/*),Bash(bash scripts/pipeline/boot-test.sh:*)"
+            --disallowedTools "WebFetch,WebSearch"
+
+      - name: Record verified Valheim build
+        run: |
+          ok=$(jq -r .ok "$CI_OUT/boot/verify/report.json" 2>/dev/null || echo false)
+          build="${{ needs.detect.outputs.build }}"
+          if [ "$ok" = "true" ] && [ -n "$build" ] && [ "$(cat ci/valheim-build 2>/dev/null)" != "$build" ]; then
+            mkdir -p ci
+            echo "$build" > ci/valheim-build
+            git add ci/valheim-build
+            git commit -m "ci: record verified Valheim dedicated server build $build"
+          fi
+
+      - name: Push branch
+        env:
+          TOKEN: ${{ github.token }}
+          MODE: ${{ steps.branch.outputs.mode }}
+        run: |
+          if [ -z "$(git log --oneline origin/main..HEAD)" ]; then
+            echo "No commits -- nothing to propose."; exit 0
+          fi
+          auth="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)"
+          if [ "$MODE" = fresh ]; then
+            git -c http.extraheader="$auth" push --force origin "HEAD:refs/heads/${BRANCH}"
+          else
+            git -c http.extraheader="$auth" push origin "HEAD:refs/heads/${BRANCH}"
+          fi
+
+      - name: Compose pull request description
+        id: body
+        run: |
+          python3 scripts/pipeline/pr_body.py --ci-out "$CI_OUT" --out "$RUNNER_TEMP/body.md" \
+            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+      - name: Open or update the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          title: ${{ steps.body.outputs.title }}
+          draft: ${{ steps.body.outputs.draft }}
+        run: |
+          [ -n "$(git log --oneline origin/main..HEAD)" ] || exit 0
+          gh label create maintenance --force --color 1D76DB --description "Automated mod maintenance" >/dev/null
+          number=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')
+          if [ -z "$number" ]; then
+            extra=()
+            [ "$draft" = true ] && extra+=(--draft)
+            gh pr create --base main --head "$BRANCH" --title "$title" \
+              --body-file "$RUNNER_TEMP/body.md" --label maintenance "${extra[@]}"
+          else
+            gh pr edit "$number" --title "$title" --body-file "$RUNNER_TEMP/body.md"
+            if [ "$draft" = true ]; then gh pr ready "$number" --undo || true; fi
+          fi
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maintenance-${{ github.run_id }}
+          path: ci-out/
+          retention-days: 30
