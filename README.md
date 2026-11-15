@@ -6,6 +6,22 @@ little as possible and stay close to vanilla.
 
 One exception: Jotunn and Vapok-AdventureBackpacks run on both sides -- see "AdventureBackpacks" below.
 
+<!-- whats-new:start -->
+## What's new in 3.0.0
+
+_Released 2026-11-14. Full list on the Changelog tab._
+
+A fresh start for Fimbulwinter: a server-side-first modpack for Valheim 1.0
+"Deep North". Not compatible with earlier versions -- start a new world.
+
+**Heads-up**
+
+- **Every player needs this exact version to join.** Adventure Backpacks
+  checks for a matching install on both the client and the server, so a
+  mismatched or missing install is turned away at connect.
+
+<!-- whats-new:end -->
+
 ## Installation
 
 **Via Thunderstore / r2modman or the Thunderstore Mod Manager (recommended):** search "Fimbulwinter"
