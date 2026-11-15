@@ -1,0 +1,46 @@
+# changie (https://changie.dev) -- player-facing release notes.
+#
+# One small YAML note per player-visible change goes in .changes/unreleased/
+# (`make change`, or written by the maintenance bot in its PR). At release
+# time `make release-prep` batches them into .changes/v<version>.md, adds the
+# generated mod list, and rebuilds CHANGELOG.md, which ships to Thunderstore.
+#
+# Write notes for players: what they will notice in game, not how it was
+# done. Technical detail goes to the GitHub Release instead.
+changesDir: .changes
+unreleasedDir: unreleased
+headerPath: header.tpl.md
+changelogPath: CHANGELOG.md
+versionExt: md
+versionFormat: '## [{{.VersionNoPrefix}}] - {{.Time.Format "2006-01-02"}}'
+kindFormat: '### {{.Kind}}'
+changeFormat: '- {{.Body}}'
+headerFormat: ''
+newlines:
+  afterChangelogHeader: 0
+  beforeChangelogVersion: 1
+  afterVersion: 1
+  beforeKind: 1
+  afterKind: 0
+  endOfVersion: 0
+kinds:
+  # Something players must act on (update before joining, new world, ...).
+  - label: Heads-up
+    auto: minor
+  - label: Added
+    auto: minor
+  - label: Changed
+    auto: patch
+  - label: Fixed
+    auto: patch
+  - label: Removed
+    auto: minor
+custom:
+  - key: Mods
+    label: Mods involved (Namespace-Name, comma separated; optional)
+    type: string
+    optional: true
+replacements:
+  - path: thunderstore.toml
+    find: '^versionNumber = ".*"'
+    replace: 'versionNumber = "{{.VersionNoPrefix}}"'

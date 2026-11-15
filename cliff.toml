@@ -1,0 +1,39 @@
+# git-cliff (https://git-cliff.org) -- the "Under the hood" section of each
+# GitHub Release, built from Conventional Commits. Developer audience only:
+# players read CHANGELOG.md (changie) on Thunderstore instead.
+#
+# Used by scripts/pipeline/release_notes.py github; not written to any file
+# in the repo.
+
+[changelog]
+header = ""
+body = """
+{% for group, commits in commits | group_by(attribute="group") %}
+### {{ group | striptags | trim }}
+{% for commit in commits %}
+- {% if commit.scope %}**{{ commit.scope }}:** {% endif %}{{ commit.message | upper_first }} \
+([{{ commit.id | truncate(length=7, end="") }}](https://github.com/ibfleming/fimbulwinter/commit/{{ commit.id }}))
+{%- endfor %}
+{% endfor %}
+"""
+footer = ""
+trim = true
+
+[git]
+conventional_commits = true
+filter_unconventional = true
+split_commits = false
+protect_breaking_commits = true
+sort_commits = "oldest"
+commit_parsers = [
+    { message = "^chore\\(release\\)", skip = true },
+    { message = "^feat", group = "<!-- 0 -->Features" },
+    { message = "^fix", group = "<!-- 1 -->Fixes" },
+    { message = "^chore\\(deps\\)", group = "<!-- 2 -->Mod updates" },
+    { message = "^perf", group = "<!-- 3 -->Performance" },
+    { message = "^refactor", group = "<!-- 4 -->Refactoring" },
+    { message = "^docs", group = "<!-- 5 -->Documentation" },
+    { message = "^(ci|build)", group = "<!-- 6 -->CI and build" },
+    { message = "^test", group = "<!-- 7 -->Tests" },
+    { message = "^(chore|style)", group = "<!-- 8 -->Other" },
+]
