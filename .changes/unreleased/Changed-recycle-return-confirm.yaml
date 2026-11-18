@@ -1,0 +1,5 @@
+kind: Changed
+body: Recycling now returns 40% of the crafting materials instead of all of them, and asks you to confirm first (Enter to accept, Escape to cancel).
+time: 2026-11-18T00:00:00Z
+custom:
+  Mods: cjayride-RecycleItemsIntoParts
