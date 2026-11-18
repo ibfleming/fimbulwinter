@@ -1,0 +1,12 @@
+# Keybind shares that were reviewed and are allowed to stay.
+#
+# The keybind audit (scripts/pipeline/keybind_audit.py) fails a PR when a
+# bind starts sharing a key combination with another mod or a vanilla key.
+# A line here accepts one bind in one combination, so if another mod later
+# joins the same keys, that's flagged again.
+#
+# Format, one bind per line, copied from the audit's output:
+#   <keys> | <bind name> | <reason>
+#
+# Only the repo owner adds lines, after checking the share in game. The
+# maintenance bot never edits this file.

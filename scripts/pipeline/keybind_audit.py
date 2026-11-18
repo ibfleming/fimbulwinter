@@ -7,7 +7,9 @@ admin binds in config/binds.yaml, then:
   audit    lists binds that share a key combination with another bind, and
            bare binds that shadow a vanilla key. With --base REF, only
            conflicts that are new since REF are failures (exit 1); the ones
-           already present at REF are reported as known.
+           already present at REF are reported as known. Binds listed in
+           ci/keybinds-accepted.txt are reviewed shares and don't fail
+           either.
   changes  lists binds added, removed or moved between --from REF and the
            working tree (or --to REF). With --players the labels use mod and
            setting names; that form goes into the player changelog.
@@ -28,6 +30,7 @@ from pathlib import Path
 import tslib
 
 KEYBIND_TYPES = {"KeyboardShortcut", "KeyCode"}
+ACCEPTED = tslib.REPO / "ci" / "keybinds-accepted.txt"
 # Bare vanilla keys a mod must never take over (CLAUDE.md "Keybind Rules").
 VANILLA = {"W", "A", "S", "D", "Space", "LeftControl", "E", "Q", "R", "F", "Tab",
            "M", "X", "V", "F5", *(f"Alpha{i}" for i in range(1, 9))}
@@ -95,13 +98,41 @@ def conflicts(b: dict) -> dict[str, list[str]]:
     return out
 
 
+def accepted() -> dict[str, set[str]]:
+    """{combo: {bind name, ...}} from ci/keybinds-accepted.txt.
+
+    One line per bind: `<keys> | <bind name> | <reason>`, exactly as the
+    audit prints them. Each line accepts that one bind sharing that key
+    combination, so a further mod joining the same keys is still new."""
+    out: dict[str, set[str]] = defaultdict(set)
+    if not ACCEPTED.exists():
+        return out
+    for n, line in enumerate(ACCEPTED.read_text().splitlines(), 1):
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        parts = [x.strip() for x in line.split(" | ")]
+        if len(parts) != 3 or not all(parts):
+            raise SystemExit(f"{ACCEPTED.name}:{n}: expected '<keys> | <bind name> | <reason>'")
+        out[parts[0]].add(parts[1])
+    return out
+
+
 def cmd_audit(a) -> int:
     head = conflicts(binds(None))
     base = conflicts(binds(a.base)) if a.base else {}
-    new = {c: n for c, n in head.items() if set(n) - set(base.get(c, []))}
+    acc = accepted()
+    unresolved = {c: sorted(set(n) - set(base.get(c, [])) - acc.get(c, set()))
+                  for c, n in head.items()}
+    new = {c: u for c, u in unresolved.items() if u}
     lines = ["| Keys | Bound by | Status |", "|---|---|---|"]
     for c, names in sorted(head.items()):
-        status = "**new**" if c in new else "known"
+        if c in new:
+            status = "**new**"
+        elif a.base and set(names) - set(base.get(c, [])):
+            status = "accepted"
+        else:
+            status = "known"
         lines.append(f"| `{c}` | {'<br>'.join(names)} | {status} |")
     md = "\n".join(lines) + "\n" if head else "No shared key combinations.\n"
     if a.md:
@@ -110,6 +141,10 @@ def cmd_audit(a) -> int:
         print(md, end="")
     if new and a.base:
         tslib.log(f"{len(new)} new keybind conflict(s) since {a.base}")
+        tslib.log(f"After review, accept a share by adding its lines to ci/{ACCEPTED.name}:")
+        for c, names in sorted(new.items()):
+            for n in names:
+                tslib.log(f"  {c} | {n} | <reason>")
         return 1
     return 0
 
