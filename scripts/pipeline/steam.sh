@@ -26,7 +26,11 @@ steamcmd_run() {
     elif command -v docker >/dev/null; then
         local mount=()
         [ -n "$dir" ] && mount=(-v "${dir}:/data")
-        docker run --rm "${mount[@]}" "$IMAGE" "$@"
+        # Docker's default seccomp profile blocks a socket call the current
+        # Steam client makes on GitHub's ubuntu-26.04 runners (kernel 7.0):
+        # every login fails with "CreateBoundSocket ... (38)" / "No
+        # Connection". The container still keeps its namespaces and mounts.
+        docker run --rm --security-opt seccomp=unconfined "${mount[@]}" "$IMAGE" "$@"
     else
         echo "steam.sh: need steamcmd or docker" >&2
         exit 1
