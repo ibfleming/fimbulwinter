@@ -47,7 +47,11 @@ jobs:
 
       - name: Get Valheim server build ID
         id: build
-        run: echo "id=$(bash scripts/pipeline/steam.sh build-id)" >> "$GITHUB_OUTPUT"
+        run: |
+          # Assign first so a failed lookup fails the step instead of
+          # passing an empty build ID on to detect and the server cache.
+          id=$(bash scripts/pipeline/steam.sh build-id)
+          echo "id=$id" >> "$GITHUB_OUTPUT"
 
       - name: Check Thunderstore for updates
         id: detect
