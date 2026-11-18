@@ -119,7 +119,9 @@ re-litigate this" notes belong in `docs/DECISIONS.md`. When you do research to j
 the finding in `DECISIONS.md` and only the resulting decision in README/CHANGELOG.
 
 Describe the pack as it is now. Don't add history of earlier packs or earlier repositories to any
-tracked file; git history and the release notes cover what changed.
+tracked file; git history and the release notes cover what changed. One exception: the 3.0.0 Heads-up notes
+(`.changes/v3.0.0.md`, `CHANGELOG.md`) tell players that 3.0.0 is a different pack from 2.x and that
+2.0.3 is the version to stay on for the old one. Keep that note.
 
 Mod and package counts belong only in README.md and CHANGELOG.md -- keep them out of the toml,
 scripts and this file.
@@ -178,8 +180,9 @@ scripts and this file.
 - **Build:** `tcli build --config-path thunderstore.toml` (output in `build/`)
 - **Player notes:** `make change` writes `.changes/unreleased/<Kind>-*.yaml` (kinds: Heads-up, Added,
   Changed, Fixed, Removed). `make release-prep` batches them into `.changes/v<version>.md` with the
-  generated "Do I need to update?" line, mod list and key changes, rebuilds `CHANGELOG.md`, sets
-  `versionNumber` and refreshes the README "What's new" block.
+  generated "Do I need to update?" line, mod list and key changes, rebuilds `CHANGELOG.md` and sets
+  `versionNumber`. The README carries no release notes: players read them on the Changelog tab, and
+  the GitHub Release repeats them with the technical detail.
 - **Release gate:** `make release-check` -- changelog lint (headings, `CHANGELOG.md` in sync with
   `.changes/`, toml version), the tag doesn't already exist, and the working tree is clean.
 - **Release:** run the **Release** workflow (dry run by default). It does release-prep, commits
