@@ -82,12 +82,11 @@ changelog-lint: ## Check CHANGELOG.md, .changes/ and notes (ARGS='--base main' i
 keybind-audit: ## List shared key combinations (ARGS='--base main' fails on new ones)
 	$(PY) $(PIPE)/keybind_audit.py audit $(ARGS)
 
-release-prep: ## Batch notes into the next version: CHANGELOG.md, toml version, README "What's new"
+release-prep: ## Batch notes into the next version: CHANGELOG.md and toml version
 	$(PY) $(PIPE)/release_notes.py prep
 	$(CHANGIE) batch $$($(PY) $(PIPE)/release_notes.py level) \
 		--header-path header.md --footer-path footer.md
 	$(CHANGIE) merge
-	$(PY) $(PIPE)/release_notes.py readme
 	@echo "Version is now $$(grep -Po 'versionNumber = "\K[^"]+' $(TOML)) -- review, commit, then make release-check"
 
 release-notes: ## Write the GitHub Release body for the current version to build/release-notes.md

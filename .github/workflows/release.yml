@@ -1,7 +1,7 @@
 name: Release
 
 # One click, started by a person: batch the player notes into the next
-# version (CHANGELOG.md, thunderstore.toml, README "What's new"), commit to
+# version (CHANGELOG.md, thunderstore.toml), commit to
 # main, tag, then publish to Thunderstore and cut the GitHub Release.
 # With dry_run (the default) it stops after showing what it would release.
 
@@ -72,7 +72,7 @@ jobs:
         if: ${{ !inputs.dry_run }}
         run: |
           v=$(make -s version)
-          git add -A .changes CHANGELOG.md README.md thunderstore.toml
+          git add -A .changes CHANGELOG.md thunderstore.toml
           git commit -m "chore(release): v$v"
           make release-check
           git tag -a "v$v" -m "Fimbulwinter v$v"

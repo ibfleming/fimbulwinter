@@ -5,8 +5,6 @@
            (the optional player summary, then the computed "Do I need to
            update?" line) and footer.md (mod updates, key changes, link to
            the technical notes), from the diff between --from and HEAD.
-  readme   Rewrites the README "What's new" block from the newest
-           .changes/v*.md.
   github   Writes the GitHub Release body: the player notes, mod updates
            with links to each mod's changelog, the key-level config diff,
            and the git-cliff commit log ("Under the hood").
@@ -16,7 +14,6 @@
 
 Usage:
   release_notes.py prep [--from REF] [--repo-url URL]
-  release_notes.py readme
   release_notes.py github --version X.Y.Z [--from REF] [--cliff PATH] --out FILE
   release_notes.py level [--from REF]
 """
@@ -32,8 +29,6 @@ import tslib
 REPO_URL = "https://github.com/ibfleming/fimbulwinter"
 CHANGES = tslib.REPO / ".changes"
 UNRELEASED = CHANGES / "unreleased"
-README = tslib.REPO / "README.md"
-START, END = "<!-- whats-new:start -->", "<!-- whats-new:end -->"
 
 
 def last_tag() -> str | None:
@@ -121,41 +116,6 @@ def cmd_prep(a) -> int:
     return 0
 
 
-def latest_version_file() -> Path:
-    files = sorted(CHANGES.glob("v*.md"), key=lambda p: tslib.vkey(p.stem[1:]))
-    if not files:
-        raise SystemExit("no .changes/v*.md files")
-    return files[-1]
-
-
-def cmd_readme(_a) -> int:
-    path = latest_version_file()
-    text = path.read_text()
-    head = text.splitlines()[0]
-    m = re.match(r"## \[(.+?)\] - (\S+)", head)
-    ver, date = m.group(1), m.group(2)
-    body = text.split("\n", 1)[1]
-    # Summary + "Do I need to update?" + Heads-up only: the README is the
-    # landing page, the full list is on the Changelog tab.
-    parts = re.split(r"(?m)^### ", body)
-    intro = parts[0].strip()
-    heads = next((p for p in parts[1:] if p.startswith("Heads-up")), "")
-    block = [START, f"## What's new in {ver}", "", f"_Released {date}. Full list on the Changelog tab._", ""]
-    if intro:
-        block += [intro, ""]
-    if heads:
-        block += ["**Heads-up**", "", heads.split("\n", 1)[1].strip(), ""]
-    block.append(END)
-    readme = README.read_text()
-    if START not in readme:
-        raise SystemExit(f"README.md has no {START} marker")
-    new = re.sub(re.escape(START) + r".*?" + re.escape(END), lambda _: "\n".join(block),
-                 readme, flags=re.S)
-    README.write_text(new)
-    tslib.log(f"README What's new -> {ver}")
-    return 0
-
-
 def config_value_diff(ref: str) -> list[str]:
     rows = []
     for p in sorted((tslib.REPO / "config").glob("*.cfg")):
@@ -228,7 +188,6 @@ def main() -> int:
     p = sub.add_parser("prep")
     p.add_argument("--from", dest="ref")
     p.add_argument("--repo-url", default=REPO_URL)
-    sub.add_parser("readme")
     p = sub.add_parser("github")
     p.add_argument("--version", required=True)
     p.add_argument("--from", dest="ref")
@@ -237,7 +196,7 @@ def main() -> int:
     p = sub.add_parser("level")
     p.add_argument("--from", dest="ref")
     a = ap.parse_args()
-    return {"prep": cmd_prep, "readme": cmd_readme, "github": cmd_github,
+    return {"prep": cmd_prep, "github": cmd_github,
             "level": cmd_level}[a.cmd](a)
 
 
