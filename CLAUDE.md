@@ -29,6 +29,7 @@ fimbulwinter/               # Git repo root
   .changes/                 # unreleased/*.yaml player notes; v<version>.md one file per release
   cliff.toml                # git-cliff config for the GitHub Release "Under the hood" commit list
   ci/valheim-build          # last Valheim dedicated-server build the pack passed a boot test on
+  ci/keybinds-accepted.txt  # keybind shares the owner reviewed in game; the audit doesn't fail on them
   CLAUDE.md                 # This file -- Claude Code context (tracked)
   LICENSE                   # MIT, scoped to this repo's own scripts/configs/docs only
   icon.png                  # 256x256 Thunderstore icon
@@ -149,6 +150,9 @@ scripts and this file.
   (voice chat!), 1-8 (hotbar), F5 (console).
 - Free keys for future mods: `U` (bare), `F3`, `F6`, `F7`, `F8`, `F10`. Avoid F9-F12 -- common Steam
   Input/overlay/macro-software hotkeys that can intercept the keypress before Valheim sees it.
+- **Accepting a share:** when the keybind check fails on a share that's harmless (checked in game), add
+  the lines the audit prints to `ci/keybinds-accepted.txt` with a reason. Each line covers one bind in
+  one key combination. Only the owner adds lines; the maintenance bot never edits that file.
 - Why each non-default bind is where it is: `docs/DECISIONS.md` "Keybinds". Current bind table:
   README.md "Keyboard Shortcuts".
 
@@ -205,7 +209,7 @@ scripts and this file.
 | harvest | `boot-test.sh harvest` | headless server, every mod, empty config -> fresh defaults (run for current and new versions) |
 | apply | `apply_updates.py`, `config_diff.py` | one `chore(deps)` commit per mod with its config migrated 3-way |
 | verify | `boot-test.sh verify`, `boot_report.py` | server mod set + shipped config, plugin count, fatal-error scan |
-| audit | `keybind_audit.py` | key combinations shared across mods; new ones vs `main` fail |
+| audit | `keybind_audit.py` | key combinations shared across mods; new ones vs `main` fail unless listed in `ci/keybinds-accepted.txt` |
 | review | `.github/agents/mod-maintainer.md` | Claude (Sonnet) resolves review rows, writes notes/docs, playtest checklist |
 | PR | `pr_body.py` | one rolling PR on `bot/maintenance` |
 
