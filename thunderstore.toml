@@ -51,7 +51,7 @@ Zenox-ServerConnect = "1.0.14"
 # ── Server-side only (never shipped to clients) ────────────────
 # Mirrored by SERVER_ONLY_MODS in scripts/export-profile.sh.
 ArgusMagnus-ServersideQoL = "2.6.0"
-ArgusMagnus-ServersideQoL_AutoStore = "2.0.11"
+ArgusMagnus-ServersideQoL_AutoStore = "2.5.1"
 ArgusMagnus-ServersideQoL_ContainerSizes = "2.0.11"
 ArgusMagnus-ServersideQoL_AutoProcess = "2.0.11"
 ArgusMagnus-ServersideQoL_LetItFloat = "2.0.11"
