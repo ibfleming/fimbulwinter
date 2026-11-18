@@ -154,7 +154,7 @@ jobs:
 
       - name: Restore Valheim server cache
         id: valheim-cache
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: ${{ runner.temp }}/valheim
           key: valheim-server-${{ needs.detect.outputs.build }}
@@ -162,6 +162,15 @@ jobs:
       - name: Install Valheim server
         if: steps.valheim-cache.outputs.cache-hit != 'true'
         run: bash scripts/pipeline/steam.sh install "$VALHEIM_DIR"
+
+      # Saved right away rather than at job end, so a later failure doesn't
+      # force the next run to download the server from Steam again.
+      - name: Save Valheim server cache
+        if: steps.valheim-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ runner.temp }}/valheim
+          key: valheim-server-${{ needs.detect.outputs.build }}
 
       - name: Collect update evidence
         run: |

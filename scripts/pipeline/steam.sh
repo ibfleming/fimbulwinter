@@ -48,13 +48,25 @@ install)
     dir="${2:?usage: steam.sh install DIR}"
     mkdir -p "$dir"
     dir="$(cd "$dir" && pwd)"
-    if command -v steamcmd >/dev/null; then
-        steamcmd +force_install_dir "$dir" +login anonymous +app_update "$APP_ID" validate +quit
-    else
-        steamcmd_run "$dir" +force_install_dir /data +login anonymous +app_update "$APP_ID" validate +quit
+    target="$dir"
+    command -v steamcmd >/dev/null || target=/data
+    # A fresh SteamCMD sometimes fails app_update with "Missing
+    # configuration" until the app info is loaded, so load it first and
+    # retry a few times.
+    ok=0
+    for attempt in 1 2 3; do
+        if steamcmd_run "$dir" +force_install_dir "$target" +login anonymous \
+            +app_info_update 1 +app_update "$APP_ID" validate +quit; then
+            ok=1; break
+        fi
+        echo "steam.sh: install attempt $attempt failed" >&2
+        sleep $((attempt * 15))
+    done
+    if ! command -v steamcmd >/dev/null; then
         # The image runs as root; hand the files back to the caller.
         docker run --rm -v "${dir}:/data" --entrypoint chown "$IMAGE" -R "$(id -u):$(id -g)" /data
     fi
+    [ "$ok" = 1 ] || { echo "steam.sh: install failed after 3 attempts" >&2; exit 1; }
     [ -x "${dir}/valheim_server.x86_64" ] || { echo "steam.sh: install failed" >&2; exit 1; }
     ;;
 *)
