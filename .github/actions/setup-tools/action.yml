@@ -1,4 +1,4 @@
-name: Set up release tooling
+name: Set Up Tools
 description: Installs pinned changie, git-cliff and tcli binaries onto PATH.
 
 inputs:
@@ -9,7 +9,8 @@ inputs:
 runs:
   using: composite
   steps:
-    - shell: bash
+    - name: Install changie, git-cliff and tcli
+      shell: bash
       env:
         CHANGIE_VERSION: "1.26.0"
         GIT_CLIFF_VERSION: "2.14.2"

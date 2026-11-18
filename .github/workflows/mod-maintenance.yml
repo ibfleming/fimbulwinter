@@ -1,4 +1,4 @@
-name: Mod maintenance
+name: Mod Maintenance
 
 # Daily: cheap detection only (Thunderstore + Steam build id, no AI).
 # Mondays, on an urgent signal (new Valheim build, deprecated mod) or on a
@@ -31,7 +31,7 @@ env:
 
 jobs:
   detect:
-    name: Detect
+    name: Detect Updates
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -42,25 +42,26 @@ jobs:
       proceed: ${{ steps.gate.outputs.proceed }}
       build: ${{ steps.build.outputs.id }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-      - name: Valheim dedicated server build
+      - name: Get Valheim server build ID
         id: build
         run: echo "id=$(bash scripts/pipeline/steam.sh build-id)" >> "$GITHUB_OUTPUT"
 
-      - name: Check Thunderstore
+      - name: Check Thunderstore for updates
         id: detect
         run: |
           python3 scripts/pipeline/detect.py --out ci-out/detect.json \
             --valheim-build "${{ steps.build.outputs.id }}" \
             --cooldown-hours "${{ inputs.cooldown_hours || '48' }}"
 
-      - name: Deprecation notices
+      - name: Sync deprecation issues
         env:
           GH_TOKEN: ${{ github.token }}
         run: python3 scripts/pipeline/notify_deprecations.py ci-out/detect.json
 
-      - name: Decide
+      - name: Decide whether to run maintenance
         id: gate
         env:
           GH_TOKEN: ${{ github.token }}
@@ -91,7 +92,7 @@ jobs:
           echo "$reason"
 
   maintain:
-    name: Update, boot-test, review
+    name: Update and Verify
     needs: detect
     if: needs.detect.outputs.proceed == 'true'
     runs-on: ubuntu-latest
@@ -104,20 +105,21 @@ jobs:
       CI_OUT: ci-out
       HAS_CLAUDE: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           # The agent step must not be able to push; the push step below
           # passes the token explicitly.
           persist-credentials: false
 
-      - name: Git identity
+      - name: Configure Git identity and paths
         run: |
           echo "VALHEIM_DIR=$RUNNER_TEMP/valheim" >> "$GITHUB_ENV"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Select branch
+      - name: Select maintenance branch
         id: branch
         env:
           GH_TOKEN: ${{ github.token }}
@@ -140,29 +142,29 @@ jobs:
           echo "mode=$mode" >> "$GITHUB_OUTPUT"
           echo "Branch mode: $mode"
 
-      - name: Detect (against this branch)
+      - name: Detect updates against the branch
         run: |
           python3 scripts/pipeline/detect.py --out "$CI_OUT/detect.json" \
             --valheim-build "${{ needs.detect.outputs.build }}" \
             --cooldown-hours "${{ inputs.cooldown_hours || '48' }}"
 
-      - name: Cache Valheim dedicated server
+      - name: Restore Valheim server cache
         id: valheim-cache
         uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/valheim
           key: valheim-server-${{ needs.detect.outputs.build }}
 
-      - name: Install Valheim dedicated server
+      - name: Install Valheim server
         if: steps.valheim-cache.outputs.cache-hit != 'true'
         run: bash scripts/pipeline/steam.sh install "$VALHEIM_DIR"
 
-      - name: Evidence
+      - name: Collect update evidence
         run: |
           python3 scripts/pipeline/evidence.py "$CI_OUT/detect.json" \
             --out "$CI_OUT/evidence" --cache "$RUNNER_TEMP/pkgcache"
 
-      - name: Harvest default configs (current and new versions)
+      - name: Harvest default configs
         run: |
           python3 scripts/pipeline/apply_updates.py stage-dir \
             --evidence "$CI_OUT/evidence/index.json" --out "$RUNNER_TEMP/stage-new"
@@ -173,7 +175,7 @@ jobs:
           bash scripts/pipeline/boot-test.sh harvest --valheim "$VALHEIM_DIR" \
             --repo-dir "$RUNNER_TEMP/stage-new" --out "$CI_OUT/boot/harvest-new" || true
 
-      - name: Apply updates (one commit per mod)
+      - name: Apply mod updates
         run: |
           python3 scripts/pipeline/apply_updates.py apply \
             --evidence "$CI_OUT/evidence/index.json" \
@@ -181,7 +183,7 @@ jobs:
             --new-harvest "$CI_OUT/boot/harvest-new/config" \
             --report-dir "$CI_OUT"
 
-      - name: Verify boot
+      - name: Verify server boot
         id: verify
         run: |
           if bash scripts/pipeline/boot-test.sh verify --valheim "$VALHEIM_DIR" \
@@ -191,10 +193,10 @@ jobs:
             echo "ok=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Keybind audit
+      - name: Audit keybinds
         run: python3 scripts/pipeline/keybind_audit.py audit --base origin/main --md "$CI_OUT/keybinds.md" || true
 
-      - name: Claude review
+      - name: Run Claude review
         id: agent
         if: env.HAS_CLAUDE == 'true' && !inputs.skip_agent
         continue-on-error: true
@@ -224,7 +226,7 @@ jobs:
             git commit -m "ci: record verified Valheim dedicated server build $build"
           fi
 
-      - name: Push branch
+      - name: Push maintenance branch
         env:
           TOKEN: ${{ github.token }}
           MODE: ${{ steps.branch.outputs.mode }}
@@ -239,13 +241,13 @@ jobs:
             git -c http.extraheader="$auth" push origin "HEAD:refs/heads/${BRANCH}"
           fi
 
-      - name: Compose pull request description
+      - name: Compose pull request body
         id: body
         run: |
           python3 scripts/pipeline/pr_body.py --ci-out "$CI_OUT" --out "$RUNNER_TEMP/body.md" \
             --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
-      - name: Open or update the pull request
+      - name: Open or update pull request
         env:
           GH_TOKEN: ${{ github.token }}
           title: ${{ steps.body.outputs.title }}
@@ -264,7 +266,7 @@ jobs:
             if [ "$draft" = true ]; then gh pr ready "$number" --undo || true; fi
           fi
 
-      - name: Upload evidence
+      - name: Upload evidence artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:

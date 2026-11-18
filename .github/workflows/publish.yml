@@ -1,4 +1,4 @@
-name: Publish to Thunderstore
+name: Publish
 
 # Runs on a pushed v*.*.* tag, or is called by release.yml (a tag pushed with
 # the default GITHUB_TOKEN does not trigger other workflows, so release.yml
@@ -30,7 +30,7 @@ on:
 
 jobs:
   build-and-publish:
-    name: Build & Publish
+    name: Build and Publish
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -38,13 +38,13 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Checkout
+      - name: Check out repository
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref || github.ref }}
           fetch-depth: 1
 
-      - name: Extract & Verify Version
+      - name: Verify version
         id: version
         env:
           REF: ${{ inputs.ref || (github.ref_type == 'tag' && github.ref_name) || '' }}
@@ -65,17 +65,18 @@ jobs:
           echo "tag=${REF}" >> "$GITHUB_OUTPUT"
           echo "Processing version: $TOML_VERSION"
 
-      - uses: ./.github/actions/setup-tools
+      - name: Set up tools
+        uses: ./.github/actions/setup-tools
         with:
           tcli: "true"
 
-      - name: Build Package
+      - name: Build package
         run: make build
 
-      - name: Build r2modman Profile (.r2z)
+      - name: Build r2modman profile
         run: make profile OUT="build/Fimbulwinter-v${{ steps.version.outputs.version }}-profile.r2z"
 
-      - name: Upload Build Artifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: thunderstore-package
@@ -100,21 +101,22 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout
+      - name: Check out repository
         uses: actions/checkout@v4
         with:
           ref: ${{ needs.build-and-publish.outputs.tag }}
           fetch-depth: 0   # release notes compare against the previous tag
 
-      - uses: ./.github/actions/setup-tools
+      - name: Set up tools
+        uses: ./.github/actions/setup-tools
 
-      - name: Download Artifact
+      - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: thunderstore-package
           path: dist/
 
-      - name: Release notes
+      - name: Generate release notes
         run: |
           prev=$(git describe --tags --abbrev=0 --match 'v[0-9]*' HEAD^ 2>/dev/null || true)
           python3 scripts/pipeline/release_notes.py github \
