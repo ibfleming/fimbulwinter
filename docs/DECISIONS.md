@@ -146,11 +146,10 @@ non-default binds are where they are:
 
 ## Maintenance batch 2026-11-18 (review notes)
 
-- **RecycleItemsIntoParts 1.8.10 return rate.** The shipped value was `1` only because that was the
-  old mod default; the 3-way merge therefore took the new default `0.4`. The pack ships recycle at mod
-  defaults (README), so 0.4 stays, but it is a player-visible nerf (a 6-wood club now returns about 2
-  wood, not 6). Revert `ReturnResources` to `1` in `config/cjayride.RecycleItemsIntoParts.cfg` if
-  full return is wanted. `ServerEnforced` is irrelevant: the mod is client-only, no server copy
+- **RecycleItemsIntoParts 1.8.10 return rate.** 1.8.x changed the default `ReturnResources` from `1`
+  to `0.4`, and because the shipped `1` matched the old default, the 3-way merge took `0.4`. The
+  owner chose to keep full return: `ReturnResources = 1` is now a deliberate override, not a
+  default, so later migrations keep it. `ServerEnforced` is irrelevant: the mod is client-only, no server copy
   exists. `RequireConfirm = true` adds a Yes/No popup (Enter/Escape). The EpicLoot settings do
   nothing, EpicLoot is not in the pack.
 - **ExtraSlots 1.2.24.** The three dropped `[Mods compatibility - Valheim Radial]` keys are

@@ -172,8 +172,8 @@ being crushing (a level-30 skill loses roughly half a level per death).
 
 Hover an item (or drag it onto the cursor) and press `Delete` to recycle it into its crafting
 materials. A popup lists what you will get; `Enter` confirms, `Escape` cancels. Config at
-`config/cjayride.RecycleItemsIntoParts.cfg`, shipped at mod defaults (40% resource return, coins
-excluded, consumables/trophies/shards included).
+`config/cjayride.RecycleItemsIntoParts.cfg`, shipped at mod defaults except for full resource
+return (you get all the materials back), with coins excluded and consumables/trophies/shards included.
 
 It needs *some* resolvable recipe to act -- raw materials and recipe-less drops just print "Cannot be
 recycled or unknown recipe" and are left alone. There's no "delete anything, return nothing" option.
