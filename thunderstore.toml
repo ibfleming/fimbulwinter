@@ -25,7 +25,7 @@ websiteUrl = "https://github.com/ibfleming/fimbulwinter"
 denikson-BepInExPack_Valheim = "5.4.2360"
 ValheimModding-YamlDotNet = "16.3.1"
 shudnal-ConditionalConfigSync = "1.0.11"
-ValheimModding-Jotunn = "2.30.1"
+ValheimModding-Jotunn = "2.30.2"
 
 # ── Content (both sides, ModRequired -- the one exception to the
 #    "no content mods" rule; needs Jotunn on both sides) ──────
