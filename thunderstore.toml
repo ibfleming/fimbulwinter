@@ -24,7 +24,7 @@ websiteUrl = "https://github.com/ibfleming/fimbulwinter"
 # ── Loader + shared libraries (both sides) ─────────────────────
 denikson-BepInExPack_Valheim = "5.4.2360"
 ValheimModding-YamlDotNet = "16.3.1"
-shudnal-ConditionalConfigSync = "1.0.8"
+shudnal-ConditionalConfigSync = "1.0.11"
 ValheimModding-Jotunn = "2.30.1"
 
 # ── Content (both sides, ModRequired -- the one exception to the
