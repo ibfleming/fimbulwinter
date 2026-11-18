@@ -56,7 +56,7 @@ ArgusMagnus-ServersideQoL_ContainerSizes = "2.0.11"
 ArgusMagnus-ServersideQoL_AutoProcess = "2.3.0"
 ArgusMagnus-ServersideQoL_LetItFloat = "2.6.0"
 ArgusMagnus-ServersideQoL_JustSleep = "2.0.11"
-ArgusMagnus-ServersideQoL_MultiplayerTweaks = "2.0.11"
+ArgusMagnus-ServersideQoL_MultiplayerTweaks = "2.6.0"
 
 [publish]
 communities = ["valheim"]
