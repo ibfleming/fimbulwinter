@@ -29,7 +29,7 @@ ValheimModding-Jotunn = "2.30.2"
 
 # ── Content (both sides, ModRequired -- the one exception to the
 #    "no content mods" rule; needs Jotunn on both sides) ──────
-Vapok-AdventureBackpacks = "2.1.4"
+Vapok-AdventureBackpacks = "2.4.7"
 
 # ── Client UI / QoL ───────────────────────────────────────────
 shudnal-MyLittleUI = "1.2.34"
