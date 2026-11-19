@@ -30,7 +30,7 @@ client profile automatically.
 | ValheimModding-YamlDotNet | 16.3.1 | library |
 | shudnal-ConditionalConfigSync | 1.0.11 | server-enforced config |
 | ValheimModding-Jotunn | 2.30.2 | library -- both sides, see "AdventureBackpacks" |
-| **Vapok-AdventureBackpacks** | 2.1.4 | tiered biome backpacks -- **required for every player**, see below |
+| **Vapok-AdventureBackpacks** | 2.4.7 | tiered biome backpacks -- **required for every player**, see below |
 | **shudnal-MyLittleUI** | 1.2.34 | tooltips, production timers, chest preview, multicraft, weather |
 | **shudnal-ExtraSlots** | 1.2.24 | equipment + quick slots |
 | **Toxo-CraftFromChests** | 0.4.0 | craft/build/fuel from nearby chests |
@@ -62,7 +62,7 @@ anything to install.
 
 ## AdventureBackpacks, and why it's required
 
-Six biome-tiered backpacks, each an equipped item (not an inventory slot -- see the caveat below) that
+Eight biome-tiered backpacks, each an equipped item (not an inventory slot -- see the caveat below) that
 adds carry capacity at a movement-speed cost:
 
 | Tier | Biome | Station | Perk |
@@ -71,8 +71,10 @@ adds carry capacity at a movement-speed cost:
 | Rugged Backpack | Black Forest | Forge | -- |
 | Bloodbag Wetpack | Swamp | Forge | Waterproof (no "Wet" debuff) |
 | Arctic Sherpa Pack | Mountain | Forge | Frost/Cold Resistance |
-| Lox Hide Knappsack | Plains | Forge | -- |
+| Lox Hide Knappsack | Plains | Forge | Frost Resistance |
 | Explorers Wisppack | Mistlands | Black Forge | Built-in Demister + Slow Fall |
+| Cinderward Pack | Ashlands | Black Forge | Heat Resistance |
+| Frostbound Haversack | Deep North | Black Forge | Frost Resistance + Second Wind |
 
 Each tier has 4 upgrade levels at its crafting station (bigger grid each time) -- upgrade what you
 have before jumping to the next biome's tier. Every tier costs -15% movement speed while worn, and
@@ -86,7 +88,7 @@ in Mistlands.
 **Craft and store straight from the backpack:** crafting and building pull materials
 from your inventory first, then the equipped backpack; newly crafted items land in the backpack when
 your inventory is full; picked-up items auto-store into the backpack if it already holds that item, and
-overflow into it when your inventory fills up. All four are on by default and server-synced.
+overflow into it when your inventory fills up. All four are on by default and are personal client settings, so each player can switch them off.
 
 **Telemetry is off in this pack.** AdventureBackpacks ships an opt-out crash/error reporter
 (`Send Error Reports`) that defaults to **on** upstream and makes outbound HTTP calls; this pack ships

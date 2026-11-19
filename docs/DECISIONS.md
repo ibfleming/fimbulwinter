@@ -181,3 +181,29 @@ non-default binds are where they are:
   again; ItemDrawers patch reverted for server lag). Boots clean, 108 h old at review. Treated as
   needs-playtest rather than held.
 - **Valheim build.** Boot test passed on build 26266951; `ci/valheim-build` is left to the workflow.
+
+## Maintenance batch 2026-11-19 (review notes)
+
+- **AdventureBackpacks 2.4.7 moved four settings to a client-local section.** The config migration
+  dropped `[Server Config] Enable Craft From Backpack`, `Enable Craft Output To Backpack`,
+  `Enable Auto Store to Backpack` and `Enable Inventory Overflow To Backpack`. The 2.4.7 DLL still
+  contains all four (`strings -e l`) under `Automation (Local Only)` (README: "client-side personal
+  preferences ... without server synchronization"), so they are client-only code the headless
+  harvest never writes. They are shipped again as `[Automation (Local Only)]` with `true`, which
+  keeps the old intent. The section name for the Auto Store and Overflow keys is taken from the
+  README, the DLL strings do not show the section for those two: confirm in game. Consequence: the
+  settings are no longer server-synced, so players can turn them off individually (README updated).
+- **`Enable Quick Right Click Item Transfer`** is only registered when `blumaye.quicktransfer` is not
+  installed (DLL strings). That mod is not in the pack, and our value was already the default, so it is
+  left to regenerate on clients.
+- **Effective Quality Level changes** (Plains frost 3 -> 1, Demister Mistlands 4 -> 2, Ashlands and
+  Deep North cold/frost 0 -> 1) are the new upstream defaults. Our old values equalled the old
+  defaults, so the 3-way merge took the new ones. Changelog 2.4.0 states the Plains change is
+  intentional (Lox Cape no longer loses frost protection).
+- **New Ashlands and Deep North packs** keep upstream defaults (drops off, Black Forge crafting).
+  `Outward Mode`, `Open with Inventory`, and all three telemetry settings are unchanged and still
+  `true`/`false` as shipped. `Open with Crafting Station` is new and defaults to `true`.
+- **Keybind audit `**new**` rows** (`LeftAlt`, `LeftShift`, `PageUp`, `PageDown`) come from the
+  earlier ExtraSlots, MyLittleUI, HUDCompass and Gizmo notes above, none from AdventureBackpacks. This
+  batch adds no keybind (the new gamepad tab button is `JoyRTrigger + JoyRStick`). They still need
+  the owner to accept them in `ci/keybinds-accepted.txt`.

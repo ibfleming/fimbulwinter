@@ -1,0 +1,5 @@
+kind: Fixed
+body: Opening a crafting station with a backpack on no longer stutters in bases with many chests, and several backpack tooltip, chest tab and shift-click errors are gone.
+time: 2026-11-19T00:00:00Z
+custom:
+  Mods: Vapok-AdventureBackpacks
