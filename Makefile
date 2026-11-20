@@ -20,6 +20,8 @@ CHANGIE   ?= changie
 GIT_CLIFF ?= git-cliff
 PY        ?= python3
 PIPE      := scripts/pipeline
+# Version bump for release-prep: auto picks it (see release_notes.py level).
+BUMP      ?= auto
 
 .PHONY: help version updates profile build deploy-configs deploy-full deploy-reinstall install-mods \
 	change changelog-lint keybind-audit release-prep release-notes release-check clean
@@ -82,9 +84,9 @@ changelog-lint: ## Check CHANGELOG.md, .changes/ and notes (ARGS='--base main' i
 keybind-audit: ## List shared key combinations (ARGS='--base main' fails on new ones)
 	$(PY) $(PIPE)/keybind_audit.py audit $(ARGS)
 
-release-prep: ## Batch notes into the next version: CHANGELOG.md and toml version
+release-prep: ## Batch notes into the next version: CHANGELOG.md and toml version (BUMP=patch|minor|major to override)
 	$(PY) $(PIPE)/release_notes.py prep
-	$(CHANGIE) batch $$($(PY) $(PIPE)/release_notes.py level) \
+	$(CHANGIE) batch $$(if [ "$(BUMP)" = auto ]; then $(PY) $(PIPE)/release_notes.py level; else echo "$(BUMP)"; fi) \
 		--header-path header.md --footer-path footer.md
 	$(CHANGIE) merge
 	@echo "Version is now $$(grep -Po 'versionNumber = "\K[^"]+' $(TOML)) -- review, commit, then make release-check"

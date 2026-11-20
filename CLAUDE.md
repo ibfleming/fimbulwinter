@@ -191,7 +191,10 @@ scripts and this file.
   `.changes/`, toml version), the tag doesn't already exist, and the working tree is clean.
 - **Release:** run the **Release** workflow (dry run by default). It does release-prep, commits
   `chore(release): vX.Y.Z` to main, tags, and calls `publish.yml`, which publishes to Thunderstore and
-  cuts the GitHub Release. Pushing a `v*.*.*` tag by hand also triggers `publish.yml`.
+  cuts the GitHub Release. Pushing a `v*.*.*` tag by hand also triggers `publish.yml`. Its `bump`
+  input defaults to `auto` (minor when a mod that runs on both sides changed or a note is Heads-up,
+  Added or Removed, else patch); `patch`, `minor` or `major` overrides it (`make release-prep
+  BUMP=patch` locally).
 - **Two audiences:** `CHANGELOG.md` (Thunderstore Changelog tab) is for players. The GitHub Release body
   (`make release-notes`) adds a linked mod table, the key-level config diff and the git-cliff commit
   list -- that's where technical detail goes.
