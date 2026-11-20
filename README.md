@@ -26,43 +26,43 @@ client profile automatically.
 
 | Package | Version | Role |
 |---|---|---|
-| denikson-BepInExPack_Valheim | 5.4.2350 | loader |
+| denikson-BepInExPack_Valheim | 5.4.2360 | loader |
 | ValheimModding-YamlDotNet | 16.3.1 | library |
-| shudnal-ConditionalConfigSync | 1.0.8 | server-enforced config |
-| ValheimModding-Jotunn | 2.30.1 | library -- both sides, see "AdventureBackpacks" |
-| **Vapok-AdventureBackpacks** | 2.1.4 | tiered biome backpacks -- **required for every player**, see below |
-| **shudnal-MyLittleUI** | 1.2.22 | tooltips, production timers, chest preview, multicraft, weather |
-| **shudnal-ExtraSlots** | 1.2.12 | equipment + quick slots |
+| shudnal-ConditionalConfigSync | 1.0.11 | server-enforced config |
+| ValheimModding-Jotunn | 2.30.2 | library -- both sides, see "AdventureBackpacks" |
+| **Vapok-AdventureBackpacks** | 2.4.7 | tiered biome backpacks -- **required for every player**, see below |
+| **shudnal-MyLittleUI** | 1.2.34 | tooltips, production timers, chest preview, multicraft, weather |
+| **shudnal-ExtraSlots** | 1.2.24 | equipment + quick slots |
 | **Toxo-CraftFromChests** | 0.4.0 | craft/build/fuel from nearby chests |
-| **Neobotics-HUDCompass** | 1.2.0 | compass bar |
-| **JoelOliMclean-NoRainDamage** | 1.3.0 | no weather decay on builds |
-| **korCaptain-NullReferenceFix** | 1.0.20 | stability |
-| **JereKuusela-Server_devcommands** | 1.113.0 | admin console on a dedicated server (see below) |
+| **Neobotics-HUDCompass** | 1.2.1 | compass bar |
+| **JoelOliMclean-NoRainDamage** | 1.3.2 | no weather decay on builds |
+| **korCaptain-NullReferenceFix** | 1.0.50 | stability |
+| **JereKuusela-Server_devcommands** | 1.116.0 | admin console on a dedicated server (see below) |
 | **Crystal-DeathPenalty** | 1.3.1 | tunes skill loss on death |
-| **cjayride-RecycleItemsIntoParts** | 1.7.3 | recycle items into parts (drag + `Delete`) |
+| **cjayride-RecycleItemsIntoParts** | 1.8.10 | recycle items into parts (`Delete`, with a confirm popup) |
 | **ComfyMods-Gizmo** | 1.16.0 | free build-piece rotation on all three axes |
-| **Searica-Extra_Snap_Points_Made_Easy** | 2.1.0 | extra snap points, manual/grid snapping |
+| **Searica-Extra_Snap_Points_Made_Easy** | 2.2.0 | extra snap points, manual/grid snapping |
 | **Ostrix-AdvancedTerrainModifiersCompatible** | 1.4.8 | square hoe/cultivator tools, radius + hardness scroll, precision raise, terrain reset |
-| **Zenox-ServerConnect** | 1.0.7 | one-click main-menu connect button |
+| **Zenox-ServerConnect** | 1.0.14 | one-click main-menu connect button |
 
 ### Server only (7) - players install none of these
 
 | Module | Version | Role |
 |---|---|---|
-| ArgusMagnus-ServersideQoL | 2.0.13 | (suite core) |
-| `_AutoStore` | 2.0.11 | auto-pickup, auto-sort, stack-to-chest |
+| ArgusMagnus-ServersideQoL | 2.6.0 | (suite core) |
+| `_AutoStore` | 2.5.1 | auto-pickup, auto-sort, stack-to-chest |
 | `_ContainerSizes` | 2.0.11 | bigger chest grids |
-| `_AutoProcess` | 2.0.11 | auto-feed smelters/kilns from nearby chests |
-| `_LetItFloat` | 2.0.11 | items float instead of sinking |
+| `_AutoProcess` | 2.3.0 | auto-feed smelters/kilns from nearby chests |
+| `_LetItFloat` | 2.6.0 | items float instead of sinking |
 | `_JustSleep` | 2.0.11 | majority-vote sleep skip |
-| `_MultiplayerTweaks` | 2.0.11 | desync fixes (ownership assignment) |
+| `_MultiplayerTweaks` | 2.6.0 | desync fixes (ownership assignment) |
 
 Server-authoritative and works with **unmodded and console clients**, so none of it costs a player
 anything to install.
 
 ## AdventureBackpacks, and why it's required
 
-Six biome-tiered backpacks, each an equipped item (not an inventory slot -- see the caveat below) that
+Eight biome-tiered backpacks, each an equipped item (not an inventory slot -- see the caveat below) that
 adds carry capacity at a movement-speed cost:
 
 | Tier | Biome | Station | Perk |
@@ -71,8 +71,10 @@ adds carry capacity at a movement-speed cost:
 | Rugged Backpack | Black Forest | Forge | -- |
 | Bloodbag Wetpack | Swamp | Forge | Waterproof (no "Wet" debuff) |
 | Arctic Sherpa Pack | Mountain | Forge | Frost/Cold Resistance |
-| Lox Hide Knappsack | Plains | Forge | -- |
+| Lox Hide Knappsack | Plains | Forge | Frost Resistance |
 | Explorers Wisppack | Mistlands | Black Forge | Built-in Demister + Slow Fall |
+| Cinderward Pack | Ashlands | Black Forge | Heat Resistance |
+| Frostbound Haversack | Deep North | Black Forge | Frost Resistance + Second Wind |
 
 Each tier has 4 upgrade levels at its crafting station (bigger grid each time) -- upgrade what you
 have before jumping to the next biome's tier. Every tier costs -15% movement speed while worn, and
@@ -86,7 +88,7 @@ in Mistlands.
 **Craft and store straight from the backpack:** crafting and building pull materials
 from your inventory first, then the equipped backpack; newly crafted items land in the backpack when
 your inventory is full; picked-up items auto-store into the backpack if it already holds that item, and
-overflow into it when your inventory fills up. All four are on by default and server-synced.
+overflow into it when your inventory fills up. All four are on by default and are personal client settings, so each player can switch them off.
 
 **Telemetry is off in this pack.** AdventureBackpacks ships an opt-out crash/error reporter
 (`Send Error Reports`) that defaults to **on** upstream and makes outbound HTTP calls; this pack ships
@@ -170,9 +172,10 @@ being crushing (a level-30 skill loses roughly half a level per death).
 
 ## cjayride-RecycleItemsIntoParts
 
-Drag an item onto the cursor and press `Delete` to recycle it into its crafting materials. Config at
-`config/cjayride.RecycleItemsIntoParts.cfg`, shipped at mod defaults (100% resource return, coins
-excluded, consumables/trophies/shards included).
+Hover an item (or drag it onto the cursor) and press `Delete` to recycle it into its crafting
+materials. A popup lists what you will get; `Enter` confirms, `Escape` cancels. Config at
+`config/cjayride.RecycleItemsIntoParts.cfg`, shipped at mod defaults except for full resource
+return (you get all the materials back), with coins excluded and consumables/trophies/shards included.
 
 It needs *some* resolvable recipe to act -- raw materials and recipe-less drops just print "Cannot be
 recycled or unknown recipe" and are left alone. There's no "delete anything, return nothing" option.
@@ -187,6 +190,8 @@ recycled or unknown recipe" and are left alone. There's no "delete anything, ret
 | `Alt + 1 / 2 / 3` | ExtraSlots | Ammo slots 1-3 | Anywhere |
 | `Alt + Q / E / R` | ExtraSlots | Food slots 1-3 | Anywhere |
 | `Alt` (hold) | ExtraSlots | Drag item between equipment slots | Inventory open |
+| `Alt` (hold) + click | MyLittleUI | Share the clicked item as a link in chat | Inventory open |
+| `Shift` (hold) | HUDCompass | Modifier for naming map entries (carts and ships can now be named) | Map open |
 | `J` | HUDCompass | Toggle the compass bar | Anywhere |
 | `Delete` | RecycleItemsIntoParts | Recycle the item on the cursor | Inventory open |
 | `LeftShift` (hold) + scroll | Gizmo | Rotate piece on X axis | Build mode, hammer |
@@ -199,6 +204,7 @@ recycled or unknown recipe" and are left alone. There's no "delete anything, ret
 | `CapsLock` | ExtraSnapPointsMadeEasy | Toggle Manual snap mode | Build mode |
 | `F11` / `F4` | ExtraSnapPointsMadeEasy | Toggle grid snap / cycle grid precision | Build mode |
 | `Q` / `E` | ExtraSnapPointsMadeEasy | Iterate placing / targeted snap points | Manual snap modes |
+| `LeftShift` (hold) | ExtraSnapPointsMadeEasy | Reverse the direction of snap-point / grid-precision cycling | Build mode, with the cycle keys |
 | `LeftAlt` (hold) + scroll | AdvancedTerrainModifiers | Change tool radius | Hoe / cultivator / shovel |
 | `LeftControl` (hold) + scroll | AdvancedTerrainModifiers | Change tool hardness | Hoe / cultivator / shovel |
 | `I` | AdventureBackpacks | Toggle equipped backpack | Anywhere |

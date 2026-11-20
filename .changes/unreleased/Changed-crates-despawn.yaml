@@ -1,0 +1,5 @@
+kind: Changed
+body: Floating item crates now despawn after an hour.
+time: 2026-11-18T00:00:00Z
+custom:
+  Mods: ArgusMagnus-ServersideQoL_LetItFloat

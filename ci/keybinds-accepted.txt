@@ -10,3 +10,15 @@
 #
 # Only the repo owner adds lines, after checking the share in game. The
 # maintenance bot never edits this file.
+
+# Maintenance batch 2026-11-18 (PR #12), playtested 2026-11-19.
+LeftAlt | shudnal.ExtraSlots.cfg [Panels - Vanilla hotbar] Modifier shortcut | ExtraSlots hotbar row switching is off, so this bind does nothing
+LeftAlt | shudnal.MyLittleUI.cfg [Chat - Item links] Link item modifier | Alt+click on an item posts a chat link; Alt+drag on the equipment panel still moves the panel (playtested)
+LeftAlt | shudnal.MyLittleUI.cfg [Item - Tooltip] Original tooltip shortcut | Shortcut is disabled (Original tooltip shortcut enabled = false)
+LeftShift | Searica.Valheim.ExtraSnapPointsMadeEasy.cfg [2 - Manual Snapping] Reverse Cycling Direction | Build mode only; reverse cycling works alongside Gizmo (playtested)
+LeftShift | bruce.valheim.comfymods.gizmo.cfg [Keys] xRotationKey | Gizmo Shift+scroll still rotates the axis with the new Shift binds present (playtested)
+LeftShift | neobotics.valheim_mod.hudcompass.cfg [M - Naming] Use Key Modifier | Only with Use (E) at a cart or ship; opens the naming dialog without attaching the cart (playtested)
+PageDown | bruce.valheim.comfymods.gizmo.cfg [Keys] snapDivisionDecrement | Gizmo snap divisions work; the ExtraSlots row bind is inactive (playtested)
+PageDown | shudnal.ExtraSlots.cfg [Panels - Vanilla hotbar] Next row shortcut | ExtraSlots hotbar row switching is off, so this bind does nothing
+PageUp | bruce.valheim.comfymods.gizmo.cfg [Keys] snapDivisionIncrement | Gizmo snap divisions work; the ExtraSlots row bind is inactive (playtested)
+PageUp | shudnal.ExtraSlots.cfg [Panels - Vanilla hotbar] Previous row shortcut | ExtraSlots hotbar row switching is off, so this bind does nothing

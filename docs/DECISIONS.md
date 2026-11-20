@@ -143,3 +143,67 @@ non-default binds are where they are:
   and release-please were rejected: both build notes from commits only, and
   semantic-release would tag and publish on every merge. git-cliff supplies
   only the commit list in the GitHub Release.
+
+## Maintenance batch 2026-11-18 (review notes)
+
+- **RecycleItemsIntoParts 1.8.10 return rate.** 1.8.x changed the default `ReturnResources` from `1`
+  to `0.4`, and because the shipped `1` matched the old default, the 3-way merge took `0.4`. The
+  owner chose to keep full return: `ReturnResources = 1` is now a deliberate override, not a
+  default, so later migrations keep it. `ServerEnforced` is irrelevant: the mod is client-only, no server copy
+  exists. `RequireConfirm = true` adds a Yes/No popup (Enter/Escape). The EpicLoot settings do
+  nothing, EpicLoot is not in the pack.
+- **ExtraSlots 1.2.24.** The three dropped `[Mods compatibility - Valheim Radial]` keys are
+  intentional: upstream removed ValheimRadial support in 1.2.19. No rename target exists. The new
+  hotbar row switching is off (`Switch inventory rows = false`), so its default binds (`LeftAlt`
+  hold, `PageUp`/`PageDown`) are inert and the keybind audit overlap with Gizmo/ATM/MyLittleUI is
+  harmless. If a player enables it, move `Previous/Next row shortcut` off `PageUp`/`PageDown` (Gizmo
+  snap divisions).
+- **MyLittleUI 1.2.34 `LeftAlt` binds.** `Link item modifier` (`LeftAlt` + click an inventory item)
+  shares Alt with ExtraSlots' equipment drag key. Different gestures (click vs drag) but the same
+  hold key in the same window, so it is a playtest item rather than rebound. `Original tooltip
+  shortcut` is disabled by default and `Hold to inspect chat modifier` needs `LeftControl` too.
+- **HUDCompass 1.2.1 `LeftShift`.** Map-naming modifier, map context only. Gizmo and ESPME use Shift
+  in build mode. Harmless.
+- **ExtraSnapPointsMadeEasy 2.2.0.** Our binds (`B`, `CapsLock`, `F11`, `F4`) are kept, the mod's new
+  defaults (`F3`, `F4`, `Q`) collide with the existing `Q` iterate bind and are not adopted. New
+  `Reverse Cycling Direction = LeftShift` only acts together with the cycle keys. The mod writes plain
+  ASCII section names, so the stray zero-width character that was in the `[3 - Extra Snap Points]`
+  header of our old file is gone and the section now matches the mod's own fresh config;
+  `Extra Snap Points: Terrain = true` is preserved. Verify in game that the terrain snap points work.
+- **Server_devcommands 1.116.** `Automatic item pick up` changed type from a boolean to
+  `Default/On/Off`. Our old value was the old default (`true`), so it moves to `Default` (do nothing),
+  which is what upstream now intends. `Automatic devcommands = false` is untouched.
+- **AutoStore 2.5.1.** `PickedUpMessageType = TopLeftNear` kept (ours, still a valid value).
+- **Zenox-ServerConnect 1.0.14.** The new server-status check on the button sends a query to the
+  configured server and, with `PlayFabFallback` (default on), asks PlayFab for the server, the same
+  lookup the game does when joining by IP. Defaults stay; there is no shipped config for this mod.
+- **NullReferenceFix 1.0.50.** Adds and removes patches often (tooltip handling added, removed, added
+  again; ItemDrawers patch reverted for server lag). Boots clean, 108 h old at review. Treated as
+  needs-playtest rather than held.
+- **Valheim build.** Boot test passed on build 26266951; `ci/valheim-build` is left to the workflow.
+
+## Maintenance batch 2026-11-19 (review notes)
+
+- **AdventureBackpacks 2.4.7 moved four settings to a client-local section.** The config migration
+  dropped `[Server Config] Enable Craft From Backpack`, `Enable Craft Output To Backpack`,
+  `Enable Auto Store to Backpack` and `Enable Inventory Overflow To Backpack`. The 2.4.7 DLL still
+  contains all four (`strings -e l`) under `Automation (Local Only)` (README: "client-side personal
+  preferences ... without server synchronization"), so they are client-only code the headless
+  harvest never writes. They are shipped again as `[Automation (Local Only)]` with `true`, which
+  keeps the old intent. The section name for the Auto Store and Overflow keys is taken from the
+  README, the DLL strings do not show the section for those two: confirm in game. Consequence: the
+  settings are no longer server-synced, so players can turn them off individually (README updated).
+- **`Enable Quick Right Click Item Transfer`** is only registered when `blumaye.quicktransfer` is not
+  installed (DLL strings). That mod is not in the pack, and our value was already the default, so it is
+  left to regenerate on clients.
+- **Effective Quality Level changes** (Plains frost 3 -> 1, Demister Mistlands 4 -> 2, Ashlands and
+  Deep North cold/frost 0 -> 1) are the new upstream defaults. Our old values equalled the old
+  defaults, so the 3-way merge took the new ones. Changelog 2.4.0 states the Plains change is
+  intentional (Lox Cape no longer loses frost protection).
+- **New Ashlands and Deep North packs** keep upstream defaults (drops off, Black Forge crafting).
+  `Outward Mode`, `Open with Inventory`, and all three telemetry settings are unchanged and still
+  `true`/`false` as shipped. `Open with Crafting Station` is new and defaults to `true`.
+- **Keybind audit `**new**` rows** (`LeftAlt`, `LeftShift`, `PageUp`, `PageDown`) come from the
+  earlier ExtraSlots, MyLittleUI, HUDCompass and Gizmo notes above, none from AdventureBackpacks. This
+  batch adds no keybind (the new gamepad tab button is `JoyRTrigger + JoyRStick`). They still need
+  the owner to accept them in `ci/keybinds-accepted.txt`.

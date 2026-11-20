@@ -1,0 +1,5 @@
+kind: Changed
+body: Crafting lists now show recipes you can make first, and holding Ctrl on the multicraft buttons changes the amount by the batch size.
+time: 2026-11-18T00:00:00Z
+custom:
+  Mods: shudnal-MyLittleUI

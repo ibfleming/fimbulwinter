@@ -1,0 +1,5 @@
+kind: Added
+body: Extra snap points for many more pieces, and holding Shift reverses the direction when cycling snap points or grid precision.
+time: 2026-11-18T00:00:00Z
+custom:
+  Mods: Searica-Extra_Snap_Points_Made_Easy
