@@ -12,6 +12,15 @@ on:
         description: "Dry run: prepare and show the notes, push nothing"
         type: boolean
         default: true
+      bump:
+        description: "Version bump. auto: minor when every player must update or a note adds or removes something, else patch"
+        type: choice
+        default: auto
+        options:
+          - auto
+          - patch
+          - minor
+          - major
 
 concurrency:
   group: release
@@ -45,13 +54,15 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Batch notes into next version
+        env:
+          BUMP: ${{ inputs.bump }}
         run: |
           last=$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)
           if [ -n "$last" ] && [ -z "$(git log --oneline "$last..HEAD")" ]; then
             echo "::error::Nothing to release: no commits since $last"
             exit 1
           fi
-          make release-prep
+          make release-prep BUMP="$BUMP"
 
       - name: Lint and preview release notes
         run: |
