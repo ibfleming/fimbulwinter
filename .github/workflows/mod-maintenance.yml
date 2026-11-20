@@ -256,9 +256,20 @@ jobs:
 
       - name: Compose pull request body
         id: body
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MODE: ${{ steps.branch.outputs.mode }}
         run: |
+          # Append mode keeps the open PR's earlier batches in the description.
+          prev=()
+          if [ "$MODE" = append ]; then
+            gh pr list --head "$BRANCH" --state open --json body --jq '.[0].body // ""' \
+              > "$RUNNER_TEMP/previous.md"
+            prev=(--previous "$RUNNER_TEMP/previous.md")
+          fi
           python3 scripts/pipeline/pr_body.py --ci-out "$CI_OUT" --out "$RUNNER_TEMP/body.md" \
-            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            "${prev[@]}"
 
       - name: Open or update pull request
         env:
