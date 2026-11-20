@@ -1,5 +1,0 @@
-kind: Fixed
-body: Configuration sync is more reliable on slow connections.
-time: 2026-11-18T00:00:00Z
-custom:
-  Mods: shudnal-ConditionalConfigSync

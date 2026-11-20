@@ -1,5 +1,0 @@
-kind: Added
-body: The main-menu connect button now shows whether the server is online or offline.
-time: 2026-11-18T00:00:00Z
-custom:
-  Mods: Zenox-ServerConnect

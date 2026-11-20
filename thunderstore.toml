@@ -16,7 +16,7 @@ repository = "https://thunderstore.io"
 namespace = "ibfleming"
 name = "Fimbulwinter"
 description = "Server-side-first Valheim modpack: quality of life, building tools and biome backpacks, with most of the work done on the dedicated server so clients stay close to vanilla."
-versionNumber = "3.0.0"
+versionNumber = "3.0.1"
 websiteUrl = "https://github.com/ibfleming/fimbulwinter"
 
 [package.dependencies]

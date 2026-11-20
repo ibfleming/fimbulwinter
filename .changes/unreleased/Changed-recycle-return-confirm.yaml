@@ -1,5 +1,0 @@
-kind: Changed
-body: Recycling now asks you to confirm first (Enter to accept, Escape to cancel). You still get all the crafting materials back.
-time: 2026-11-18T00:00:00Z
-custom:
-  Mods: cjayride-RecycleItemsIntoParts
