@@ -32,13 +32,13 @@ ValheimModding-Jotunn = "2.30.2"
 Vapok-AdventureBackpacks = "2.4.7"
 
 # ── Client UI / QoL ───────────────────────────────────────────
-shudnal-MyLittleUI = "1.2.34"
+shudnal-MyLittleUI = "1.2.35"
 shudnal-ExtraSlots = "1.2.24"
 Toxo-CraftFromChests = "0.4.0"
 Neobotics-HUDCompass = "1.2.1"
 JoelOliMclean-NoRainDamage = "1.3.2"
 korCaptain-NullReferenceFix = "1.0.50"
-JereKuusela-Server_devcommands = "1.116.0"
+JereKuusela-Server_devcommands = "1.117.0"
 Crystal-DeathPenalty = "1.3.1"
 cjayride-RecycleItemsIntoParts = "1.8.10"
 
@@ -50,13 +50,13 @@ Zenox-ServerConnect = "1.0.14"
 
 # ── Server-side only (never shipped to clients) ────────────────
 # Mirrored by SERVER_ONLY_MODS in scripts/export-profile.sh.
-ArgusMagnus-ServersideQoL = "2.6.0"
+ArgusMagnus-ServersideQoL = "2.6.2"
 ArgusMagnus-ServersideQoL_AutoStore = "2.5.1"
 ArgusMagnus-ServersideQoL_ContainerSizes = "2.0.11"
 ArgusMagnus-ServersideQoL_AutoProcess = "2.3.0"
 ArgusMagnus-ServersideQoL_LetItFloat = "2.6.0"
 ArgusMagnus-ServersideQoL_JustSleep = "2.0.11"
-ArgusMagnus-ServersideQoL_MultiplayerTweaks = "2.6.0"
+ArgusMagnus-ServersideQoL_MultiplayerTweaks = "2.6.1"
 
 [publish]
 communities = ["valheim"]
